@@ -58,9 +58,10 @@ Making your website user friendly.
 
 #### Online Resource
 
-[W3School], CSS-Tricks, egghead, AngularJS, ReactJS...
+[W3School], CSS-Tricks, [egghead.io], AngularJS, ReactJS...
 
    [W3School]: <http://expressjs.com>
    [TodoMVC]: <http://todomvc.com/>
+   [egghead.io]: <https://egghead.io/>
 
 
