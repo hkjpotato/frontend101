@@ -23,7 +23,7 @@ Understand the basic of HTML as well as new technology of the HTML5 is a key to 
 
 #### CSS:
 
-Even though developers are generally dealing with coding language like javascript, understanding about the how the css layout works is important on making your UI
+Even though developers are generally dealing with coding language like javascript, understanding about the how the css layout works is important in making your UI works as desired. Besides, CSS is also important in creating responsive web so it can fit in different screen size.
 
 
 #### Javascript:
@@ -32,7 +32,7 @@ Javascript basics: scope, closure, array manipulation, callback ...
 
 #### Framework:
 
-A deep understanding of framework is essential in make the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In face, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
+A deep understanding of framework is essential in make the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
 
 #### Build Tool:
 
