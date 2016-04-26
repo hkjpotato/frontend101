@@ -64,9 +64,10 @@ Making your website user friendly.
 [W3School], CSS-Tricks, [egghead.io], AngularJS, ReactJS...
 
 #### Know How
-  - [First App in React] Build your first ReactJS application.
-  - [Angular and Webpack] A very good tutorial for understanding build tool webpack.
-  - [RESTful api in NodeJS] A simple tutorial about REST and NodeJS.
+
+  - [First App in React]: Build your first ReactJS application.
+  - [Angular and Webpack]: A very good tutorial for understanding build tool webpack.
+  - [RESTful api in NodeJS]: A simple tutorial about REST and NodeJS.
 
 
    [W3School]: <http://expressjs.com>
