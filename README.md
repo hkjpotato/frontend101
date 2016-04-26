@@ -1,26 +1,25 @@
 #Front-end Job Interview Questions
 
-This file contains a number of front-end interview questions that can be used when vetting potential candidates. It is by no means recommended to use every single question here on the same candidate (that would take hours). Choosing a few items from this list should help you vet the intended skills you require.
+One challenge of front end development is that the universities normally don't teach front end specific courses. They only teach you about OO language, database and basic knowledge about computing. The good news is that most of the front end development knowledge can be found online and there are tons of excellent tutorials. Through my study about front end development. I have gained help from different people and varous online resource. Thus here I want to keep summarizing waht I know about front end development and share with anyone who is interested in becoming a front end/UI developer.
 
-**Note:** Keep in mind that many of these questions are open-ended and could lead to interesting discussions that tell you more about the person's capabilities than a straight answer would.
+**Note:** This material is designed for people with some background of CS. It is not for people who has no background or who is seeking for high level knowledge. I will continue updating this respository. The table of contents might change.
 
 ## Table of Contents
 
-  1. [General Questions](#general-questions)
-  1. [HTML Questions](#html-questions)
-  1. [CSS Questions](#css-questions)
-  1. [JS Questions](#js-questions)
-  1. [Testing Questions](#testing-questions)
-  1. [Performance Questions](#performance-questions)
-  1. [Network Questions](#network-questions)
-  1. [Coding Questions](#coding-questions)
-  1. [Fun Questions](#fun-questions)
+  1. [HTML](#html-questions)
+  1. [CSS](#css-questions)
+  1. [Javascript](#js-questions)
+  1. [MVC? Framework](#testing-questions)
+  1. [Build Tool](#performance-questions)
+  1. [Web in General](#general-questions)
+  1. [Algorithim](#coding-questions)
+  1. [Server Side](#general-questions)
+  1. [Online Resource](#fun-questions)
 
 ## Getting Involved
 
   1. [Contributors](#contributors)
   1. [How to Contribute](https://github.com/h5bp/Front-end-Developer-Interview-Questions/blob/master/CONTRIBUTING.md)
-  1. [License](https://github.com/h5bp/Front-end-Developer-Interview-Questions/blob/master/LICENSE.md)
 
 #### General Questions:
 
