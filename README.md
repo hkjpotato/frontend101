@@ -4,7 +4,7 @@ One challenge of learning front end development is that universities normally do
 
 **Note:** This material is designed for people of entry level. It is not for people who is seeking for high level knowledge. I will continue updating this respository. The table of contents might change.
 
-**KNOW HOW:** Frankly speaking, the best way to study the front end development is to start build something by yourself. There are tons of excellent tutorials in teaching you to build your first app. Here is a quick link to [Know How].
+**Know How:** Frankly speaking, the best way to study the front end development is to start build something by yourself. There are tons of excellent tutorials in teaching you to build your first app. Here is a quick link to [Know How](#know-how).
 
 ## Table of Contents
 
