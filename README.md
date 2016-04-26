@@ -1,6 +1,6 @@
 #Front End 101 - everything you want to know about front end.
 
-One challenge of learning front end development is that universities normally don't have front end specific courses. They only teach you about OO language, database and basic knowledge about CS. The good news is that most of the front end development knowledge can be found online and there are tons of excellent tutorials. Through my study about front end, I get help from different people and varous online resource. Thus here I want to summarize what I know about front end development and share with anyone who is interested in becoming a Front End Developer/UI developer/UX Engineer/Design technologist.
+One challenge of learning front end development is that universities normally don't have front end specific courses. They only teach you about OO language, database and basic knowledge about CS. The good news is that most of the front end development knowledge can be found online and there are tons of excellent tutorials. Through my study about front end, I get help from different people and varous online resource. Thus here I want to summarize what I know about front end development and share with anyone who is interested in becoming a Front End Developer/UI developer/UX Engineer/Design Technologist/Whatever you call.
 
 **Note:** This material is designed for people of entry level. It is not for people who is seeking for high level knowledge. I will continue updating this respository. The table of contents might change.
 
