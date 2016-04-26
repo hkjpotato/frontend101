@@ -4,7 +4,7 @@ One challenge of learning front end development is that universities normally do
 
 **Note:** This material is designed for people of entry level. It is not for people who is seeking for high level knowledge. I will continue updating this respository. The table of contents might change.
 
-**Know How:** Frankly speaking, the best way to study the front end development is to start build something by yourself. There are tons of excellent tutorials in teaching you to build your first app. Here is a quick link to [Know How](#know-how).
+**Know How:** Frankly speaking, the best way to study the front end development is to start to build something by yourself. There are tons of excellent tutorials in teaching you to build your first app. Here is a quick link to [Know How](#know-how).
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ JS is the key for front end development. Javascript basics: scope, closure, arra
 
 #### Framework:
 
-A deep understanding of framework is essential in make the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
+A deep understanding of framework is essential in making the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
 
 #### Build Tool:
 
