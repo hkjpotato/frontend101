@@ -30,7 +30,7 @@ Even though developers are generally dealing with coding language like javascrip
 
 Javascript basics: scope, closure, array manipulation, callback ...
 
-#### framework:
+#### Framework:
 
 A deep understanding of framework is essential in make the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In face, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
 
