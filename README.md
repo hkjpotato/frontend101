@@ -4,20 +4,27 @@ One challenge of learning front end development is that universities normally do
 
 **Note:** This material is designed for people of entry level. It is not for people who is seeking for high level knowledge. I will continue updating this respository. The table of contents might change.
 
+**KNOW HOW:** Frankly speaking, the best way to study the front end development is to start build something by yourself. There are tons of excellent tutorials in teaching you to build your first app. Here is a quick link to [Know How].
+
 ## Table of Contents
 
+  1. [Web in General](#web-in-general)
   1. [HTML](#html)
   1. [CSS](#css)
   1. [Javascript](#js)
   1. [Framework](#framework)
   1. [Build Tool](#build-tool)
-  1. [Web in General](#web-in-general)
   1. [Algorithm](#algorithm)
   1. [Server Side](#server-side)
   1. [UI/UX](#ui/ux)
   1. [Online Resource](#online-resource)
+  1. [Know How](#know-how)
 
-##
+
+####  Web in General:
+
+How Browser works, Performance, AJAX ...
+
 #### HTML:
 
 Understand the basic of HTML as well as new technology of the HTML5 is a key to manipulate the DOM.
@@ -29,7 +36,7 @@ Even though developers are generally dealing with coding language like javascrip
 
 #### Javascript:
 
-Javascript basics: scope, closure, array manipulation, callback ...
+JS is the key for front end development. Javascript basics: scope, closure, array manipulation, callback ...
 
 #### Framework:
 
@@ -37,11 +44,7 @@ A deep understanding of framework is essential in make the website to be a funct
 
 #### Build Tool:
 
-Gulp, Webpack, Bower, Preprocessor, Testing...
-
-####  Web in General:
-
-Performance, AJAX, browser...
+Gulp, Webpack, Bower, Preprocessor, Testing, Git...
 
 #### Algorithm:
 
@@ -60,8 +63,17 @@ Making your website user friendly.
 
 [W3School], CSS-Tricks, [egghead.io], AngularJS, ReactJS...
 
+#### Know How
+  - [First App in React] Build your first ReactJS application.
+  - [Angular and Webpack] A very good tutorial for understanding build tool webpack.
+  - [RESTful api in NodeJS] A simple tutorial about REST and NodeJS.
+
+
    [W3School]: <http://expressjs.com>
    [TodoMVC]: <http://todomvc.com/>
    [egghead.io]: <https://egghead.io/>
+   [Angular and Webpack]:<https://egghead.io/series/angular-and-webpack-for-modular-applications>
+   [First App in React]:<https://egghead.io/series/build-your-first-react-js-application> 
+   [RESTful api in Nodejs]:<https://scotch.io/tutorials/build-a-restful-api-using-node-and-express-4>
 
 
