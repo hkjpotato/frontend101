@@ -32,7 +32,7 @@ Javascript basics: scope, closure, array manipulation, callback ...
 
 #### framework:
 
-A deep understanding of framework is essential in make the website to be a functional application. A very good resource about MVC framework is [TodoMVC](http://todomvc.com/). In face, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
+A deep understanding of framework is essential in make the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In face, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
 
 #### Build Tool:
 
@@ -57,4 +57,9 @@ Making your website user friendly.
 
 #### Online Resource
 
-W3CSchool, CSS-tricks, egghead, AngularJS, ReactJS...
+[W3School], CSS-Tricks, egghead, AngularJS, ReactJS...
+
+   [W3School]: <http://expressjs.com>
+   [TodoMVC]: <http://todomvc.com/>
+
+
