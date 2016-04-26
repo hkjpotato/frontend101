@@ -23,7 +23,7 @@ Understand the basic of HTML as well as new technology of the HTML5 is a key to 
 
 #### CSS:
 
-Even though developers are generally dealing with coding language like javascript, understanding about the how the css layout works is important in making your UI works as desired. Besides, CSS is also important in creating responsive web so it can fit in different screen size.
+Even though developers are generally dealing with coding language like javascript, understanding how the css layout works is essential in making your UI works as desired. Besides, CSS is also important in creating responsive web so it can fit in different screen size.
 
 
 #### Javascript:
