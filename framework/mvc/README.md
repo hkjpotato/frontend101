@@ -38,7 +38,19 @@ As Raynos mentioned:
 	the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."
 
 
+<<<<<<< HEAD
 #H1
 ##H2
 ###H3
 #H1
+=======
+the View knows nothing about the Model apart from it implements some interface
+the Model knows nothing of the View and the Controller
+the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."
+
+
+#H1
+##H2
+###H3
+#H1
+>>>>>>> 9d0c944a51ea2aece79401978084cc2c3a669d80
