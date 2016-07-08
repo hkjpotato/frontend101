@@ -23,19 +23,19 @@ document.getElementById("myBtn").addEventListener("click", C.handleClick);
 ```
 As Raynos mentioned:
 
-	"Controller (C) listens on some kind of interaction/event stream.
+"Controller (C) listens on some kind of interaction/event stream.
 
-	Model (M) is an abstraction of a data source.
+Model (M) is an abstraction of a data source.
 
-	View (V) knows how to render data from the Model.
+View (V) knows how to render data from the Model.
 
-	The Controller tells to View to do something with something from the Model.
+The Controller tells to View to do something with something from the Model.
 
-	In this example
+In this example
 
-	the View knows nothing about the Model apart from it implements some interface
-	the Model knows nothing of the View and the Controller
-	the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."
+the View knows nothing about the Model apart from it implements some interface
+the Model knows nothing of the View and the Controller
+the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."
 
 
 #H1
