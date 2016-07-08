@@ -5,11 +5,11 @@ Here are some simple examples for MVC in plain JS from "Hello World" to "TodoMVC
 ### The Basic
 Below is the simplest example of MVC I have found from StackOverflow By [Raynos](http://stackoverflow.com/questions/8497833/hello-world-in-mvc-pattern)
 
-	html
+  html
 ```html
 <input id="myBtn" type="button" value="click"></input>
 ```
-####javascript
+#####javascript
 ```javascript
 var M = {}, V = {}, C = {};
 
