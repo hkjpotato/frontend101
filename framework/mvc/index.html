@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #f5f5f5;
+  color: #4d4d4d;
+  font-weight: 300;
+}
+
+
+</style>
+<body>
+
+<div id="container">
+</div>
+
+<input id="myBtn" type="button" value="click"></input>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+var M = {}, V = {}, C = {};
+
+M.data = "Hello World";
+V.render = function(M) { console.log(M.data); }
+
+C.handleClick = function() {
+  V.render(M);
+}
+
+document.getElementById("myBtn").addEventListener("click", C.handleClick);
+</script>
+
+<script type="text/javascript">
+var M = {}, V = {}, C = {};
+
+M.data = "Hello World";
+V.render = function(M) { console.log(M.data); }
+
+C.handleClick = function() {
+  V.render(M);
+}
+
+document.getElementById("myBtn").addEventListener("click", C.handleClick);
+</script>
+
+
+
+
+
+
