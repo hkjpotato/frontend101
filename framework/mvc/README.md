@@ -92,9 +92,9 @@ document.getElementById("myBtn").addEventListener("click", hwController.handleCl
 ```
 
 ### Framework or Design Pattern
-After reading some materials, I got a little bit confused about whether MVC is a framework or a design pattern. To clearify that, I decide to focus on some popular [design patterns](./../design%20pattern/observer%20pattern) first.
+After reading some materials, I got a little bit confused about whether MVC is a framework or a design pattern. To clearify that, I decide to focus on some popular [design patterns](../design%20pattern/observer%20pattern) first.
 
-Before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some ideas about [design patterns](./../design%20pattern/observer%20pattern) first. Personally, I got confused about who should trigger the view event, who should be in charge of attach the event listener, what should be update, and the role of the controller. I think understanding design pattern like observer pattern can greatly help us understand the MVC.
+Before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some ideas about [design patterns](../design%20pattern/observer%20pattern) first. Personally, I got confused about who should trigger the view event, who should be in charge of attach the event listener, what should be update, and the role of the controller. I think understanding design pattern like observer pattern can greatly help us understand the MVC.
 
 #H1
 ##H2
