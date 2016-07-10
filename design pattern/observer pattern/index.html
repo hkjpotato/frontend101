@@ -12,58 +12,230 @@ body {
 <input id="myBtn" type="button" value="click"></input>
 <span id="data"></span>
 <script type="text/javascript">
-//Self-defined
-//Subject
-var store = {};
-//a cache to store the observers(the callbacks from them)
-store.clientList = []; //notice that this is an array of array since we want to let observer listen to different types of events.
+//Make it global
+//The previous example has some defaults. For example, observers(tom and jerry) need to know the name of the subject(store) so as to listen to a specific event. Besides, each subject(store) needs to maintain its own clientList.
+//To solve that, we can create a middleware, which is a global Event system.
 
-//function to add observer , the "listen" function
-store.addClient = function(key, fn) {
-	//use key to differentiate different events(news)
-	if (!this.clientList[key]) {
-		this.clientList[key] = [];
+var Event = (function(){
+	//create a closure using IIFE(immediately-invoked function)
+	var clientList = {}, //clientList as a map
+		listen,
+		trigger,
+		remove;
+
+	listen = function(key, fn) {
+		if (!clientList[key]) {
+			clientList[key] = [];
+		}
+		clientList[key].push(fn);
+	};
+
+	trigger = function() {
+		var key = Array.prototype.shift.call(arguments),
+			fns = clientList[key];
+		if (!fns || fns.length === 0) {
+			return false;
+		}
+		for (var i = 0; i < fns.length; i++) {
+			var fn = fns[i];
+			fn.apply(this, arguments);
+		}
+	};
+
+	remove = function(key, fn) {
+		var fns = clientList[key];
+		if (!fns) {
+			return false;
+		}
+		if (!fn) {
+			fns && (fns.length = 0);
+		} else {
+			for (var l = fns.length; l >= 0; l--) {
+				if (fns[l] === fn) {
+					fns.splice(l, 1);
+				}
+			}
+		}
 	}
-		this.clientList[key].push(fn);
-}
 
-//notify the observers when sth happened
-store.trigger = function() {
-	//from the arguments, get the type of the event!
-	var key = Array.prototype.shift.call(arguments);
-
-	//get the array of observer callbacks corresponding to that event
-	var fns = this.clientList[key];
-
-	if (!fns || fns.length == 0) {
-		return false;
+	return {
+		listen: listen,
+		trigger: trigger,
+		remove: remove
 	}
+})();
 
-	for (var i = 0, fn; i < fns.length; i++) {
-		fn = fns[i];
-		fn.apply(this, arguments);
+var store = {
+	"coke": 2.5,
+	"cheese": 2
+}
+
+var tom = {
+	name: "tom",
+	getCokePrice: function(price) {
+		console.log("coke price is " + price)
 	}
 }
 
-//observer, here we call it Client
-function Client(name) {
-	this.name = name;
-}
+//now the subject and observer don't need to know each other
+var eventName = "coke";
+Event.listen("coke", tom.getCokePrice.bind(tom));
+Event.trigger("coke", store["coke"]);
 
-Client.prototype.getPrice = function(item, price) {
-	console.log(this.name + " receives the price of " + item + " is " + price);
-}
+</script>
+<script type="text/javascript">
+// //Make the observer function as an object, so it can be applied to different subjects who implement it (like an interface in java)
+// //we call it event object/interface
+// var event = {
+// 	clientList: [], //previously, the clientList is an property of a specific subject
+// 	listen: function(key, fn) {
+// 		//key is the type of the event, fn is the callback from observer
+// 		if (!this.clientList[key]) {
+// 			this.clientList[key] = [];
+// 		}
+// 		this.clientList[key].push(fn);
+// 	}, //the listen function is the same as the addClient
+// 	trigger: function() {
+// 		var key = Array.prototype.shift.call(arguments);
+// 			fns = this.clientList[key];
 
-var tom = new Client("Tom");
-var jerry = new Client("Jerry");
+// 		if (!fns || fns.length == 0) {
+// 			return false;
+// 		}
 
-//add observer
-store.addClient("coke", tom.getPrice.bind(tom));
-store.addClient("cheese", jerry.getPrice.bind(jerry));
+// 		for (var i = 0; i < fns.length; i++) {
+// 			var fn = fns[i];
+// 			fn.apply(this, arguments); //yes, we apply 'this' when trigger the observer's callback. 'this' means the subject here. That's why when the button trigger the event, you will find the the callback function from listener refers 'this' to the button!!!
+// 		}
+// 	},
+// 	remove: function(key, fn) {
+// 		//a method to stop a callback from observer
+// 		//get the callback list corresponding to the key
+// 		var fns = this.clientList[key];
+// 		console.log("here");
 
-//notify the observer
-store.trigger("coke", 2);
-store.trigger("cheese", 2.5);
+// 		console.log(fns);
+
+// 		if (!fns || fns.length == 0) {
+// 			return false;
+// 		}
+
+// 		if (!fn) {
+// 			//if no specifc call is defined, delete all the callbacks corresponding to the key
+// 			fns && (fns.length = 0); //ensure fns still exit at this point
+// 		} else {
+// 			for (var l = fns.length - 1; l >=0; l--) {
+// 				//backward check
+// 				var _fn = fns[l];
+// 				if ( _fn === fn) {
+// 					console.log("find it", fn, fns[l]);
+// 					fns.splice(l, 1);
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+// //define an installEvent function to implement the event obj, which is similar to "implements" in java
+// function installEvent(obj) {
+// 	//get all properties of event obj
+// 	for (var key in event) {
+// 		obj[key] = event[key];
+// 	}
+// } 
+
+// //Test
+// var store = {};
+// installEvent(store);
+
+// //observer, here we call it Client
+// function Client(name) {
+// 	this.name = name;
+// }
+
+// Client.prototype.getPrice = function(price) {
+// 	console.log(this.name + " get price " + price);
+// }
+
+// var tom = new Client("Tom");
+// var jerry = new Client("Jerry");
+
+// //add observer
+// store.listen("cheese", jerry.getPrice.bind(jerry));
+// store.listen("coke", fn1 = tom.getPrice.bind(tom));
+
+// //notify the observer
+// store.trigger("coke", 2);
+// store.trigger("cheese", 2.5);
+
+// store.remove("coke", fn1);
+// store.trigger("coke", 200);
+</script>
+
+<script type="text/javascript">
+// //A little More
+// //Subject
+// var store = {};
+// //a cache to store the observers(the callbacks from them)
+// store.clientList = []; //notice that this is an array of array since we want to let observer listen to different types of events.
+
+// //function to add observer , the "listen" function
+// store.addClient = function(key, fn) {
+// 	//use key to differentiate different events(news)
+// 	if (!this.clientList[key]) {
+// 		this.clientList[key] = [];
+// 	}
+// 		this.clientList[key].push(fn);
+// }
+
+// //notify the observers when sth happened
+// store.trigger = function() {
+// 	//from the arguments, get the type of the event!
+// 	var key = Array.prototype.shift.call(arguments);
+
+// 	//get the array of observer callbacks corresponding to that event
+// 	var fns = this.clientList[key];
+
+// 	if (!fns || fns.length == 0) {
+// 		return false;
+// 	}
+
+// 	for (var i = 0, fn; i < fns.length; i++) {
+// 		fn = fns[i];
+// 		fn.apply(this, arguments);
+// 	}
+// }
+
+// //observer, here we call it Client
+// function Client(name) {
+// 	this.name = name;
+// }
+
+// Client.prototype.getPrice = function(price) {
+// 	console.log(this.name + " receives price is " + price);
+// }
+
+// var tom = new Client("Tom");
+// var jerry = new Client("Jerry");
+
+// //add observer
+// store.addClient("coke", tom.getPrice.bind(tom));
+// store.addClient("cheese", jerry.getPrice.bind(jerry));
+
+// //notify the observer
+// store.trigger("coke", 2);
+// store.trigger("cheese", 2.5);
+
+// //notice the difference from callback
+// (function success() {
+// 	data = {
+// 		coke: 2,
+// 		cheese, 2.5
+// 	}
+// 	tom.getPrice(data["coke"]);
+// 	jerry.getPrice(data["cheese"]);
+
+// })();
 </script>
 
 

@@ -36,10 +36,9 @@ subject.addEventListener("click", obj2.notify.bind(obj2));
 ```
 
 ### A little more (self-defined event)
-Below is an example of self-defined event with a sepecific type
+Below is an example of self-defined event with a specific type.
 
 ```javascript
-//Self-defined
 //Subject
 var store = {};
 //a cache to store the observers(the callbacks from them)
@@ -77,8 +76,8 @@ function Client(name) {
 	this.name = name;
 }
 
-Client.prototype.getPrice = function(item, price) {
-	console.log(this.name + " receives the price of " + item + " is " + price);
+Client.prototype.getPrice = function(price) {
+	console.log(this.name + " receives price is " + price);
 }
 
 var tom = new Client("Tom");
@@ -92,3 +91,158 @@ store.addClient("cheese", jerry.getPrice.bind(jerry));
 store.trigger("coke", 2);
 store.trigger("cheese", 2.5);
 ```
+Notice it's difference from a traditional callback
+```javascript
+(function success() {
+	data = {
+		coke: 2,
+		cheese, 2.5
+	}
+	tom.getPrice(data["coke"]);
+	jerry.getPrice(data["cheese"]);
+
+})();
+```
+For a callback mode, you need to call the callback function of each observer by yourself(store). The subject needs to know about the observers and even the details such as the name of the specific callback function. For an observer mode, subject only needs to trigger the event, then it will launch the callbacks from the observers automatically. The subject does not need to know anything about the observer.
+
+### A complete guide
+Make the event listen system a function.
+
+```javascript
+//Make the observer function as an object, so it can be applied to different subjects who implement it (like an interface in java)
+//we call it event object/interface
+var event = {
+	clientList: [], //previously, the clientList is an property of a specific subject
+	listen: function(key, fn) {
+		//key is the type of the event, fn is the callback from observer
+		if (!this.clientList[key]) {
+			this.clientList[key] = [];
+		}
+		this.clientList[key].push(fn);
+	}, //the listen function is the same as the addClient
+	trigger: function() {
+		var key = Array.prototype.shift.call(arguments);
+			fns = this.clientList[key];
+
+		if (!fns || fns.length == 0) {
+			return false;
+		}
+
+		for (var i = 0; i < fns.length; i++) {
+			var fn = fns[i];
+			fn.apply(this, arguments); //yes, we apply 'this' when trigger the observer's callback. 'this' means the subject here. That's why when the button trigger the event, you will find the the callback function from listener refers 'this' to the button!!!
+		}
+	},
+	remove: function(key, fn) {
+		//a method to stop a callback from observer
+		//get the callback list corresponding to the key
+		var fns = this.clientList[key];
+		console.log("here");
+
+		console.log(fns);
+
+		if (!fns || fns.length == 0) {
+			return false;
+		}
+
+		if (!fn) {
+			//if no specifc call is defined, delete all the callbacks corresponding to the key
+			fns && (fns.length = 0); //ensure fns still exit at this point
+		} else {
+			for (var l = fns.length - 1; l >=0; l--) {
+				//backward check
+				var _fn = fns[l];
+				if ( _fn === fn) {
+					console.log("find it", fn, fns[l]);
+					fns.splice(l, 1);
+				}
+			}
+		}
+	}
+}
+
+//define an installEvent function to implement the event obj, which is similar to "implements" in java
+function installEvent(obj) {
+	//get all properties of event obj
+	for (var key in event) {
+		obj[key] = event[key];
+	}
+}
+```
+The above example has some defaults. For example, observers(tom and jerry) need to know the name of the subject(store) so as to listen to a specific event. Besides, each subject(store) needs to maintain its own clientList.
+//To solve that, we can create a middleware, which is a global Event system.
+
+```javascript
+var Event = (function(){
+	//create a closure using IIFE(immediately-invoked function)
+	var clientList = {}, //clientList as a map
+		listen,
+		trigger,
+		remove;
+
+	listen = function(key, fn) {
+		if (!clientList[key]) {
+			clientList[key] = [];
+		}
+		clientList[key].push(fn);
+	};
+
+	trigger = function() {
+		var key = Array.prototype.shift.call(arguments),
+			fns = clientList[key];
+		if (!fns || fns.length === 0) {
+			return false;
+		}
+		for (var i = 0; i < fns.length; i++) {
+			var fn = fns[i];
+			fn.apply(this, arguments);
+		}
+	};
+
+	remove = function(key, fn) {
+		var fns = clientList[key];
+		if (!fns) {
+			return false;
+		}
+		if (!fn) {
+			fns && (fns.length = 0);
+		} else {
+			for (var l = fns.length; l >= 0; l--) {
+				if (fns[l] === fn) {
+					fns.splice(l, 1);
+				}
+			}
+		}
+	}
+
+	return {
+		listen: listen,
+		trigger: trigger,
+		remove: remove
+	}
+})();
+
+var store = {
+	"coke": 2.5,
+	"cheese": 2
+}
+
+var tom = {
+	name: "tom",
+	getCokePrice: function(price) {
+		console.log("coke price is " + price)
+	}
+}
+
+//now the subject and observer don't need to know each other
+var eventName = "coke";
+Event.listen("coke", tom.getCokePrice.bind(tom));
+Event.trigger("coke", store["coke"]);
+```
+However, the global middleware has some defaults as well. The relationship between observer and subject is hided behind the scene, and thus, we might lose the control over data flow when the system becomes big, and maintenance can be difficult.
+
+I believe this has sth to do with the traditional MVC model and the newly occurred model. However, at this moment, I am not quite sure about it. Is the flux model more like a global event system? Let's see...
+
+Another consideration here is: what if the event is triggered before an observer listens to that subject? This is possible in real world application. For example, say we need to load the user information to render an naviagtion bar (such as the avatar) of the page. We use ajax to fetch the user's information when the user login. When the ajax call successes, an event will be triggerred so that the navigation bar, which listens to this ajax call, can start render itself. However, there is a chance that when the ajax call successes and triggers the event, the code of the navigation bar hasn't be loaded completely, and it hasn't listened to the subject(ajax call). 
+
+In this case, the solution is that when the event is triggered, but no observer has listenered to it, the subject should store the event trigger function in a stack. Later, when the subject gets a new observer, it can traverse the stack and trigger the event.
