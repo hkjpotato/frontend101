@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minimal JS front-end App Example</title>
+  <style>
+    ol#todos > li.completed {
+      text-decoration: line-through;
+    }
+  </style>
+  <script src="src/ctrl/init.js"></script>
+  <script src="src/model/Todo.js"></script>
+  <script src="src/view/readTodos.js"></script>
+  <script>
+   window.addEventListener( "load", todoApp.view.readTodos.setupUserInterface);
+  </script>
+</head>
+<body>
+  <h1>TodoApp: read all todos</h1>
+  <ol id="todos">
+  </ol>
+  <nav><a href="index.html">Back to main menu</a></nav>
+</body>
+</html>

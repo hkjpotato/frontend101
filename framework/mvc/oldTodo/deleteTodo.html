@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minimal JS front-end App Example</title>    
+  <script src="src/ctrl/init.js"></script>
+  <script src="src/model/Todo.js"></script>
+  <script src="src/view/deleteTodo.js"></script>
+  <script>
+   window.addEventListener("load", todoApp.view.deleteTodo.setupUserInterface);
+  </script>
+</head>
+<body>
+  <h1>TodoApp: delete an existing todo</h1>
+  <form id="Todo">
+    <p>
+      <label>Select Todo
+        <select name="selectTodo"><option value=""> --- </option></select>
+      </label>
+    </p>
+    <p><button type="button" name="commit">Delete</button></p>
+  </form>
+  <nav><a href="index.html">Back to main menu</a></nav>
+</body>
+</html>

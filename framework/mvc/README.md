@@ -5,10 +5,11 @@ Here are some simple examples for MVC in plain JS from "Hello World" to "TodoMVC
 ### The Basic
 Below is the simplest example of MVC I have found from StackOverflow By [Raynos](http://stackoverflow.com/questions/8497833/hello-world-in-mvc-pattern)
 
-  html
+#####html
 ```html
 <input id="myBtn" type="button" value="click"></input>
 ```
+
 #####javascript
 ```javascript
 var M = {}, V = {}, C = {};
@@ -39,35 +40,37 @@ the Model knows nothing of the View and the Controller
 the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."
 
 ### A little more
-The code above is improved with the Object-oriented design approach, which includes the idea of "class" and "object" for MVC. Standard accessors/mutators are introduced to the data layer (Model) to makes it look more similar to the general MVC framework. Notice the "bind" function when binding the callback to the button, since "this" is sensitive to the context. (Without the "bind" function, "this" is actually refering to the button not the controller when invoked);
+The code above is improved with the Object-oriented design approach, which includes the idea of "class" and "object". Notice the "bind" function when binding the callback to the button, since "this" is sensitive to the context. (Without the "bind" function, "this" is actually refering to the button, instead of the controller, when invoked);
 
+#####html
 ```html
 <input id="myBtn" type="button" value="click"></input>
 <span id="data"></span>
 ```
+
+#####javascript
 ```javascript
-//Define MVC classes
+//Define MVC
 var Model, View, Controller;
 
-Model = function() {
-	this.data = null;
+//database
+var Storage = {
+	data: "Hello World!"
 }
 
-Model.prototype.setData = function(data) {
-	this.data = data;
+Model = {
+	data: null,
+	fetchData: function() {
+		this.data = Storage["data"];
+	}
 }
 
-Model.prototype.getData = function() {
-	return this.data;
+View = {
+	render: function(data) {
+		document.getElementById("data").innerHTML = data;
+	}
 }
 
-View = function() {
-	this.data = document.getElementById("data");
-}
-
-View.prototype.update = function(M) {
-	this.data.innerHTML = M.getData();
-}
 
 Controller = function(M, V) {
 	this.model = M;
@@ -75,26 +78,27 @@ Controller = function(M, V) {
 }
 
 Controller.prototype.handleClick = function() {
-	console.log(this);
-	this.view.update(this.model);
+	//update model
+	this.model.fetchData();
+
+	//update view
+	this.view.render(this.model.data);
 }
 
-//create Objects
-var hwModel = new Model();
-hwModel.setData("Hello World");
-
-var hwView = new View();
-
-var hwController = new Controller(hwModel, hwView);
+//create Controller Object hwController
+var hwController = new Controller(Model, View);
 
 document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
 ```
+
+### Framework or Design Pattern
+After reading some materials, I got a little bit confused about whether MVC is a framework or a design pattern. To clearify that, I decide to focus on some popular [design patterns] first.
 
 #H1
 ##H2
 ###H3
 #H1
-Hello
+Hello View is not HTML!,View performs updating the HTML or other interface with data given.
 =======
 ```html
 <div></div>

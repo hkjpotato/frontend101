@@ -15,28 +15,129 @@ body {
 
 
 <script type="text/javascript">
-//Define MVC classes
+// //Define MVC classes
+// var Model, View, Controller;
+
+// Model = function() {
+// 	this.data = null;
+// }
+
+// Model.prototype.setData = function(data) {
+// 	this.data = data;
+// }
+
+// Model.prototype.getData = function() {
+// 	return this.data;
+// }
+
+// View = function() {
+// 	this.data = document.getElementById("data");
+// }
+
+// View.prototype.update = function(M) {
+// 	this.data.innerHTML = M.getData();
+// }
+
+// Controller = function(M, V) {
+// 	this.model = M;
+// 	this.view = V;
+// }
+
+// Controller.prototype.handleClick = function() {
+// 	console.log(this);
+// 	this.view.update(this.model);
+// }
+
+// //create Objects
+// var hwModel = new Model();
+// hwModel.setData("Hello World");
+
+// var hwView = new View();
+
+// var hwController = new Controller(hwModel, hwView);
+
+// document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
+</script>
+
+<script type="text/javascript">
+// var M = {}, V = {}, C = {};
+
+// //VERSION 1
+// M = {
+// 	data: null,
+// 	fetchData: function () {
+// 		this.data = "hello world"
+// 	}
+// }
+
+// C = {
+// 	handleClick : function() {
+// 		M.fetchData();
+//   		V.render(M.data);
+// 	}
+// }
+
+// V = {
+// 	setup: function() {
+// 		document.getElementById("myBtn").addEventListener("click", C.handleClick);
+// 	},
+// 	render : function(data) {
+// 		document.getElementById("data").innerHTML = data; 
+// 	}
+// }
+
+// V.setup();
+
+// //VERSION2
+// M = {
+// 	data: null,
+// 	fetchData: function() {
+// 		this.data = "hello world";
+// 	}
+// }
+
+// V = {
+// 	render: function(data) {
+// 		document.getElementById("data").innerHTML = data;
+// 	}
+// }
+
+// C = {
+// 	setup: function() {
+// 		document.getElementById("myBtn").addEventListener("click", this.handleClick);
+// 	},
+// 	handleClick : function() {
+// 		M.fetchData();
+// 		V.render(M.data);
+// 	}
+// }
+
+// C.setup();
+
+console.log("hah");
+
+
+//Define MVC
 var Model, View, Controller;
 
-Model = function() {
-	this.data = null;
+//database
+var Storage = {
+	data: "Hello World!"
 }
 
-Model.prototype.setData = function(data) {
-	this.data = data;
+Model = {
+	data: null,
+	fetchData: function() {
+		this.data = Storage["data"];
+	}
 }
 
-Model.prototype.getData = function() {
-	return this.data;
+View = {
+	render: function(data) {
+		document.getElementById("data").innerHTML = data;
+	}
 }
 
-View = function() {
-	this.data = document.getElementById("data");
-}
-
-View.prototype.update = function(M) {
-	this.data.innerHTML = M.getData();
-}
 
 Controller = function(M, V) {
 	this.model = M;
@@ -44,32 +145,17 @@ Controller = function(M, V) {
 }
 
 Controller.prototype.handleClick = function() {
-	console.log(this);
-	this.view.update(this.model);
+	//update model
+	this.model.fetchData();
+
+	//update view
+	this.view.render(this.model.data);
 }
 
-//create Objects
-var hwModel = new Model();
-hwModel.setData("Hello World");
-
-var hwView = new View();
-
-var hwController = new Controller(hwModel, hwView);
+//create Controller Object hwController
+var hwController = new Controller(Model, View);
 
 document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
-</script>
-
-<script type="text/javascript">
-// var M = {}, V = {}, C = {};
-
-// M.data = "Hello World";
-// V.render = function(M) { console.log(M.data); }
-
-// C.handleClick = function() {
-//   V.render(M);
-// }
-
-// document.getElementById("myBtn").addEventListener("click", C.handleClick);
 </script>
 
 
