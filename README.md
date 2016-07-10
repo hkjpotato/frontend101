@@ -43,6 +43,7 @@ JS is the key for front end development. Javascript basics: scope, closure, arra
 A deep understanding of framework is essential in making the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
   1. [MVC](./framework/mvc)
   2. [Flux]
+  
 #### Build Tool:
 
 Gulp, Webpack, Bower, Preprocessor, Testing, Git...
