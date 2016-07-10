@@ -92,7 +92,7 @@ document.getElementById("myBtn").addEventListener("click", hwController.handleCl
 ```
 
 ### Framework or Design Pattern
-After reading some materials, I got a little bit confused about whether MVC is a framework or a design pattern. To clearify that, I decide to focus on some popular [design patterns] first.
+After reading some materials, I got a little bit confused about whether MVC is a framework or a design pattern. To clearify that, I decide to focus on some popular [design patterns](../design%20pattern/observer%20pattern) first.
 
 #H1
 ##H2
@@ -100,10 +100,5 @@ After reading some materials, I got a little bit confused about whether MVC is a
 #H1
 Hello View is not HTML!,View performs updating the HTML or other interface with data given.
 =======
-```html
-<div></div>
-```
-	```html
-	<div></div>
-	```
+
 
