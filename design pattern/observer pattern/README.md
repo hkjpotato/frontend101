@@ -2,8 +2,7 @@ Observer Pattern
 =====================
 ### Illustration
 
-![illustration of oberser pattern](oberser.png)
-[illustration of oberser pattern](oberser.png)
+![illustration of oberser pattern](/obserser.png)
 
 
 ### The Basic
