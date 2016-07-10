@@ -8,12 +8,12 @@ Observer Pattern
 ### The Basic
 Below is a simple examples for Observer Pattern
 
-#####html
+--html
 ```html
 <input id="myBtn" type="button" value="click"></input>
 ```
 
-#####javascript
+-javascript
 ```javascript
 //the subject
 var subject = document.querySelector("#myBtn");
@@ -105,8 +105,8 @@ Notice it's difference from a traditional callback
 ```
 For a callback mode, you need to call the callback function of each observer by yourself(store). The subject needs to know about the observers and even the details such as the name of the specific callback function. For an observer mode, subject only needs to trigger the event, then it will launch the callbacks from the observers automatically. The subject does not need to know anything about the observer.
 
-### A complete guide
-Make the event listen system a function.
+### A complete implementation
+Make the event listen system an interface.
 
 ```javascript
 //Make the observer function as an object, so it can be applied to different subjects who implement it (like an interface in java)
@@ -169,8 +169,7 @@ function installEvent(obj) {
 	}
 }
 ```
-The above example has some defaults. For example, observers(tom and jerry) need to know the name of the subject(store) so as to listen to a specific event. Besides, each subject(store) needs to maintain its own clientList.
-//To solve that, we can create a middleware, which is a global Event system.
+The above example has some defaults. For example, observers(tom and jerry) need to know the name of the subject(store) so as to listen to a specific event. Besides, each subject(store) needs to maintain its own clientList. To solve that, we can create a middleware, which is a global Event system.
 
 ```javascript
 var Event = (function(){
@@ -241,7 +240,7 @@ Event.trigger("coke", store["coke"]);
 ```
 However, the global middleware has some defaults as well. The relationship between observer and subject is hided behind the scene, and thus, we might lose the control over data flow when the system becomes big, and maintenance can be difficult.
 
-I believe this has sth to do with the traditional MVC model and the newly occurred model. However, at this moment, I am not quite sure about it. Is the flux model more like a global event system? Let's see...
+I believe this has sth to do with the traditional MVC model and the newly occurred flux model. However, at this moment, I am not quite sure about it. Is the flux model more like a global event system? Let's see... (I will update it when I complete the MVC and Flux framework parts).
 
 Another consideration here is: what if the event is triggered before an observer listens to that subject? This is possible in real world application. For example, say we need to load the user information to render an naviagtion bar (such as the avatar) of the page. We use ajax to fetch the user's information when the user login. When the ajax call successes, an event will be triggerred so that the navigation bar, which listens to this ajax call, can start render itself. However, there is a chance that when the ajax call successes and triggers the event, the code of the navigation bar hasn't be loaded completely, and it hasn't listened to the subject(ajax call). 
 
