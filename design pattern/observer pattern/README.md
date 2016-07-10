@@ -8,12 +8,12 @@ Observer Pattern
 ### The Basic
 Below is a simple examples for Observer Pattern
 
---html
+html
 ```html
 <input id="myBtn" type="button" value="click"></input>
 ```
 
--javascript
+javascript
 ```javascript
 //the subject
 var subject = document.querySelector("#myBtn");
