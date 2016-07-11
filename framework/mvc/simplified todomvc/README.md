@@ -30,6 +30,7 @@ root
 ```
 
 Before you dive into it, there are some basic things you need to know to help understand it:
+
 	1. [javascript object]
 	2. [event delegation]
 	3. [IIFE] and [scope]
