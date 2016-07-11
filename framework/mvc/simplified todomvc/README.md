@@ -4,12 +4,12 @@ This is the simplified version of the Vanilla JS code from [todomvc.com](http://
 These are what I do to simplified them:
 
 1. Delete the uncessary git and node_modules file, move the css file to the root directory.
-2. Now the root directory only has three code files: html(index.html), css(index.css) and a js file for the javascript code.
-3. The js file contains app.js(to set up the app), and MVC files(controller.js, model.js, view.js) as well as a helpers file.
+2. Now the root directory only has three code files: html (index.html), css(index.css) and a js file for the javascript code.
+3. The js file contains app.js (to set up the app), and MVC files (controller.js, model.js, view.js) as well as a helpers file.
 4. The helpers file contains 
-	* helper.js(use to define methods for simplifying dom manipulation methdos such as querySelector, event registration, etc.).
-	* store.js(use to interact with database, here is the localStorage). 
-	* template.js(help the view.js to render html).
+	* helper.js (use to define methods for simplifying dom manipulation methdos such as querySelector, event registration, etc.).
+	* store.js (use to interact with database, here is the localStorage). 
+	* template.js (help the view.js to render html).
 
 
 After simplication, the file structure is:
