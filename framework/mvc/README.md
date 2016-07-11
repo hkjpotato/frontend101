@@ -99,7 +99,7 @@ The above code is clear since View, Model and Controller are separate objects. H
 document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
 ```
 
-I am not sure if this line of code should be regarded a global action to setup the app, or should I make it as a function of the Controller, or maybe the View? Overall, I am not sure who, M or V or C, should be in charge of registering the event, which is the key point of combining the UI and Model.
+I am not sure if this line of code should be regarded as a global action to setup the app, or should I make it as a function of the Controller, or maybe the View? Overall, I am not sure who, M or V or C, should be in charge of registering the event, which is the key point of combining the UI and Model.
 
 If you have the same confusion as me, maybe we are facing the same problem: whether MVC is a design pattern or a framework.
 
