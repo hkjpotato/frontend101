@@ -23,7 +23,7 @@ How it works?
 [Live Demo](http://codepen.io/hkjpotato/pen/yJPYBN)
 
 
-#####html
+#####html & css
 We have two mother divs with 3 child divs, when user click on the child div, we want to highlight it by changing its color to yellow for 1 second. We can use two approaches to do that:
 
 1. Attach event listener to each child div.
