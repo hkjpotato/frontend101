@@ -31,13 +31,13 @@ root
 
 Before you dive into it, there are some basic things you need to know to help understand it:
 
-	1. [javascript object]
-	2. [event delegation]
-	3. [IIFE] and [scope]
-	4. [localStorage]
-	5. [apply, call and bind methods]
-	6. [MVC basic]
-	7. [regex] and [escapeHTML]
+1. [javascript object]
+2. [event delegation]
+3. [IIFE] and [scope]
+4. [localStorage]
+5. [apply, call and bind methods]
+6. [MVC basic]
+7. [regex] and [escapeHTML]
 
 It will be good if you understand:
 
