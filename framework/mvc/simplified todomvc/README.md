@@ -39,6 +39,7 @@ Before you dive into it, there are some basic things you need to know to help un
 	7. [regex] and [escapeHTML]
 
 It will be good if you understand:
+
 1. [Observer pattern]
 2. [Browser events]
 
