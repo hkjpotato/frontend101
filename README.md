@@ -17,7 +17,7 @@ One challenge of learning front end development is that universities normally do
   5. [Build Tool](#build-tool)
   6. [Algorithm](#algorithm)
   7. [Server Side](#server-side)
-  8. [UI/UX](#ui&#92;ux)
+  8. [#UI&#47;UX](#UI&#47;UX)
   9. [Online Resource](#online-resource)
   10. [Know How](#know-how)
 
@@ -70,7 +70,7 @@ JS solutions to LeetCode Questions.
 NodeJS, Database...
 
 
-#### UI&#92;UX
+#### UI&#47;UX
 
 Making your website user friendly.
 
