@@ -9,16 +9,17 @@ One challenge of learning front end development is that universities normally do
 ## Table of Contents
 
   1. [Web in General](#web-in-general)
-  1. [HTML](#html)
-  1. [CSS](#css)
-  1. [Javascript](#js)
-  1. [Framework](#framework)
-  1. [Build Tool](#build-tool)
-  1. [Algorithm](#algorithm)
-  1. [Server Side](#server-side)
-  1. [UI/UX](#ui-ux)
-  1. [Online Resource](#online-resource)
-  1. [Know How](#know-how)
+  2. [HTML](#html)
+  3. [CSS](#css)
+  3. [Javascript](#js)
+  5. [Design Pattern](#design pattern)
+  4. [Framework](#framework)
+  5. [Build Tool](#build-tool)
+  6. [Algorithm](#algorithm)
+  7. [Server Side](#server-side)
+  8. [UI/UX](#ui&#92;ux)
+  9. [Online Resource](#online-resource)
+  10. [Know How](#know-how)
 
 
 ####  Web in General:
@@ -38,11 +39,23 @@ Even though developers are generally dealing with coding language like javascrip
 
 JS is the key for front end development. Javascript basics: scope, closure, array manipulation, callback ...
 
+#### Design Pattern:
+Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
+  1. Singleton
+  2. Observer Pattern
+  3. Delegate Pattern
+  4. Interactive Pattern
+
 #### Framework:
 
 A deep understanding of framework is essential in making the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
   1. [MVC](./framework/mvc)
+      1. Basic
+      2. Simplified TodoMVC
+      3. AngularJS TodoMVC
   2. [Flux]
+  3. [Redux]
+
   
 #### Build Tool:
 
@@ -57,7 +70,7 @@ JS solutions to LeetCode Questions.
 NodeJS, Database...
 
 
-#### UI UX
+#### UI&#92;UX
 
 Making your website user friendly.
 
