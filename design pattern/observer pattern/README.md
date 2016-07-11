@@ -1,39 +1,5 @@
 Observer Pattern
 =====================
-### Storey
-
-You are a poor store owner. And one day, Tom comes in and he says he want to buy a coke, but you have no coke in your store at this moment. So you tell Tom to leave his phone number, and you will give him a callback when you have some coke.
-
-_"My phone number is 4043211234, remember to call me when you have coke, I am thirsty to death!"_, said Tom.
-
-_"Ok, 4043211234, I will call you back."_
-
-
-A moment later, Jerry comes in and asks to buy some cheese, and again, you don't have any cheese to sail.
-
-_"My phone number is 4043212234, remember to call me when you have cheese, I am hungry to death"_, said Jerry.
-
-_"Ok, 4043212234, I will call you back."_
-
-And then, Mickey comes in, whose phone is 4043212234, and Donald comes in, whoes phone is 4043212231...
-
-And one day, you finally have some cheese and coke, you start to call them back, one by one.
-
-_"Ok, Tom want some coke, his number is 4043211234, Hi Tom blablabla"_. 
-
-_"Ok, Jerry want some cheese, his number is 4043212234, Hi Jerry blablabla"_.
-
-_"Ok, Mickey want some coke, his number is 404321... ah..maybe 1234. Hi Mickey, oh you are Tom? I am sorry..."_.
-
-_"Oh, I remember there is a guy, or a duck, called Donald, what does he want? And what's his number..404?? Holy ..."_.
-
-You becomes crazy now. You really don't want to remember so many phone numbers and make phone call back one by one by yourself.
-
-Finally, you make a decision, you setup a facebook(FB) public profile. Anyone interested in buying some goods from you can like you page. And once you have the goods are available, you just need to publish a status on FB telling people that you got them now and anyone who has liked your page can get noticed, which save your life.
-
-Remembering client's phone number and make callback by yourself is like the callback function, and it will ruin your life since you need to remeber the information (phone number of your customers). A facebook public profile is like a observer design pattern. It's a media between you and the one who is interested in buying goods from you. As a owner, you don't need to know anything about your customers. As the customers, they don't need to provide their personal information to you.
-
-
 ### Illustration
 
 ![illustration of oberser pattern](./observer.png)
