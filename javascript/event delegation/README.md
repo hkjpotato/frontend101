@@ -5,6 +5,7 @@ Event Delegation
 ![illustration of oberser pattern](./observer.png)
 
 Read the below two articles to help understand it:
+
 1. [JavaScript Event Delegation is Easier than You Think](https://www.sitepoint.com/javascript-event-delegation-is-easier-than-you-think/)
 2. [How JavaScript Event Delegation Works](https://davidwalsh.name/event-delegate)
 
