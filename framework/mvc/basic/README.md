@@ -25,19 +25,19 @@ document.getElementById("myBtn").addEventListener("click", C.handleClick);
 ```
 As Raynos mentioned:
 
-_"Controller (C) listens on some kind of interaction/event stream.
+_"Controller (C) listens on some kind of interaction/event stream._
 
-Model (M) is an abstraction of a data source.
+_Model (M) is an abstraction of a data source._
 
-View (V) knows how to render data from the Model.
+_View (V) knows how to render data from the Model._
 
-The Controller tells to View to do something with something from the Model.
+_The Controller tells to View to do something with something from the Model._
 
-In this example
+_In this example_
 
-the View knows nothing about the Model apart from it implements some interface
-the Model knows nothing of the View and the Controller
-the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."_
+_the View knows nothing about the Model apart from it implements some interface_
+_the Model knows nothing of the View and the Controller_
+_the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."_
 
 ### A little more
 The code above is improved with the Object-oriented design approach, which includes the idea of "class" and "object". Notice the "bind" function when binding the callback to the button, since "this" is sensitive to the context. (Without the "bind" function, "this" is actually refering to the button, instead of the controller, when invoked);
