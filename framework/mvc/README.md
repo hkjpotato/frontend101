@@ -93,7 +93,7 @@ document.getElementById("myBtn").addEventListener("click", hwController.handleCl
 ```
 
 ### Framework or Design Pattern
- The above code is clear since View, Model and Controller are separate objects. However, I am a little bit confused about the below code.
+The above code is clear since View, Model and Controller are separate objects. However, I am a little bit confused about the below code.
 
 ```javascript
 document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
@@ -105,7 +105,7 @@ If you have the same confusion as me, maybe we are facing the same problem: whet
 
 Thus, before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some ideas about [design patterns](../../design%20pattern) first.
 
- I think understanding design pattern, especially the [observer pattern]../../design%20pattern/observer%20pattern), can greatly help us answer the above questions, and understand the MVC as a framework better.
+ I think understanding design pattern, especially the [observer pattern](../../design%20pattern/observer%20pattern), can greatly help us answer the above questions, and understand the MVC as a framework better.
 
 #H1
 ##H2
