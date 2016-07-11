@@ -99,13 +99,13 @@ The above code is clear since View, Model and Controller are separate objects. H
 document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
 ```
 
-I am not sure if this line of code should be regarded a global action to setup the app, or should I make it as a function of the Controller, or maybe the View? Overall, I am not sure who, M or V or C, should be in charge of register the event, which is the key point of combining the UI and Model.
+I am not sure if this line of code should be regarded a global action to setup the app, or should I make it as a function of the Controller, or maybe the View? Overall, I am not sure who, M or V or C, should be in charge of registering the event, which is the key point of combining the UI and Model.
 
 If you have the same confusion as me, maybe we are facing the same problem: whether MVC is a design pattern or a framework.
 
-Thus, before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some ideas about [design patterns](../../design%20pattern) first.
+Thus, before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some basic ideas of [design patterns](../../design%20pattern) first.
 
- I think understanding design pattern, especially the [observer pattern](../../design%20pattern/observer%20pattern), can greatly help us answer the above questions, and understand the MVC as a framework better.
+ I think understanding design pattern, especially the [observer pattern](../../design%20pattern/observer%20pattern), can greatly help us answer the above questions (event registration), and understand the MVC as a framework better.
 
 #H1
 ##H2
