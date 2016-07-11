@@ -57,7 +57,7 @@ var Model, View, Controller;
 var Storage = {
 	data: "Hello World!"
 }
-
+//Model, only in charge of data & business logic part.
 Model = {
 	data: null,
 	fetchData: function() {
@@ -65,13 +65,14 @@ Model = {
 	}
 }
 
+//View, here only in charge of rendering the UI
 View = {
 	render: function(data) {
 		document.getElementById("data").innerHTML = data;
 	}
 }
 
-
+//Controller, connect the view and model
 Controller = function(M, V) {
 	this.model = M;
 	this.view = V;
@@ -92,9 +93,19 @@ document.getElementById("myBtn").addEventListener("click", hwController.handleCl
 ```
 
 ### Framework or Design Pattern
-After reading some materials, I got a little bit confused about whether MVC is a framework or a design pattern. To clearify that, I decide to focus on some popular [design patterns](../../design%20pattern/observer%20pattern) first.
+ The above code is clear since View, Model and Controller are separate objects. However, I am a little bit confused about the below code.
 
-Before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some ideas about [design patterns](../../design%20pattern/observer%20pattern) first. Personally, I got confused about who should trigger the view event, who should be in charge of attach the event listener, what should be update, and the role of the controller. I think understanding design pattern like observer pattern can greatly help us understand the MVC.
+```javascript
+document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
+```
+
+I am not sure if this line of code should be regarded a global action to setup the app, or should I make it as a function of the Controller, or maybe the View? Overall, I am not sure who, M or V or C, should be in charge of register the event, which is the key point of combining the UI and Model.
+
+If you have the same confusion as me, maybe we are facing the same problem: whether MVC is a design pattern or a framework.
+
+Thus, before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some ideas about [design patterns](../../design%20pattern) first.
+
+ I think understanding design pattern, especially the [observer pattern]../../design%20pattern/observer%20pattern), can greatly help us answer the above questions, and understand the MVC as a framework better.
 
 #H1
 ##H2
