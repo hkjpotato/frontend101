@@ -12,12 +12,12 @@ One challenge of learning front end development is that universities normally do
   2. [HTML](#html)
   3. [CSS](#css)
   3. [Javascript](#js)
-  5. [Design Pattern](#design pattern)
+  5. [Design Pattern](#design-pattern)
   4. [Framework](#framework)
   5. [Build Tool](#build-tool)
   6. [Algorithm](#algorithm)
   7. [Server Side](#server-side)
-  8. [UI&#47;UX](#ui&#47;ux)
+  8. [UI&#47;UX](#uiux)
   9. [Online Resource](#online-resource)
   10. [Know How](#know-how)
 
@@ -70,7 +70,7 @@ JS solutions to LeetCode Questions.
 NodeJS, Database...
 
 
-#### UI&#47;UX:
+#### UI/UX:
 
 Making your website user friendly.
 
