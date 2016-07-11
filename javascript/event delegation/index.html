@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #f5f5f5;
+  color: #4d4d4d;
+  font-weight: 300;
+}
+
+.mother {
+	width: 400px;
+	height: 400px;
+	background-color: pink;
+	border: 1px dotted grey;
+}
+.mother>.child {
+	width: 350px;
+	height: 350px;
+	background-color: grey;
+	border: 1px solid black;
+	margin: 10px;
+}
+
+.mother>.child>.grandChild {
+	width: 100px;
+	height: 100px;
+	background-color: red;
+	border: 1px solid black;
+	margin: 10px;
+}
+
+</style>
+<body>
+<div class="mother">
+	mother
+	<div class="child">child
+		<div class="grandChild">grand child1</div>
+		<div class="grandChild">grand child2</div>
+	</div>
+</div>
+<span id="data"></span>
+<script type="text/javascript">
+	var mother = document.querySelector(".mother");
+	var child = document.querySelector(".child");
+	var grandChildren = document.querySelectorAll(".grandChild");
+	//create an array to store all elements
+	var divs = [];
+	divs.push(mother);
+	divs.push(child);
+	Array.prototype.forEach.call(grandChildren, function(grandChild) {
+		divs.push(grandChild);
+	});
+
+	//attach click event listener to each element
+	divs.forEach(function(div) {
+		div.addEventListener("click", function() {
+			console.log(this.getAttribute("class") + " is being clicked");
+		});
+	});
+
+	/*if you click on on of the grand child div, this is what you get from console
+		grandChild is being clicked
+		child is being clicked
+		mother is being clicked
+	*/
+</script>
+<script type="text/javascript">
