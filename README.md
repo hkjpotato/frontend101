@@ -17,7 +17,7 @@ One challenge of learning front end development is that universities normally do
   5. [Build Tool](#build-tool)
   6. [Algorithm](#algorithm)
   7. [Server Side](#server-side)
-  8. [UI&#47;UX](#UI&#47;UX)
+  8. [UI&#47;UX](#ui&#47;ux)
   9. [Online Resource](#online-resource)
   10. [Know How](#know-how)
 
@@ -39,7 +39,7 @@ Even though developers are generally dealing with coding language like javascrip
 
 JS is the key for front end development. Javascript basics: scope, closure, array manipulation, callback ...
 
-#### Design Pattern:
+#### Design&#32;Pattern:
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
   1. Singleton
   2. Observer Pattern
@@ -70,7 +70,7 @@ JS solutions to LeetCode Questions.
 NodeJS, Database...
 
 
-#### UI&#47;UX
+#### UI&#47;UX:
 
 Making your website user friendly.
 
