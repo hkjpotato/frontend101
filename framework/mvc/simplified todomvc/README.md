@@ -2,6 +2,7 @@
 This is the simplified version of the Vanilla JS code from [todomvc.com](http://todomvc.com/). I believe this is the most simplified version you can find on the web. The original [source code](https://github.com/tastejs/todomvc/tree/gh-pages/examples/vanillajs) includes some unnecessary files(to make it works on the browser), such as node_modules and test files.
 
 These are what I do to simplified them:
+
 1. Delete the uncessary git and node_modules file, move the css file to the root directory.
 2. Now the root directory only has three code files: html(index.html), css(index.css) and a js file for the javascript code.
 3. The js file contains app.js(to set up the app), and MVC files(controller.js, model.js, view.js) as well as a helpers file.
@@ -25,6 +26,7 @@ root
 ```
 
 Before you dive into it, there are some basic things you need to know to help understand it:
+
 1. [javascript object]
 2. [event delegation]
 3. [IIFE] and [scope]
