@@ -61,7 +61,7 @@ Before going into framework such as MVC and Flux, it is better to know the basic
   * Observer Pattern
   * Delegation Pattern
   * Iterator Pattern
-  * Comman Pattern
+  * Command Pattern
 
 #### Framework:
 
