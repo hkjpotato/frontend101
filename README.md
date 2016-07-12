@@ -30,10 +30,10 @@ How Browser works, Performance...
 #### HTML:
 
 Understand the basic of HTML as well as new technology of the HTML5 is a key to manipulate the DOM.
-  * EscapeHTML
   * Semantic
-  * Cookie, sessionStorage and localStorage
   * Attributes
+  * EscapeHTML
+  * Cookie, sessionStorage and localStorage
   * Template
 
 #### CSS:
