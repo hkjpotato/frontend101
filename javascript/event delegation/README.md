@@ -117,7 +117,6 @@ mother2.addEventListener("click", function(e) {
 The event delegation does has some pros and cons, and I quote Andrew's summary here:
 
 Pros:
-
  * __There are less event handlers to setup and reside in memory__. This is the big one; better performance and less crashing.
  * There’s no need to re-attach handlers after a DOM update. If your page content is generated dynamically, via Ajax for example, you don’t need to add and remove event handlers as elements are loaded or unloaded.
 
