@@ -24,37 +24,53 @@ One challenge of learning front end development is that universities normally do
 
 ####  Web in General:
 
-How Browser works, Performance, AJAX ...
+How Browser works, Performance...
+  * How broswer works
 
 #### HTML:
 
 Understand the basic of HTML as well as new technology of the HTML5 is a key to manipulate the DOM.
+  * EscapeHTML
+  * Semantic
+  * Cookie, sessionStorage and localStorage
+  * Attributes
+  * Template
 
 #### CSS:
 
 Even though developers are generally dealing with coding language like javascript, understanding how the css layout works is essential in making your UI works as desired. Besides, CSS is also important in creating responsive web so it can fit in different screen size.
-
+  * Box model
+  * How to center an div
+  * Responsive web
+  * Flex
+  * CSS animation
 
 #### Javascript:
 
 JS is the key for front end development. Javascript basics: scope, closure, array manipulation, callback ...
+  * Object
+  * Scope
+  * Array mainipulation
+  * Apply, call and bind
+  * IIFE
+  * Asynchronous
 
 #### Design&#32;Pattern:
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
-  1. Singleton
-  2. Observer Pattern
-  3. Delegate Pattern
-  4. Interactive Pattern
+  * Singleton
+  * Observer Pattern
+  * Delegate Pattern
+  * Interactive Pattern
 
 #### Framework:
 
 A deep understanding of framework is essential in making the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
-  1. [MVC](./framework/mvc)
+  * [MVC](./framework/mvc)
       1. Basic
       2. Simplified TodoMVC
       3. AngularJS TodoMVC
-  2. [Flux]
-  3. [Redux]
+  * [Flux]()
+  * [Redux]()
 
   
 #### Build Tool:
@@ -73,6 +89,9 @@ NodeJS, Database...
 #### UI/UX:
 
 Making your website user friendly.
+  * UX principles
+  * User Study Methods
+  * Prototyping
 
 #### Online Resource
 
