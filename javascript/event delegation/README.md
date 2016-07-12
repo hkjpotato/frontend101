@@ -114,3 +114,34 @@ mother2.addEventListener("click", function(e) {
 });
 ```
 
+The event delegation does has some pros and cons, and I quote Andrew's summary here:
+
+Pros:
+-__There are less event handlers to setup and reside in memory__. This is the big one; better performance and less crashing.
+-There’s no need to re-attach handlers after a DOM update. If your page content is generated dynamically, via Ajax for example, you don’t need to add and remove event handlers as elements are loaded or unloaded.
+
+Cons:
+-There’s a risk your event management code could become a performance bottleneck, so keep it as lean as possible.
+-Not all events bubble. The __blur, focus, load and unload__ events don’t bubble like other events. The blur and focus events can actually be accessed using the capturing phase (in browsers other than IE) instead of the bubbling phase but that’s a story for another day.
+-You need caution when managing some mouse events. If your code is handling the mousemove event you are in serious risk of creating a performance bottleneck because the mousemove event is triggered so often. The mouseout event has a quirky behaviour that is difficult to manage with event delegation.
+
+Notice the second point of the cons: not all event can bubble (```event.bubbles == false```). This is why in the vanillas js code for todoMVC, you can see it actually set the useCapture to be true for focus and blur event so as to capture the event.
+
+```javascript
+	window.$delegate = function (target, selector, type, handler) {
+		function dispatchEvent(event) {
+			var targetElement = event.target;
+			var potentialElements = window.qsa(selector, target);
+			var hasMatch = Array.prototype.indexOf.call(potentialElements, targetElement) >= 0;
+
+			if (hasMatch) {
+				handler.call(targetElement, event);
+			}
+		}
+
+		// https://developer.mozilla.org/en-US/docs/Web/Events/blur
+		var useCapture = type === 'blur' || type === 'focus'; //if the event is blur or focus, use capturing stage to catch the event.
+
+		window.$on(target, type, dispatchEvent, useCapture);
+	};
+```
