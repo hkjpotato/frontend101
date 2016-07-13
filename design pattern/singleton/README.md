@@ -210,7 +210,7 @@ myApp.namespace = function(name) {
 myApp.namespace("event");
 myApp.namespace("dom.style");
 ```
-Oh, here an interesting quetsion will be how to get all names from the object. This is a typical depth-first Search(DFS) question, below is the solution, for more information, go to my link on [Algorithim].
+Oh, here an interesting quetsion to ask is how to get all names from the object. This is a typical depth-first Search(DFS) question, below is the solution, for more information, you can check the link on [Algorithim].
 ```javascript
 var names = [];
 function dfs(obj, result, name) {
