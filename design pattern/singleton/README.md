@@ -268,9 +268,9 @@ document.getElementById("loginBtn").onclick = function() {
 	loginWindow.style.display = "block";
 }
 ```
-This approach is not good since sometimes user does not needs to login, and the dom node, which always exits, is a waste.
+This approach is not good since sometimes user does not need to login, and the dom node, which always exits, is a waste.
 
-Let's change the code so that the window will only be created when the user click on the "log in" button.
+Let's change the code so that the window will only be created once when the user click on the "log in" button.
 
 We use the idea of closure here again
 ```javascript
