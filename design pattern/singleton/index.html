@@ -7,266 +7,369 @@ body {
   color: #4d4d4d;
   font-weight: 300;
 }
+
+#login {
+	margin: 20px auto;
+	width: 300px;
+	height: 200px;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 5px 10px rgba(0,0,0,.05),0 5px 5px rgba(0,0,0,.08),0 7px 10px rgba(0,0,0,.09),0 22px 22px rgba(0,0,0,.05);
+	text-align: center;
+	vertical-align: middle;
+	line-height: 200px;
+}
+
+input[type="button"] {
+	display: block;
+	margin: auto;
+}
 </style>
 <body>
-<input id="myBtn" type="button" value="click"></input>
-<span id="data"></span>
+<input id="loginBtn" type="button" value="Log in"></input>
+
+<input id="bindBtn" type="button" value="Binding"></input>
+
 <script type="text/javascript">
-//Make it global
-//The previous example has some defaults. For example, observers(tom and jerry) need to know the name of the subject(store) so as to listen to a specific event. Besides, each subject(store) needs to maintain its own clientList.
-//To solve that, we can create a middleware, which is a global Event system.
+//Lazy-loaded Singleton in JS
+/*
+ Singleton initialized on Demand
+*/
+//Bad Practice, create it when page loaded, and then hide it.
+// var loginWindow = (function() {
+// 	var div = document.createElement("div");
+// 	div.innerHTML = "Login Window";
+// 	div.style.display = "none";
+// 	div.setAttribute("id", "login");
+// 	document.body.appendChild(div);
+// 	return div;
+// })();
 
-var Event = (function(){
-	//create a closure using IIFE(immediately-invoked function)
-	var clientList = {}, //clientList as a map
-		listen,
-		trigger,
-		remove;
 
-	listen = function(key, fn) {
-		if (!clientList[key]) {
-			clientList[key] = [];
-		}
-		clientList[key].push(fn);
-	};
+// document.getElementById("loginBtn").onclick = function() {
+// 	loginWindow.style.display = "block";
+// }
 
-	trigger = function() {
-		var key = Array.prototype.shift.call(arguments),
-			fns = clientList[key];
-		if (!fns || fns.length === 0) {
-			return false;
-		}
-		for (var i = 0; i < fns.length; i++) {
-			var fn = fns[i];
-			fn.apply(this, arguments);
-		}
-	};
+//This approach is not good since sometimes user does not needs to login, and the dom node, which always exits, is a waste.
 
-	remove = function(key, fn) {
-		var fns = clientList[key];
-		if (!fns) {
-			return false;
-		}
-		if (!fn) {
-			fns && (fns.length = 0);
-		} else {
-			for (var l = fns.length; l >= 0; l--) {
-				if (fns[l] === fn) {
-					fns.splice(l, 1);
-				}
-			}
-		}
+
+//Let's change the code so that the window will only be created when the user click on the "log in" button.
+//We use the idea of closure here again
+// var createLoginWindow = (function() {
+// 	var div;
+// 	return function() {
+// 		if ( !div ) {
+// 			div = document.createElement("div");
+// 			div.innerHTML = "Login Window";
+// 			div.style.display = "none";
+// 			div.setAttribute("id", "login");
+// 			document.body.appendChild(div);
+// 		}
+// 		return div;
+// 	}
+// })();
+
+// document.getElementById("loginBtn").onclick = function() {
+// 	var loginWindow = createLoginWindow();
+// 	loginWindow.style.display = "block";
+// }
+
+// This looks better, but again we are facing the same problems: the createLoginWindow is in charge of two functions, checking singleton and create new object. As mentioned, we want to separate them.
+
+/* logic for checking singleton
+	var obj
+	if ( !obj ) {
+		obj = xxx
 	}
+*/
 
-	return {
-		listen: listen,
-		trigger: trigger,
-		remove: remove
-	}
-})();
-
-var store = {
-	"coke": 2.5,
-	"cheese": 2
-}
-
-var tom = {
-	name: "tom",
-	getCokePrice: function(price) {
-		console.log("coke price is " + price)
-	}
-}
-
-//now the subject and observer don't need to know each other
-var eventName = "coke";
-Event.listen("coke", tom.getCokePrice.bind(tom));
-Event.trigger("coke", store["coke"]);
-
-</script>
-<script type="text/javascript">
-// //Make the observer function as an object, so it can be applied to different subjects who implement it (like an interface in java)
-// //we call it event object/interface
-// var event = {
-// 	clientList: [], //previously, the clientList is an property of a specific subject
-// 	listen: function(key, fn) {
-// 		//key is the type of the event, fn is the callback from observer
-// 		if (!this.clientList[key]) {
-// 			this.clientList[key] = [];
-// 		}
-// 		this.clientList[key].push(fn);
-// 	}, //the listen function is the same as the addClient
-// 	trigger: function() {
-// 		var key = Array.prototype.shift.call(arguments);
-// 			fns = this.clientList[key];
-
-// 		if (!fns || fns.length == 0) {
-// 			return false;
-// 		}
-
-// 		for (var i = 0; i < fns.length; i++) {
-// 			var fn = fns[i];
-// 			fn.apply(this, arguments); //yes, we apply 'this' when trigger the observer's callback. 'this' means the subject here. That's why when the button trigger the event, you will find the the callback function from listener refers 'this' to the button!!!
-// 		}
-// 	},
-// 	remove: function(key, fn) {
-// 		//a method to stop a callback from observer
-// 		//get the callback list corresponding to the key
-// 		var fns = this.clientList[key];
-// 		console.log("here");
-
-// 		console.log(fns);
-
-// 		if (!fns || fns.length == 0) {
-// 			return false;
-// 		}
-
-// 		if (!fn) {
-// 			//if no specifc call is defined, delete all the callbacks corresponding to the key
-// 			fns && (fns.length = 0); //ensure fns still exit at this point
-// 		} else {
-// 			for (var l = fns.length - 1; l >=0; l--) {
-// 				//backward check
-// 				var _fn = fns[l];
-// 				if ( _fn === fn) {
-// 					console.log("find it", fn, fns[l]);
-// 					fns.splice(l, 1);
-// 				}
-// 			}
-// 		}
+// //Below is the general code for getSinglton
+// var getSinglton = function(fn) {
+// 	var result;
+// 	return function() {
+// 		return result || (result = fn.apply(this, arguments));
 // 	}
 // }
 
-// //define an installEvent function to implement the event obj, which is similar to "implements" in java
-// function installEvent(obj) {
-// 	//get all properties of event obj
-// 	for (var key in event) {
-// 		obj[key] = event[key];
+// // fn is the function we pass in as a parameter, its duty is to create the object, such as createLoginWindow, createXhr...
+
+// var createLoginWindow = function() {
+// 	var div = document.createElement("div");
+// 	div.innerHTML = "Login Window";
+// 	div.style.display = "none";
+// 	div.setAttribute("id", "login");
+// 	document.body.appendChild(div);
+// 	return div;
+// }
+
+
+
+// var createSingletonLoginWindow = getSinglton(createLoginWindow);
+// document.getElementById("loginBtn").onclick = function() {
+// 	var loginWindow = createSingletonLoginWindow();
+// 	loginWindow.style.display = "block";
+// }
+
+// //What's more, getSinglton can also be used to bind the event listener only once.
+// var bindEvent = getSinglton(function() {
+// 	document.getElementById("bindBtn").addEventListener("click", function() {
+// 		console.log("click");
+// 	});
+// 	return true;
+// });
+
+// var render = function() {
+// 	console.log("rendering...");
+// 	bindEvent();
+// }
+
+// render();
+// render();
+// render();
+// // you can see even though we call rendering 3 times, only one event listener has been bined to the Binding button 
+</script>
+<script type="text/javascript">
+// We can further improve it by proxy
+// We first make the init function separate from the checking function
+
+// //I only in charge of init now
+// var CreateLoginDiv = function(html) {
+// 	this.html = html;
+// 	this.init();
+// }
+
+// CreateLoginDiv.prototype.init = function() {
+// 	var div = document.createElement('div');
+// 	div.innerHTML = this.html;
+// 	document.body.appendChild(div);
+// }
+
+// //Then we can introduce the proxy to do the checking function
+// var ProxySingletonCreateLoginDiv = (function() {
+// 	var instance;
+// 	return function(html) {
+// 		if (!instance) {
+// 			instance = new CreateLoginDiv(html);
+// 		}
+// 		return instance;
+// 	}
+// })();
+
+// you can use the proxy as constructor, though what it returns is technically not created ("new") by itself, but another constructor (CreateLoginDiv).
+// var a = new ProxySingletonCreateLoginDiv("Twitter Login");
+// var b = new ProxySingletonCreateLoginDiv("Another Twitter Login");
+
+// if (a === b) {console.log(true)};
+
+// For more information about proxy, visit the [Proxy Pattern].
+
+// The above code you see is more like the tradition OO language such as Java, where object always comes from class. However, javascript is class-free. You can simply make an object without class, Thus we don't need to follow the traditional OO style.
+// Remember, the key of Singleton is to ensure there is only one instantiation, and provide global access to it.
+// As a result, a singleton in js can be as simple as declaring a global variable
+// var a = {};
+// //However, we all know that global variable is not good. It might pollute our namespace, and can be easily overwritten by local variables. To solve it:
+// //1. Use proper namespace
+// var namespace1 = {
+// 	a: function() {
+// 		console.log("hello world by ns1");
+// 	},
+// 	b: function() {
+// 		console.log("goodbye world by ns1");
 // 	}
 // } 
+// //or do it dynamically (quoted from "Object-Oriented Javascript")
+// var myApp = {};
 
-// //Test
-// var store = {};
-// installEvent(store);
+// myApp.namespace = function(name) {
+// 	//e.g name = "store.food.meat"
+// 	var parts = name.split("."); //parts = ["store", "food", "meat"]
+// 	var current = myApp;
+//  	// parts.forEach(function(attr) {
+//  	// 	if ( !current[attr]) {
+//  	// 		current[attr] = {}
+//  	// 	}
+//  	// 	current = current[attr];
+//  	// });
 
-// //observer, here we call it Client
-// function Client(name) {
-// 	this.name = name;
+//  	for (var i in parts) {
+//  		if (!current[ parts[i] ]) {
+//  			current[ parts[i] ] = {};
+//  		}
+//  		current = current[ parts[i] ];
+//  	}
 // }
 
-// Client.prototype.getPrice = function(price) {
-// 	console.log(this.name + " get price " + price);
-// }
 
-// var tom = new Client("Tom");
-// var jerry = new Client("Jerry");
+// myApp.namespace("event");
+// myApp.namespace("dom.style");
+// myApp.namespace("dom.style.width");
+// myApp.namespace("dom.style.height");
 
-// //add observer
-// store.listen("cheese", jerry.getPrice.bind(jerry));
-// store.listen("coke", fn1 = tom.getPrice.bind(tom));
 
-// //notify the observer
-// store.trigger("coke", 2);
-// store.trigger("cheese", 2.5);
+// console.log(myApp);
 
-// store.remove("coke", fn1);
-// store.trigger("coke", 200);
-</script>
-
-<script type="text/javascript">
-// //A little More
-// //Subject
-// var store = {};
-// //a cache to store the observers(the callbacks from them)
-// store.clientList = []; //notice that this is an array of array since we want to let observer listen to different types of events.
-
-// //function to add observer , the "listen" function
-// store.addClient = function(key, fn) {
-// 	//use key to differentiate different events(news)
-// 	if (!this.clientList[key]) {
-// 		this.clientList[key] = [];
-// 	}
-// 		this.clientList[key].push(fn);
-// }
-
-// //notify the observers when sth happened
-// store.trigger = function() {
-// 	//from the arguments, get the type of the event!
-// 	var key = Array.prototype.shift.call(arguments);
-
-// 	//get the array of observer callbacks corresponding to that event
-// 	var fns = this.clientList[key];
-
-// 	if (!fns || fns.length == 0) {
-// 		return false;
-// 	}
-
-// 	for (var i = 0, fn; i < fns.length; i++) {
-// 		fn = fns[i];
-// 		fn.apply(this, arguments);
+// /*
+// you will get 
+// var Myapp = {
+// 	event: {},
+// 	dom: {
+// 		style: {
+// 			width: {},
+// 			height: {}
+// 		}
 // 	}
 // }
+// */
 
-// //observer, here we call it Client
-// function Client(name) {
-// 	this.name = name;
-// }
-
-// Client.prototype.getPrice = function(price) {
-// 	console.log(this.name + " receives price is " + price);
-// }
-
-// var tom = new Client("Tom");
-// var jerry = new Client("Jerry");
-
-// //add observer
-// store.addClient("coke", tom.getPrice.bind(tom));
-// store.addClient("cheese", jerry.getPrice.bind(jerry));
-
-// //notify the observer
-// store.trigger("coke", 2);
-// store.trigger("cheese", 2.5);
-
-// //notice the difference from callback
-// (function success() {
-// 	data = {
-// 		coke: 2,
-// 		cheese, 2.5
+//Oh, here an interesting quetsion will be how to get all names from the object. This is a typical depth-first Search(DFS) question, below is the solution, for more information, go to my link on [Algorithim].
+// var names = [];
+// function dfs(obj, result, name) {
+// 	var keys = Object.keys(obj);
+// 	if (keys.length == 0) {
+// 		//reach the leaf node, add the name to the result collection
+// 		result.push(name.join("."));
+// 	} else {
+// 		for (var i = 0, key; key = keys[i++];) {
+// 			name.push(key);
+// 			dfs(obj[key], result, name);
+// 			name.pop();
+// 		}
 // 	}
-// 	tom.getPrice(data["coke"]);
-// 	jerry.getPrice(data["cheese"]);
+// }
+// dfs(myApp, names, []);
+// console.log(names);
 
+
+// //Use closure to make private variable
+// var user = (function() {
+// 	var _name = "Tom",
+// 		_food = "Jerry";
+// 	return {
+// 		getUserInfo: function() {
+// 			return _name + " eats " + _food;
+// 		}
+// 	}
 // })();
+
+// console.log(user.getUserInfo());
+
 </script>
-
-
 <script type="text/javascript">
-// //The Basic
-// //the subject
-// var subject = document.querySelector("#myBtn");
+// Improved version
+// make the singleton class transparent
+// this is a class to create the unique Login div in the page
+// var CreateLoginDiv = (function() {
+// 	//closure
+// 	var instance;
 
-// //create observers
-// var Observer = function(name) {
+// 	//the return function is a constructor
+// 	var CreateLoginDiv = function(html) {
+// 		//if the variable in the closure has been defined, the constructor return it
+// 		if (instance) {
+// 			return instance;
+// 		}
+// 		//else, construct a new object and assign it to the variable in the closure
+// 		this.html = html;
+// 		console.log(this);
+// 		this.init();
+// 		return instance = this;
+// 	};
+
+// 	CreateLoginDiv.prototype.init = function() {
+// 		var div = document.createElement('div');
+// 		div.innerHTML = this.html;
+// 		document.body.appendChild(div);
+// 	}
+
+// 	return CreateLoginDiv;
+// })();
+
+// //we can now do sth like this:
+// var a = new CreateLoginDiv("facebook Login");
+// var b = new CreateLoginDiv("another facebook Login");
+// if (a === b) {console.log(true)};
+
+
+// This method also has some problems. The IIFE makes the real constructor method unclear to read. Besides, the contructor here is in charge of doing two things:
+
+// 	var CreateLoginDiv = function(html) {
+// 		if (instance) {
+// 			return instance;
+// 		}
+// 		this.html = html;
+// 		this.init();
+// 		return instance = this;
+// 	};
+
+
+// 	first it runs the init function to setup the object
+// 	second it also needs to check if the instance already exit
+
+// 	In charge of doing two functions is not good for a function, you know 1 + 1 != 1. 
+
+</script>
+<script type="text/javascript">
+// // Follow the tradition OO stype (class -> object)
+// // Two simple examples to make singleton
+// // first exampe: instance as a property (like the static variable in java) of the class
+// var Singleton = function(name) {
 // 	this.name = name;
+// 	this.instance = null;
 // }
 
-// Observer.prototype.notify = function() {
-// 	console.log(this.name + " receives notification");
+// Singleton.prototype.getName = function() {
+// 	console.log(this.name);
 // }
 
-// var obj1 = new Observer("obj1");
-// var obj2 = new Observer("obj2");
+// // notice this is an attribute of the class, not the prototype
+// // similar to static method in Java
+// // this attribute is a function that return the only instance of this class
+// Singleton.getInstance = function(name) {
+// 	if ( !this.instance) {
+// 		this.instance = new Singleton(name);
+// 	}
+// 	return this.instance;
+// }
+// var a = Singleton.getInstance("instance1");
+// var b = Singleton.getInstance("instance2");
 
+// if (a === b) {
+// 	console.log(true, a.getName(), b.getName());
+// }
 
-// var testObj = {
-// 	name: "hello world",
-// 	notify: function() {
-// 		console.log(this.name + " obj notified");
+// //another exampe: instance as a variable in the closure
+// var Singleton = function(name) {
+// 	this.name = name;
+// };
+
+// Singleton.prototype.getName = function() {
+// 	console.log(this.name);
+// }
+
+// Singleton.getInstance = (function(name) {
+// 	//create a closure
+// 	var instance = null;
+// 	return function(name) {
+// 		//this function has reference to the variabe inside the closure
+// 		//it will be return to the getInstance attribute
+// 		if (!instance) {
+// 			instance = new Singleton(name);
+// 		}
+// 		return instance;
+// 	}
+// })();//self-invoked only once, create the only reference to instance
+
+// //What is closure, see below
+// function closure(input) {
+// 	var valueInClosure = 100;
+// 	return var funcInClosure = function() {
+// 		//remember, a function can also access variables defined outside the function
+// 		//in fact, all functions have access to the scope "above" them.
+// 		console.log(valueInClosure);
 // 	}
 // }
-// //observe
-// subject.addEventListener("click", obj1.notify.bind(obj1));
-// subject.addEventListener("click", obj2.notify.bind(obj2));
-// subject.addEventListener("click", testObj.notify.bind(testObj));
+
+// //Through ```Singleton.getInstance``` method, we can have a singleton pattern. However, this class is not transparent, and the way to get instance is different from the general "new" function.
 </script>
 
 

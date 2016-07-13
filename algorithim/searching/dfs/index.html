@@ -1,0 +1,358 @@
+<html>
+<script type="text/javascript">
+/*The problem here is to transform from obj's attribute to paths, and vice versa
+It has a lot of applications in JS from data transformation as well as create dynamic namespace
+
+Let's illustrate the idea here
+
+The obj is 
+
+	obj {
+		attr1: { 
+			attr11 : {
+				attr111: {},
+				attr112: {},
+			},
+			attr12: {
+				attr121: {},
+			}
+		},
+		attr2: {
+			attr21: {},
+			attr22: {
+				attr221: {},
+			}
+		}
+		attr3: {}
+	}
+
+The paths is
+	[
+		[obj, attr1, attr11, attr111],
+		[obj, attr1, attr11, attr112],
+		[obj, attr1, attr12, attr121],
+		[obj, attr2, attr21],
+		[obj, attr2, attr22, attr221],
+		[obj, attr3]
+	]
+
+
+The nodeAttrsAsArray is a reference to
+		
+		          rootNode (name, attrs)
+		 	          |
+	  [node1,       node2,           node3]
+		|	          |	                |	  
+[node11, node12]    [node21]     [node31,  node32]
+			|		  |			    |        |
+		[node123]   [node221]   [node311]  [node321, node322]
+*/
+
+var Paths = [
+		["obj", "attr1", "attr11", "attr111"],
+		["obj", "attr1", "attr11", "attr112"],
+		["obj", "attr1", "attr12", "attr121"],
+		["obj", "attr2", "attr21"],
+		["obj", "attr2", "attr22", "attr221"],
+		["obj", "attr3"]
+	];
+
+// ------------PATH to OBJ -----------------
+
+
+
+//From Path to Obj using the idea of pointer
+function PathsToObj(paths) {
+	paths.forEach(function(path) {
+		this.addSinglePath(this, path);
+	}.bind(this));
+	return this;
+}
+
+PathsToObj.prototype.addSinglePath = function(obj, path) {
+	for (var i = 1; i < path.length; i++) {
+		var currAttr = path[i];
+		// check if the obj has this attr
+		if ( !obj[currAttr]) {
+			//if no, create the new attr
+			obj[currAttr] = {};
+		}
+		//move to the next level
+		obj = obj[currAttr];
+	}
+}
+
+//the result is the first element is also a attribute of obj
+var obj = new PathsToObj(Paths);
+console.log(JSON.stringify(obj, null, 2));
+
+var Node = function(name, attrs) {
+	this.name = name;
+	this.attrs = attrs;
+}
+
+function PathsToNodeAttrsAsArray (paths) {
+	this.name = paths[0][0];
+	this.attrs = [];
+	//loop the path
+	paths.forEach(function(path) {
+		this.addSinglePath(this, path);
+	}.bind(this));
+	return this;
+}
+
+PathsToNodeAttrsAsArray.prototype.addSinglePath = function (node, path) {
+	for (var i = 1; i < path.length; i++) {
+		var currAttrName = path[i],
+			nextAttr = null;
+		// check if the obj has this attr
+		for (var j = 0; j < node.attrs.length; j++) {
+			if (node.attrs[j].name === currAttrName) {
+				nextAttr = node.attrs[j];
+				break;
+			}
+		}
+		//if no, create the new attr
+		if (!nextAttr) {
+			nextAttr = new Node(currAttrName, []);
+			node.attrs.push(nextAttr);
+		}
+
+		//move to the next level
+		node = nextAttr;
+	}
+}
+
+var NodeAttrsAsArray = new PathsToNodeAttrsAsArray(Paths);
+// console.log(JSON.stringify(NodeAttrsAsArray, null, 2));
+
+
+function PathsToNodeAttrsAsMap (paths) {
+	this.name = paths[0][0];
+	this.attrs = {};
+	//loop the path
+	paths.forEach(function(path) {
+		this.addSinglePath(this, path);
+	}.bind(this));
+	return this;
+}
+
+PathsToNodeAttrsAsMap.prototype.addSinglePath = function(node, path) {
+	for (var i = 1; i < path.length; i++) {
+		var currAttrName = path[i];
+		// check if the obj has this attr
+		if (!node.attrs[currAttrName]) {
+			//if no, create the new attr
+			node.attrs[currAttrName] = {
+				name: currAttrName,
+				attrs: {}
+			}
+		}
+		//move to the next level
+		node = node.attrs[currAttrName];
+	}
+}
+
+var NodeAttrsAsMap = new PathsToNodeAttrsAsMap(Paths);
+// console.log(JSON.stringify(NodeAttrsAsMap, null, 2));
+
+// ------------OBJ to PATH -----------------
+
+//from obj to path
+function dfs(obj) {
+	for (var attr in obj) {
+		if (obj.hasOwnProperty(attr)) {
+			//pre-order
+			console.log(attr);
+			dfs(obj[attr]);
+		}
+	}
+}
+
+function bfs(obj) {
+	var stack = [];
+	stack.push(obj);
+	while(stack.length != 0) {
+		var curr = stack.shift();
+		for (var attr in curr) {
+			if (curr.hasOwnProperty(attr)) {
+				console.log(attr);
+				stack.push(curr[attr]);
+			}
+		}
+	}
+}
+// console.log("---bfs---");
+
+// bfs(obj);
+
+// console.log("---dfs---");
+// dfs(obj);
+
+console.log("---dfs to get Path---");
+function dfsGetPaths(obj) {
+	var paths = [];
+	for (var attr in obj) {
+		if (obj.hasOwnProperty(attr)) {
+			path.push(attr);
+
+		}
+	}
+	return paths;
+}
+
+function dfsGetPaths(obj, result, path) {
+	var keys = Object.keys(obj);
+	if (keys.length == 0) {
+		//at the leaf
+		console.log("adding path", path);
+		result.push(path.slice(0));
+	} else {
+		for (var i = 0, key; key = keys[i++];) {
+			path.push(key);
+			dfsGetPaths(obj[key], result, path);
+			path.pop();
+		}
+	}
+}
+
+
+var result = [];
+dfsGetPaths(obj, result, []);
+console.log(result);
+var resultA = [];
+function dfsGetAll(obj, result, path) {
+	for (var key in obj) {
+		if (obj.hasOwnProperty(key)) {
+			path.push(key);
+			dfsGetAll(obj[key], result, path);
+			path.pop(key);
+		} 
+	}
+	// I dont even check whether you are a leaf node, just add you
+	result.push(path.slice(0));
+}
+
+dfsGetAll(obj, resultA, []);
+console.log(resultA);
+
+
+//This structure, for sure, can be used for combination
+var givenNums = [1, 2, 3];
+
+var set = [];
+
+function dfs(givenNums, index, set) {
+	for (var i = index; i < givenNums.length; i++) {
+		set.push(givenNums[i]);
+		console.log("--go live-----" + givenNums[i]);
+		console.log(set);
+		dfs(givenNums, index + 1, set);
+		set.pop();
+		console.log("--go die-----" + givenNums[i]);
+		console.log(set);
+	}
+}
+
+dfs(givenNums, 0, set);
+
+
+
+//Old code
+// var Node = function(name, children) {
+// 	this.name = name;
+// 	this.children = children;
+// }
+
+// //See how stupid I create the node
+// var child1 = new Node('node1', [
+// 	{name: 'node11', children: null},
+// 	{name: 'node12', children: null},
+// 	]);
+// var child2 = new Node('node2', null);
+// var child3 = new Node('node3', [
+// 	{name: 'node31', children: null},
+// 	{name: 'node32', children: null},
+// 	]);
+
+// var rootNode = new Node('root', [child1, child2, child3]);
+
+// console.log(JSON.stringify(rootNode, null, 2));
+
+// // VERSION 2
+// //better deal with pop
+// var o2a_v2 = function(obj) {
+// 	if(obj == null) {
+// 		return result
+// 	}
+
+// 	var result = [];
+// 	var currentPath = [];
+
+// 	currentPath.push(obj.name);
+// 	dfs_v2(result, currentPath, obj.children);
+// 	return result;
+
+// }
+
+// var dfs_v2 = function(result, currentPath, children) {
+// 	//to pop better, PUSH and POP should be call continuously
+// 	//meaning that if you want to push, you push when you can pop
+// 	if (children == null) {
+// 		result.push(currentPath.slice(0));
+// 		return;
+// 	}
+
+// 	children.forEach(function(child) {
+// 		currentPath.push(child.name);
+// 		dfs_v2(result, currentPath, child.children);
+// 		currentPath.pop();
+// 	})
+// }
+
+
+
+// // VERSION 3
+// //better deal with pop && no preprocess of the root
+// //which means the third parameter is a node instead of a children array
+// var o2a_v3 = function(obj) {
+// 	if(obj == null) {
+// 		return result
+// 	}
+
+// 	var result = [];
+// 	var currentPath = [];
+// 	dfs_v3(result, currentPath, obj);
+// 	return result;
+
+// }
+
+// var dfs_v3 = function(result, currentPath, node) {
+// 	//to pop better, PUSH and POP should be call continuously
+// 	//meaning that if you want to push, you push when you can pop
+// 	currentPath.push(node.name);
+// 	if (node.children) {
+// 		node.children.forEach(function(child) {
+// 			//add its children to it
+// 			// currentPath.push(child.name);
+// 			dfs_v3(result, currentPath, child);
+// 			// currentPath.pop();
+// 		})
+// 	} else {
+// 		//reach the leaf
+// 		result.push(currentPath.slice(0));
+// 	}
+// 	currentPath.pop();
+// }
+
+
+
+// var resultArray = o2a_v3(rootNode);
+// var tempArr = resultArray[1];
+// resultArray[1] = resultArray[4];
+// resultArray[4] = tempArr;
+// console.log(resultArray);
+// // console.log(resultArray);
+
+</script>
+</html>

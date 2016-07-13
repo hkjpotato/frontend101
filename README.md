@@ -59,7 +59,7 @@ JS is the key for front end development. Javascript basics: scope, closure, arra
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
   * Singleton
   * Observer Pattern
-  * Delegation Pattern
+  * Proxy Pattern
   * Iterator Pattern
   * Command Pattern
 

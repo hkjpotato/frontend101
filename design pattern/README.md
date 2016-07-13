@@ -1,5 +1,5 @@
   * [Singleton](./singleton) 
   * [Observer Pattern](./observer pattern)
-  * Delegation Pattern
+  * Proxy Pattern
   * Iterator Pattern
   * Command Pattern
