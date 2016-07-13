@@ -10,6 +10,7 @@ For example, when you click on the login button on the facebook home page, there
 Follow the tradition OO stype (class -> object)
 
 Below are two simple examples to make singleton.
+
 First exampe: instance as a property (like the static variable in java) of the class.
 
 ```javascript
