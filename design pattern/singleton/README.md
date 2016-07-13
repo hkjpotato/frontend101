@@ -125,8 +125,8 @@ This method also has some problems. The IIFE makes the real constructor method u
 	};
 ```
 
-first it runs the init function to setup the object
-second it also needs to check if the instance already exit
+1. First it runs the init function to setup the object
+2. second it also needs to check if the instance already exit
 
 In charge of doing two functions is not good for a function, you know 1 + 1 != 1. 
 We can further improve it by proxy.
