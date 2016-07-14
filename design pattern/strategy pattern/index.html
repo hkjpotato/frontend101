@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #f5f5f5;
+  color: #4d4d4d;
+  font-weight: 300;
+}
+
+#ball {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: lightgrey;
+	position: absolute;
+}
+</style>
+<body>
+<div id="ball"></div>
+<script type="text/javascript">
+
+var div = document.getElementById("ball");
+
+
+
+//t = time, b = begin, c = change, d = duration
+var linear = function(t, b, c, d) {
+	return c * t / d + b;
+}
+
+var easeIn = function(t, b, c, d) {
+	return c * (t /= d) * t + b;
+}
+
+var strongEaseIn = function(t, b, c, d) {
+	return c * (t /= d ) * t * t * t * t + b;
+}
+
+var strongEaseOut = function(t, b, c, d) {
+	return c * ((t = t/d - 1) * t * t * t * t + 1) + b;
+}
+
+var sineaseIn = function(t, b, c, d) {
+	return c * (t /= d) * t * t + b;
+}
+
+
+var sineaseOut = function(t, b, c, d) {
+	return c * ((t = t/d - 1) * t * t + 1) + b;
+}
+
+var tween = {
+	linear: linear,
+	easeIn: easeIn,
+	strongEaseIn: strongEaseIn,
+	strongEaseOut: strongEaseOut,
+	sineaseIn: sineaseIn,
+	sineaseOut: sineaseOut
+}
+
+
+var Animate = function(dom) {
+	this.dom = dom;
+	this.startTime = 0;
+	this.startPos = 0;
+	this.endPos = 0;
+	this.propertName = null;
+	this.easing = null;
+	this.duration = null;
+}
+
+Animate.prototype.start = function(propertName, endPos, duration, easing) {
+	this.startTime = +new Date;
+	this.startPos = this.dom.getBoundingClientRect()[propertName];
+	this.propertName = propertName;
+	this.endPos = endPos;
+	this.duration = duration;
+	this.easing = tween[easing];
+
+	//similar to while loop
+	var timeId = setInterval(function() {
+		if (this.step() === false) {
+			clearInterval(timeId);
+		}
+	}.bind(this), 19);
+}
+
+Animate.prototype.step = function() {
+	var t = +new Date();
+	if (t > this.startTime + this.duration) {
+		this.update(this.endPos);
+		return false;
+	}
+
+	var pos = this.easing(t - this.startTime, this.startPos, this. endPos - this.startPos, this.duration);
+
+	this.update(pos);
+}
+
+Animate.prototype.update = function(pos) {
+	this.dom.style[this.propertName] = pos + "px";
+}
+
+Animate.prototype.startRAF = function(propertName, endPos, duration, easing) {
+	this.startTime = +new Date;
+	this.startPos = this.dom.getBoundingClientRect()[propertName];
+	this.propertName = propertName;
+	this.endPos = endPos;
+	this.duration = duration;
+	this.easing = tween[easing];
+	this.paintByStep();
+}
+
+Animate.prototype.paintByStep = function() {
+	var t = + new Date();
+	if (t > this.startTime + this.duration) {
+		this.update(this.endPos);
+		return false;
+	} else {
+		var pos = this.easing(t - this.startTime, this.startPos, this. endPos - this.startPos, this.duration);
+		this.update(pos);
+		requestAnimationFrame(this.paintByStep.bind(this));
+	}
+}
+
+
+var animate = new Animate(div);
+
+animate.startRAF("left", 500, 1000, "strongEaseOut");
+
+
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+// var GetRegularGasPrice = function() {}
+// GetRegularGasPrice.prototype.calculate = function(gallons) {
+// 	return gallons * 1.9;
+// }
+
+// var GetMidgradeGasPrice = function() {}
+// GetMidgradeGasPrice.prototype.calculate = function(gallons) {
+// 	return gallons * 2.3;
+// }
+
+// var GetPremiumGasPrice = function() {}
+// GetPremiumGasPrice.prototype.calculate = function(gallons) {
+// 	return gallons * 2.9;
+// }
+
+// var GetDieselGasPrice = function() {}
+// GetDieselGasPrice.prototype.calculate = function(gallons) {
+// 	return gallons * 2.1;
+// }
+
+// var GasCalculator = function() {
+// 	this.gallons = 0;
+// 	this.strategy = null;
+// }
+// GasCalculator.prototype.setGallons = function(gallons) {
+// 	this.gallons = gallons;
+// }
+
+// GasCalculator.prototype.setStrategy = function(strategy) {
+// 	this.strategy = strategy;
+// }
+
+// GasCalculator.prototype.getPrice = function() {
+// 	return this.strategy.calculate(this.gallons);
+// }
+
+
+
+// var gasCalculator = new GasCalculator();
+// gasCalculator.setGallons(10);
+// gasCalculator.setStrategy(new GetRegularGasPrice());
+
+// console.log(gasCalculator.getPrice());
+</script>
+
+
+
+
+

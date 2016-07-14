@@ -6,7 +6,7 @@ _"You are my only instantiation in this world."_ said a Class, to an Object.
 
 For example, when you click on the login button on the facebook home page, there is a login window pop up. No matter how many times you click the login button, there is always one single unique login window, which is the single object of the login class. (Just an idea, not sure if facebook really design in this way).
 
-### The traditional Object-oriented way
+### The Object-oriented Way
 Follow the tradition OO stype (class -> object)
 
 Below are two simple examples to make singleton.
@@ -161,7 +161,7 @@ you can use the proxy as constructor, though what it returns is technically not 
 
 For more information about proxy, visit the [Proxy Pattern].
 
-### The javascript way
+### The JavaScript Way
 The above code you see is more like the tradition OO language such as Java, where object always comes from class. However, javascript is class-free. You can simply make an object without class, Thus we don't need to follow the traditional OO style.
 
 Remember, the key of Singleton is to ensure there is only one instantiation, and provide global access to it. As a result, a singleton in js can be as simple as declaring a global variable.
