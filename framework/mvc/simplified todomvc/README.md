@@ -32,15 +32,15 @@ root
 
 You can download the code file to try it by yourself. You can also click on the following links to check out my comments on each file, so as to know what exactly they are doing. I suggest you follow the order of the links :)
 
- * [index.html](./tutorial/html)
- * [index.css](./tutorial/css)
- * [helps/helps.js](./tutorial/js/helpers/helpers)
- * [helps/template.js](./tutorial/js/helpers/template)
- * [helps/store.js](./tutorial/js/helpers/store)
- * [view.js](./tutorial/js/view)
- * [model.js](./tutorial/js/model)
- * [controller.js](./tutorial/js/controller)
- * [app.js](./tutorial/js/app)
+ * [index.html](./tutorials/html)
+ * [index.css](./tutorials/css)
+ * [helps/helps.js](./tutorials/js/helpers/helpers)
+ * [helps/template.js](./tutorials/js/helpers/template)
+ * [helps/store.js](./tutorials/js/helpers/store)
+ * [view.js](./tutorials/js/view)
+ * [model.js](./tutorials/js/model)
+ * [controller.js](./tutorials/js/controller)
+ * [app.js](./tutorials/js/app)
 
 
 ##Notice
