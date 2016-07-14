@@ -29,18 +29,31 @@ root
  		-store.js
 ```
 
+You can download the code file to try it by yourself. You can also click on the following links to check out my comments on each file, so as to know what exactly they are doing. I suggest you follow the order of the links :)
+
+ * [index.html](./tutorial/html)
+ * [index.css](./tutorial/css)
+ * [helps/helps.js](./tutorial/js/helpers/helpers)
+ * [helps/template.js](./tutorial/js/helpers/template)
+ * [helps/store.js](./tutorial/js/helpers/store)
+ * [view.js](./tutorial/js/view)
+ * [model.js](./tutorial/js/model)
+ * [controller.js](./tutorial/js/controller)
+
+
+##Notice
 Before you dive into it, there are some basic things you need to know to help understand it:
 
-1. [javascript object]
-2. [event delegation]
-3. [IIFE] and [scope]
-4. [localStorage]
-5. [apply, call and bind methods]
-6. [MVC basic]
-7. [regex] and [escapeHTML]
+1. [MVC basic](./../basic)
+1. javascript object
+2. [event delegation](./../../../javascript/event delegation)
+3. IIFE and scope
+4. localStorage
+5. apply, call and bind methods
+7. regex and escapeHTML
 
 It will be good if you understand:
 
-1. [Observer pattern]
+1. [Observer pattern](./../../../design pattern/observer pattern)
 2. [Browser events]
 
