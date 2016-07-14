@@ -1,4 +1,5 @@
 #Simplified TodoMVC
+
 This is the simplified version of the Vanilla JS code from [todomvc.com](http://todomvc.com/). I believe this is the most simplified version you can find on the web. The original [source code](https://github.com/tastejs/todomvc/tree/gh-pages/examples/vanillajs) includes some unnecessary files(to make it works on the browser), such as node_modules and test files.
 
 These are what I do to simplified them:

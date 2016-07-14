@@ -69,7 +69,7 @@ Before going into framework such as MVC and Flux, it is better to know the basic
 A deep understanding of framework is essential in making the website to be a functional application. A very good resource about MVC framework is [TodoMVC]. In fact, I think the best way to understand the MVC is to make a native JS MVC by yourself. I will update one soon.
   * [MVC](./framework/mvc)
       * [Basic](./framework/mvc/basic)
-      * [Simplified TodoMVC](./framework/mvc/simplied todomvc)
+      * [Simplified TodoMVC](./framework/mvc/simplified todomvc)
       * AngularJS TodoMVC
   * Flux
   * Redux
