@@ -4,8 +4,6 @@ Strategy Pattern
 
 In javascript, strategy pattern is normally replaced by the "function", which make it implicit. However, it is still good to learn about strategy pattern from an OO (object-oriented) approach, which not only help us to understand it's meaning, but can also manipulate "function" better.
 
-
-### The Basic
 There are a lot of different ways to achieve the same goals. Strategy pattern, is a design pattern which, according to wikipedia:
 
 1. defines a family of algorithms,
@@ -18,6 +16,8 @@ A strategy pattern design can be devided to two parts: context and strategies.
 The context gets request from client, it is in charge of how to "use" the algorithims.
 
 The context then assign the request to a strategy algorithm, which in charge of the logic.
+
+### The Basic
 
 Let's start from a simple example:
 Say you want to find out the price for the gas, and you have this function
