@@ -40,6 +40,7 @@ You can download the code file to try it by yourself. You can also click on the 
  * [view.js](./tutorial/js/view)
  * [model.js](./tutorial/js/model)
  * [controller.js](./tutorial/js/controller)
+ * [app.js](./tutorial/js/app)
 
 
 ##Notice
