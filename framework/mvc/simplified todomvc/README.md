@@ -44,6 +44,8 @@ You can download the code file to try it by yourself. You can also click on the 
 
 
 ##Notice
+You can also check out the **[simple](./simple/index.html)** example I made to see a very basic function of this app in one file. It only supports one function: add a todo item.
+
 Before you dive into it, there are some basic things you need to know to help understand it:
 
 1. [MVC basic](./../basic)
