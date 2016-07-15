@@ -40,78 +40,116 @@ _the Model knows nothing of the View and the Controller_
 _the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."_
 
 ### A little more
-The code above is improved with the Object-oriented design approach, which includes the idea of "class" and "object". Notice the "bind" function when binding the callback to the button, since "this" is sensitive to the context. (Without the "bind" function, "this" is actually refering to the button, instead of the controller, when invoked);
+The more complete example with the Object-oriented design approach is shown below, which includes the idea of "class" and "object". The MVC are separate and abstract to each other.
 
 #####html
 ```html
-<input id="myBtn" type="button" value="click"></input>
-<span id="data"></span>
+<input type="text" />
+<input type="button" value="add"></input>
+<span id="display"></span>
 ```
 
 #####javascript
 ```javascript
-//Define MVC
-var Model, View, Controller;
-
-//database
-var Storage = {
-	data: "Hello World!"
+//------------Database-----------------
+var Storage = function(data) {
+	this.data = data;
 }
-//Model, only in charge of data & business logic part.
-Model = {
-	data: null,
-	fetchData: function() {
-		this.data = Storage["data"];
+
+Storage.prototype.fetchData = function(callback) {
+	console.log("fetch in the storage");
+	callback.call(this, this.data);
+}
+
+Storage.prototype.saveData = function(data, callback) {
+	console.log("save in the storage");
+	this.data.push(data);
+	callback.call(this, [this.data]);
+}
+
+//------------Model-----------------
+var Model = function(storage) {
+	this.data = null;
+	this.storage = storage;
+}
+Model.prototype.read = function(callback) {
+	console.log("read in the model");
+	this.storage.fetchData(callback);
+}
+
+Model.prototype.create = function(data, callback) {
+	console.log("create in the model");
+	this.storage.saveData(data, callback);
+}
+
+//------------View-----------------
+var View = function() {
+	this.display = document.querySelector("#display");
+	this.button = document.querySelector("input[type='button']");
+	this.input = document.querySelector("input[type='text']");
+}
+
+View.prototype.render = function(data) {
+	console.log("render in the view");
+	this.display.innerHTML = data;
+}
+
+View.prototype.bind = function(event, handler) {
+	var self = this;
+	if (event == "add") {
+		self.button.addEventListener("click", function() {
+			console.log("click in the view");
+			handler(self.input.value);
+		});
+	} else {
+		console.log("this event is not supported!");
 	}
 }
 
-//View, here only in charge of rendering the UI
-View = {
-	render: function(data) {
-		document.getElementById("data").innerHTML = data;
-	}
+//------------Model-----------------
+var Controller = function(V, M) {
+	var self = this;
+	self.model = M;
+	self.view = V;
+	self.view.bind("add", function(data) {
+		self.add(data);
+	});
 }
 
-//Controller, connect the view and model
-Controller = function(M, V) {
-	this.model = M;
-	this.view = V;
+Controller.prototype.show = function() {
+	console.log("show in the controller");
+	var self = this;
+	self.model.read(function(data) {
+		self.view.render(data);
+	});
 }
 
-Controller.prototype.handleClick = function() {
-	//update model
-	this.model.fetchData();
-
-	//update view
-	this.view.render(this.model.data);
+Controller.prototype.add = function(data) {
+	//handler's logic is here
+	console.log("add in the controller");
+	var self = this;
+	self.model.create(data, function() {
+		self.show();
+	});
 }
 
-//create Controller Object hwController
-var hwController = new Controller(Model, View);
-
-document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
+//------------Setup-----------------
+var view = new View();
+var model = new Model(new Storage([]));
+var controller = new Controller(view, model);
 ```
 
-### Framework or Design Pattern
-The above code is clear since View, Model and Controller are separate objects. However, I am a little bit confused about the below code.
+I add some logs to console so as to show the data flow of the application. 
 
-```javascript
-document.getElementById("myBtn").addEventListener("click", hwController.handleClick.bind(hwController));
+```
+	click in the view
+	add in the controller
+	create in the model
+	save in the storage
+	show in the controller
+	read in the model
+	fetch in the storage
+	render in the view
 ```
 
-I am not sure if this line of code should be regarded as a global action to setup the app, or should I make it as a function of the Controller, or maybe the View? Overall, I am not sure who, M or V or C, should be in charge of registering the event, which is the key point of combining the UI and Model.
-
-If you have the same confusion as me, maybe we are facing the same problem: whether MVC is a design pattern or a framework.
-
-Thus, before we dive into the the vanilla js code for TodoMVC, I highly suggest you to know about some basic ideas of [design patterns](../../design%20pattern) first.
-
- I think understanding design pattern, especially the [observer pattern](../../design%20pattern/observer%20pattern), can greatly help us answer the above questions (event registration), and understand the MVC as a framework better.
-
-#H1
-##H2
-###H3
-#H1
-Hello View is not HTML!,View performs updating the HTML or other interface with data given.
-=======
-
-
+As you can see: When the view detect a click event, it will triggers controller's "add" method. The add method will call the model's "create" method, which will "save" the passed in data in the storage. Once this action is finished, the callback will be triggered, which calls the controller's "show" method. It will call the model's "read" method to "fetch" data from storage, and pass it to the callback, so as to "render" the view.
