@@ -1,7 +1,7 @@
 #helpers/helpers.js
 It is not related to MVC framework, just some helpers function to wrap the querySelector and event attach functions.
 
-##Things to know in the beginning
+##Explanation
 
 ```javascript
 (function(window) {
