@@ -1,5 +1,5 @@
 #helpers/helpers.js
-It is not related to MVC framework, just some helpers function to wrap the querySelector and event attach functions.
+This file is not directly related to MVC framework. They are just some helper functions to wrap the querySelector and event attach functions, but they are important to make the code works.
 
 ##Points to know
 
