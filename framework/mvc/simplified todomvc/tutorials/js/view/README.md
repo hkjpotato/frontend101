@@ -21,7 +21,7 @@ Notice that the todo application "event" is not a "click" event from the UI. It 
 ```
 Use the data-id attribute to store the key with the dom element, that's how we identify and select a todo list item.
 
-####Strategy Pattern & viewCmd
+####viewCmd
 
 ```javascript
 	View.prototype.render = function (viewCmd, parameter) {
@@ -47,7 +47,7 @@ Use the data-id attribute to store the key with the dom element, that's how we i
 
 ```
 
-Similar to strategy pattern, the View layer implements its render function with input from Controller. This input is so called "viewCmd", which corresponding to different methods (strategies) to render the UI.
+The View layer implements its render function with input from Controller. This input is so called "viewCmd", which corresponding to different methods (strategies) to render the UI.
 
 #### "bind"
 
