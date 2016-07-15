@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" data-framework="javascript">
+	<head>
+		<meta charset="utf-8">
+		<title>VanillaJS TodoMVC - add todo</title>
+		<style type="text/css">
+			.completed label {
+				text-decoration: line-through;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="todoapp">
+			<header class="header">
+				<h1>todos</h1>
+				<input class="new-todo" placeholder="What needs to be done?" autofocus>
+			</header>
+			<section class="main">
+				<ul class="todo-list"></ul>
+			</section>
+		</section>
+		<script type="text/javascript">
+		var Template, View, Model, Controller;
+		/* -------------------------------------- */
+
+		Template = function() {
+			this.defaultTemplate
+			=	'<li data-id="{{id}}" class="{{completed}}">'
+			+		'<div class="view">'
+			+			'<label>{{title}}</label>'
+			+		'</div>'
+			+	'</li>';
+		}
+
+		Template.prototype.show = function(data) {
+			var view = "";
+			for (var i = 0; i < data.length; i++) {
+				var template = this.defaultTemplate;
+				var completed = data[i].completed ? "completed" : "";
+				template = template.replace("{{id}}", data[i].id);
+				template = template.replace("{{completed}}", completed);
+				template = template.replace("{{title}}", data[i].title);
+				view += template;
+			}
+			return view;
+		}
+		/* -------------------------------------- */
+
+		View = function(template) {
+			this.template = template;
+			this.$todoList = document.querySelector(".todo-list");
+			this.$newTodo = document.querySelector(".new-todo");
+		}
+
+		View.prototype.render = function(cmd, parameter) {
+			var self = this;
+			var viewCmds = {
+				showEntries: function() {
+					self.$todoList.innerHTML = self.template.show(parameter);
+				},
+				clearNewTodo: function() {
+					self.$newTodo.value = "";
+				}
+			}
+
+			viewCmds[cmd]();
+		}
+		//why do we want the abstract the bind function
+		View.prototype.bind = function(event, handler) {
+			var self = this;
+			if (event === "newTodo") {
+				console.log("view binding add todo")
+				self.$newTodo.addEventListener("change", function() {
+					handler(self.$newTodo.value);
+				});
+			}
+		}
+
+		/* -------------------------------------- */
+		Controller = function(view, model) {
+			var self = this;
+			self.view = view;
+			self.model = model;
+
+			self.view.bind('newTodo', function (title) {
+				console.log("controller callback pass to view to bind to its own element");
+				self.addItem(title);
+			});
+		}
+
+		Controller.prototype.showAll = function() {
+			var self = this;
+			self.model.read(function(data) {
+				self.view.render('showEntries', data);
+			});
+		}
+
+
+		Controller.prototype.addItem = function(title) {
+			var self = this;
+			if (title.trim() === "") {
+				return;
+			}
+			self.model.create(title, function() {
+				self.view.render("clearNewTodo");
+				self._filter(true);
+			});
+		}
+
+		Controller.prototype._filter = function(force) {
+			//default to route "All"
+			var activeRoute = "All"
+			if (force) {
+				this['show' + activeRoute]();
+			}
+		}
+
+		Controller.prototype.setView = function(locationHash) {
+			var route = locationHash.split('/')[1];
+			//call the render filter
+			this._filter(true);
+		}
+  
+		/* -------------------------------------- */
+		Model = function(storage) {
+			this.storage = storage;
+		}
+
+		Model.prototype.create = function(title, callback) {
+			title = title || '';
+			callback = callback || function () {};
+			//This is done by storage object but here it is just an array
+			var newItem = {
+				id: new Date().getTime(),
+				title: title.trim(),
+				completed: false
+			};
+			var updateData = this.storage.push(newItem);
+			callback.call(this, [updateData]);
+		}
+
+		Model.prototype.read = function(query, callback) {
+			var queryType = typeof query;
+			callback = callback || function () {};
+			if (queryType === 'function') {
+				callback = query;
+				return callback(this.storage);
+			}
+		}
+
+		/* -------------------------------------- */
+		//Prepare
+		var database = [
+			{
+				id: 1,
+			 	completed: true,
+			 	title: "Testing"
+			}
+		];
+
+		function Todo(name) {
+			this.appName = name;
+			this.view = new View(new Template());
+			this.model = new Model(database);
+			this.controller = new Controller(this.view, this.model);
+		}
+
+		var todo = new Todo("Super Simple Todo");
+
+		function setView() {
+			todo.controller.setView(document.location.hash);
+		}
+
+		window.addEventListener("load", setView);
+		/* -------------------------------------- */
+		</script>
+	</body>
+</html>

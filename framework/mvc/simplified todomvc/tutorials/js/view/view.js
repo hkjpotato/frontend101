@@ -176,7 +176,7 @@
 			$on(self.$newTodo, 'change', function () {
 				handler(self.$newTodo.value);
 			});
-
+			
 		} else if (event === 'removeCompleted') {
 			$on(self.$clearCompleted, 'click', function () {
 				handler();

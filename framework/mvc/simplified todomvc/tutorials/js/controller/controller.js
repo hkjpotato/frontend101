@@ -12,7 +12,7 @@
 		var self = this;
 		self.model = model;
 		self.view = view;
-
+		//do the binding at init
 		self.view.bind('newTodo', function (title) {
 			self.addItem(title);
 		});
