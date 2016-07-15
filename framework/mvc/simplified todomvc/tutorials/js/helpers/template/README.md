@@ -133,4 +133,4 @@ Use regex to help search for the escapeHTML characters and replace them with pro
 		}
 	};
 ```
-Together with the regex, we are able to create the html code for the list item easily. Notice only the title part needs to run the escapeHTML test. As the comment mentioned, _In real life you should be using a templating engine such as Mustache or Handlebars, however, this is a vanilla JS example._
+Together with the regex, we are able to create the html code for the list items easily. Notice only the "title" part needs to run the escapeHTML test. As the comment mentioned, _In real life you should be using a templating engine such as Mustache or Handlebars, however, this is a vanilla JS example._
