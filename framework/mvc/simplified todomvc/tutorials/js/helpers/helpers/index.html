@@ -74,6 +74,32 @@ myDelegate(menu, "#firstItem", "click", function() {
 	console.log("click on first item");
 })
 
+//About prototype chain
+var Jack = function() {
+	this.name = "jack";
+}
+var jackie = new Jack();
+var jackie2 = new Jack();
+
+
+console.log(Object.getPrototypeOf(jackie));
+console.log(Object.getPrototypeOf(Jack));
+
+console.log(jackie.__proto__ === Object.getPrototypeOf(jackie));
+console.log(jackie.__proto__ === Jack.prototype);
+
+console.log("------------")
+/*
+ jackie2.__proto__.val2 = "val2" is same as
+ Jack.prototype.val2 = "val2";
+*/
+
+console.log(Jack); //Jack is a function
+console.log(Jack.__proto__); //Jack's __proto__ points to the constructor function of Jack
+console.log(jackie.__proto__);
+
+
+
 </script>
 
 </body>

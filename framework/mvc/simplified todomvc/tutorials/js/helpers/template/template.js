@@ -1,4 +1,6 @@
-/*jshint laxbreak:true */
+// Things to know
+/*
+*/
 (function (window) {
 	'use strict';
 
@@ -29,6 +31,7 @@
 	 *
 	 * @constructor
 	 */
+	 //This is the template for a list element (the todo item).
 	function Template() {
 		this.defaultTemplate
 		=	'<li data-id="{{id}}" class="{{completed}}">'

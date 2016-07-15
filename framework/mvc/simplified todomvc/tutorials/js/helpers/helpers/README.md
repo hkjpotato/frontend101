@@ -1,14 +1,17 @@
 #helpers/helpers.js
 It is not related to MVC framework, just some helpers function to wrap the querySelector and event attach functions.
 
-Note that it uses event delegation technique to handle event from dom list. Remember that for "focus" and "blur" event, they don't have the bubbling phase and thus it set the useCapture to be true to detect those two events.
-
-
+##Things to know in the beginning
 
 ```javascript
-(function (window) {
-	'use strict';
+(function(window) {
+	'use strict'
+	//the code
+})(window);
+```
+The above code is an IIFE which create a private scope, the use of "use strict" defines that within this function, JavaScript code should be executed in ["strict mode"](http://www.w3schools.com/js/js_strict.asp). With strict mode, you can not, for example, use undeclared variables. This will ensure everything in the scope is private and won't pollute the global namespace. However, it pass in window as a parameter to access those private function.
 
+```javascript
 	// Get element(s) by CSS selector:
 	// scope here can be a parent dom node
 	window.qs = function (selector, scope) {
@@ -23,6 +26,22 @@ Note that it uses event delegation technique to handle event from dom list. Reme
 		target.addEventListener(type, callback, !!useCapture);
 	};
 
+	// Find the element's parent with the given tag name:
+	// $parent(qs('a'), 'div');
+	window.$parent = function (element, tagName) {
+		if (!element.parentNode) {
+			return;
+		}
+		if (element.parentNode.tagName.toLowerCase() === tagName.toLowerCase()) {
+			return element.parentNode;
+		}
+		return window.$parent(element.parentNode, tagName);
+	};
+```
+
+The above codes are wrappers for the native function. They serves as shortcuts for the native functions, thus you don't need to write long code everytime (e.g. ```document.getElementById()```.
+
+```javascript
 	// Attach a handler to event for all elements that match the selector,
 	// now or in the future, based on a root element
 	window.$delegate = function (target, selector, type, handler) {
@@ -43,23 +62,17 @@ Note that it uses event delegation technique to handle event from dom list. Reme
 
 		window.$on(target, type, dispatchEvent, useCapture);
 	};
+```
 
-	// Find the element's parent with the given tag name:
-	// $parent(qs('a'), 'div');
-	window.$parent = function (element, tagName) {
-		if (!element.parentNode) {
-			return;
-		}
-		if (element.parentNode.tagName.toLowerCase() === tagName.toLowerCase()) {
-			return element.parentNode;
-		}
-		return window.$parent(element.parentNode, tagName);
-	};
+This is what I want most important code for this js file. It uses event delegation technique to handle event from dom list. Thus later when you dynamically add and remove todo item, you don't need to worry about adding/removing event listeners.
 
+Remember that for "focus" and "blur" event, they don't have the bubbling phase and thus it set the useCapture to be true to detect those two events.
+
+
+```javascript
 	// Allow for looping on nodes by chaining:
 	// qsa('.foo').forEach(function () {})
 	NodeList.prototype.forEach = Array.prototype.forEach;
-})(window);
 ```
 
 Why is NodeList not an Array?(from [MDN](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Why_is_NodeList_not_an_Array))
