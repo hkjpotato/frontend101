@@ -1,8 +1,9 @@
 #helpers/helpers.js
 It is not related to MVC framework, just some helpers function to wrap the querySelector and event attach functions.
 
-##Explanation
+##Points to know
 
+####IIFE
 ```javascript
 (function(window) {
 	'use strict'
@@ -11,6 +12,7 @@ It is not related to MVC framework, just some helpers function to wrap the query
 ```
 The above code is an IIFE which create a private scope, the use of "use strict" defines that within this function, JavaScript code should be executed in ["strict mode"](http://www.w3schools.com/js/js_strict.asp). With strict mode, you can not, for example, use undeclared variables. This will ensure everything in the scope is private and won't pollute the global namespace. However, it pass in window as a parameter to access those private function.
 
+####Wrapper functions
 ```javascript
 	// Get element(s) by CSS selector:
 	// scope here can be a parent dom node
@@ -41,6 +43,7 @@ The above code is an IIFE which create a private scope, the use of "use strict" 
 
 The above codes are wrappers for the native function. They serves as shortcuts for the native functions, thus you don't need to write long code everytime (e.g. ```document.getElementById()```.
 
+####Event delegation
 ```javascript
 	// Attach a handler to event for all elements that match the selector,
 	// now or in the future, based on a root element
@@ -68,7 +71,7 @@ This is what I want most important code for this js file. It uses event delegati
 
 Remember that for "focus" and "blur" event, they don't have the bubbling phase and thus it set the useCapture to be true to detect those two events.
 
-
+####Chaining
 ```javascript
 	// Allow for looping on nodes by chaining:
 	// qsa('.foo').forEach(function () {})
