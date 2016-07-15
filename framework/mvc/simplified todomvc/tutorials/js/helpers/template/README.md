@@ -29,7 +29,7 @@ Instead, you have to do
 	text.innerHTML = "&lt;My Book&gt;";
 ```
 
-####[Regex](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+####Regex
 
 ```javascript
 	var reUnescapedHtml = /[&<>"'`]/g;
@@ -42,7 +42,7 @@ Instead, you have to do
 	};
 ```
 
-Use regex to help search for the escapeHTML characters and replace them with proper format.
+Use [Regex](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) to help search for the escapeHTML characters and replace them with proper format.
 
 
 ####HTML template string
