@@ -26,6 +26,8 @@ One challenge of learning front end development is that universities normally do
 
 How Browser works, Performance...
   * How broswer works
+  * [High Perfomance](https://developer.yahoo.com/performance/rules.html)
+  * [CDN](https://www.nczonline.net/blog/2011/11/29/how-content-delivery-networks-cdns-work/)
 
 #### HTML:
 
@@ -33,6 +35,7 @@ Understand the basic of HTML as well as new technology of the HTML5 is a key to 
   * Semantic
   * Attributes
   * Cookie, sessionStorage and localStorage
+  * API
   * Template
 
 #### CSS:
@@ -79,6 +82,11 @@ A deep understanding of framework is essential in making the website to be a fun
 
 Gulp, Webpack, Bower, Preprocessor, Testing, Git...
 
+  * [CommonJS: Why and How](https://0fps.net/2013/01/22/commonjs-why-and-how/)  My favourite article about modularizing JS. Use it as a base to extend your knowledge to CommonJS, AMD, CDN, makefile, browserify and other bundle methods
+  * [AMD is Not the Answer](http://tomdale.net/2012/01/amd-is-not-the-answer/)
+  * [On ES 6 Modules](http://blog.izs.me/post/25906678790/on-es-6-modules)
+  * [npm vs bower vs browserify vs gulp vs grunt vs webpack](http://stackoverflow.com/questions/35062852/npm-vs-bower-vs-browserify-vs-gulp-vs-grunt-vs-webpack)
+  
 #### Algorithm:
 
 JS solutions to LeetCode Questions.
