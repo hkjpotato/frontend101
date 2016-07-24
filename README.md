@@ -43,6 +43,7 @@ Understand the basic of HTML as well as new technology of the HTML5 is a key to 
 Even though developers are generally dealing with coding language like javascript, understanding how the css layout works is essential in making your UI works as desired. Besides, CSS is also important in creating responsive web so it can fit in different screen size.
   * Box model
   * How to center a div
+    * Check out my __[20 POTATOES PROJECT](http://codepen.io/hkjpotato/full/yJjLRW/)__ on codepen to see how different styles of centering a div are used.
   * Responsive web
   * Flex
   * CSS animation
@@ -86,7 +87,7 @@ Gulp, Webpack, Bower, Preprocessor, Testing, Git...
   * [AMD is Not the Answer](http://tomdale.net/2012/01/amd-is-not-the-answer/)
   * [On ES 6 Modules](http://blog.izs.me/post/25906678790/on-es-6-modules)
   * [npm vs bower vs browserify vs gulp vs grunt vs webpack](http://stackoverflow.com/questions/35062852/npm-vs-bower-vs-browserify-vs-gulp-vs-grunt-vs-webpack)
-  
+
 #### Algorithm:
 
 JS solutions to LeetCode Questions.
