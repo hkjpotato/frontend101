@@ -2,7 +2,7 @@
 
 I was confused about the idea of using build tools when I first came into terms like "browersify", "CMD", "AMD" and task runners like "gulp" and "grunt". I did not come from a CS undergraduate background, with little experience with software development. For me as an HCI student, I was attracted by the "WOW" moment of the UI, and focused most on the styling of the interface. I didn't realize the value of these tools, until I started building my own web app. Among all the materials I read, I feel the following two are the most helpful and clear to understand the basic idea behind different tools: 
 
-	__why we want to use them?__ 
+__why we want to use them?__ 
 
 And I highly recommend them to you.
 
