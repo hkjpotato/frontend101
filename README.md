@@ -58,6 +58,7 @@ JS is the key for front end development. Javascript basics: scope, closure, arra
   * [Event delegation](./javascript/event delegation)
   * IIFE
   * Asynchronous
+  * ES6
 
 #### Design&#32;Pattern:
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
@@ -82,11 +83,8 @@ A deep understanding of framework is essential in making the website to be a fun
 #### Build Tool:
 
 Gulp, Webpack, Bower, Preprocessor, Testing, Git...
-
-  * [CommonJS: Why and How](https://0fps.net/2013/01/22/commonjs-why-and-how/)  My favourite article about modularizing JS. Use it as a base to extend your knowledge to CommonJS, AMD, CDN, makefile, browserify and other bundle methods
-  * [AMD is Not the Answer](http://tomdale.net/2012/01/amd-is-not-the-answer/)
-  * [On ES 6 Modules](http://blog.izs.me/post/25906678790/on-es-6-modules)
-  * [npm vs bower vs browserify vs gulp vs grunt vs webpack](http://stackoverflow.com/questions/35062852/npm-vs-bower-vs-browserify-vs-gulp-vs-grunt-vs-webpack)
+  * [Background](./build-tool/background)
+  * [Webpack](./build-tool/webpack)
 
 #### Algorithm:
 
@@ -95,7 +93,7 @@ JS solutions to LeetCode Questions.
 #### Server Side:
 
 NodeJS, Database...
-
+  * [NodeJS](./server/nodejs)
 
 #### UI/UX:
 

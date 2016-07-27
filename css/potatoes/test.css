@@ -1,0 +1,614 @@
+/* first */
+.collection:hover>:nth-child(1)
+.glasses>span:before {
+  text-indent: 0px;
+}
+.collection:hover>:nth-child(1)
+.mouth {
+  transform: rotate(-30deg);
+  transform-origin: 50% -250%;
+}
+/* second */
+.collection:hover>:nth-child(2)
+.glasses>span:before {
+  content: "T";
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: 0px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(2)
+.mouth {
+  height: 12px;
+  margin-top: 3px;
+  border: 2px solid black;
+}
+/* third */
+.collection:hover>:nth-child(3)
+.glasses>span:before {
+  content: "^";
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: 0px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(3)
+.mouth {
+  width: 20px;
+  height: 10px;
+  margin-top: 3px;
+  border: 2px solid black;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+/* forth */
+.collection:hover>:nth-child(4)
+.glasses>span:before {
+  content: "$";
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: -2px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(4)
+.mouth {
+  width: 10px;
+  height: 20px;
+  margin-top: 2px;
+  border: 2px solid black;
+  border-radius: 20px;
+}
+/* fifth */
+.collection:hover>:nth-child(5)
+.glasses>span:before {
+  content: "@";
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: -2px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(5)
+.mouth {
+  width: 1px;
+}
+/* sixth */
+.collection:hover>:nth-child(6)
+.glasses>span:before {
+  content: "??";
+  text-indent: -2px;
+  font-size: 20px;
+  margin-top: -2px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(6)
+.mouth {
+  width: 10px;
+  height: 10px;
+  margin-top: 3px;
+  border: 2px solid black;
+  border-radius: 10px;
+  
+}
+
+/* seventh */
+/* -- */
+.collection:hover>:nth-child(7)
+.glasses>span:before {
+  content: "/";
+  text-indent: -2px;
+  font-size: 20px;
+  margin-top: -2px;
+  color: white;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(7)
+.mouth {
+  transform: rotate(-30deg);
+  transform-origin: 50% -200%;
+}
+
+/* eighth */
+/* -- */
+.collection:hover>:nth-child(8)
+.glasses>span {
+  background-color: black;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.collection:hover>:nth-child(8)
+.mouth {
+  width: 5px;
+}
+.collection:hover>:nth-child(8)
+.mouth:before {
+  opacity: 1;
+  transform: rotate(-30deg);
+}
+
+/* ninth */
+/* -- */
+.collection:hover>:nth-child(9) {
+  border-radius: 25px;
+}
+.collection:hover>:nth-child(9)
+.ears {
+  opacity: 1;
+}
+.collection:hover>:nth-child(9)
+.glasses>span:before {
+  content: "o";
+  text-indent: -2px;
+  font-size: 20px;
+  margin-top: -2px;
+  color: white;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(9)
+.mouth {
+  margin-top: 4px;
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black;
+  border-bottom: 3px solid black;
+}
+
+
+/* tenth */
+/* -- */
+.collection:hover>:nth-child(10) {
+  border-bottom-left-radius:  30px 40px;
+  border-bottom-right-radius:  30px 40px;
+}
+.collection:hover>:nth-child(10):before {
+  opacity: 1;
+}
+.collection:hover>:nth-child(10):after {
+  opacity: 1;
+  height: 65px;
+  
+}
+.collection:hover>:nth-child(10)
+.glasses>span {
+  background-color: black;
+  border-radius: 20px;
+  height: 20px;
+}
+.collection:hover>:nth-child(10)
+.mouth:before {
+  content: "";
+  display: block;
+  transition: .25s;
+  opacity: 0;
+  position: absolute;
+  margin-left: -3px;
+  left: 50%;
+  margin-top: -5px;
+  width: 6px;
+  height: 10px;
+  border-radius: 6px;
+  background-color: black;
+}
+.collection:hover>:nth-child(10)
+.mouth {
+  width: 8px;
+}
+.collection:hover>:nth-child(10)
+.mouth:before {
+  opacity: 1;
+}
+
+/* eleventh */
+/* -- */
+.collection:hover>:nth-child(11):before {
+  opacity: 1;
+  margin-top: 0px;
+  font-size: 20px;
+  content: "|||";
+}
+.collection:hover>:nth-child(11)
+.mouth:before {
+  opacity: 1;
+  margin-top: -10px;
+}
+.collection:hover>:nth-child(11)
+.glasses>span {
+  border-radius: 20px;
+  height: 20px;
+  background-color: black;
+}
+.collection:hover>:nth-child(11)
+.glasses>span:before {
+  content: "`";
+  text-indent: -2px;
+  font-size: 20px;
+  margin-top: -2px;
+  color: white;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(11)
+.mouth {
+  width: 8px;
+}
+
+/* twelfth */
+/* -- */
+.collection:hover>:nth-child(12)
+.mouth {
+  width: 8px;
+  transform: rotate(60deg);
+  transform-origin: 20% 50%;
+}
+.collection:hover>:nth-child(12)
+.smoke {
+  transform: rotate(-20deg);
+  opacity: 1;
+}
+.collection:hover>:nth-child(12)
+.hat {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+.collection:hover>:nth-child(12)
+.glasses>span {
+  background-color: black;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;  
+}
+.collection:hover>:nth-child(12)
+.glasses>span:before {
+  content: "/";
+  text-indent: -2px;
+  font-size: 20px;
+  margin-top: -2px;
+  color: white;
+  font-family:sans-serif;
+}
+
+
+
+/* thirteenth */
+/* -- */
+.collection:hover>:nth-child(13)
+.mouth {
+  width: 0px;
+  height: 10px;
+  margin-top: 0px;
+}
+.collection:hover>:nth-child(13)
+.robot-eye {
+  margin-top: 20px;
+  opacity: 1;
+}
+.collection:hover>:nth-child(13)
+.robot-eye:before {
+  animation-delay: .5s;
+  animation-duration: 1.5s;
+  animation-name: robot-eye-move;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes robot-eye-move {
+  0% {margin-left: 21px;}
+  25% {margin-left: 10px;}
+  75% {margin-left: 32px;}
+  100% {margin-left: 21px;}
+}
+.collection:hover>:nth-child(13)
+.glasses>span {
+  opacity: 0;
+  height: 0;
+}
+
+/* fourteenth */
+/* -- */
+.collection:hover>:nth-child(14)
+.glasses>span:before {
+  content: "/";
+  text-indent: -2px;
+  font-size: 20px;
+  margin-top: -2px;
+  color: white;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(14)
+.mouth {
+  transform: rotate(-30deg);
+  transform-origin: 50% -200%;
+}
+.collection:hover>:nth-child(14)
+.glasses>span {
+  animation-delay: .25s;
+  animation-duration: 2s;
+  animation-name: shining;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes shining {
+  0% {background-color: black;}
+  10% {background-color: #e5e5e5;}
+  20% {background-color: #ff6d6d;}
+  30% {background-color: #ffca6d;}
+  40% {background-color: #ffff6d;}
+  50% {background-color: #00c26d;}
+  60% {background-color: #b6ff6d;}
+  70% {background-color: #6dcaff;}
+  80% {background-color: #ec6dff;}
+  90% {background-color: #e5e5e5;}
+  100% {background-color: black;}
+}
+
+/* fifteenth */
+/* -- */
+.collection:hover>:nth-child(15) {
+  border-radius: 25px;
+}
+.collection:hover>:nth-child(15)
+.glasses>span {
+  border: none;
+}
+.collection:hover>:nth-child(15)
+.glasses>span:before {
+  content: "^";
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: 0px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(15)
+.nose{
+  border-top: 5px solid black;
+  
+}
+.collection:hover>:nth-child(15)
+.mouth {
+  width: 10px;
+}
+.collection:hover>:nth-child(15)
+.mouth:before {
+  height: 12px;
+  opacity: 1;
+}
+.collection:hover>:nth-child(15)
+.ears {
+  opacity: 1;
+}
+
+
+/* sixteenth */
+/* -- */
+.collection:hover>:nth-child(16)
+.glasses>span {
+  border: none;
+}
+.collection:hover>:nth-child(16)
+.mouth:before {
+  opacity: 1;
+}
+.collection:hover>:nth-child(16)
+.glasses>span:before {
+  content: "-";
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: 0px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(16):before {
+  opacity: 1;
+  margin-top: 0px;
+  font-size: 20px;
+  content: "zZ";
+}
+/* seventeenth */
+/* -- */
+.collection:hover>:nth-child(17)
+*{
+  display: none;
+}
+.collection:hover>:nth-child(17) 
+{
+  background-color: lightgrey;
+  background-size: 110%;
+  border-top: 2px solid #ff6d6d;
+  border-right: 2px solid #ffca6d;
+  border-bottom: 2px solid #6dcaff;
+  border-left: 2px solid #00c26d;
+  animation-delay: .25s;
+  animation-duration: .5s;
+  animation-name: rotate-border;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes rotate-border {
+  0% {
+    border-top-color:#ff6d6d;
+    border-right-color:#ffca6d;
+    border-bottom-color:#6dcaff;
+    border-left-color:#00c26d;
+    background-size: 110%;
+  }
+  25% {
+    border-right-color:#ff6d6d;
+    border-bottom-color:#ffca6d;
+    border-left-color:#6dcaff;
+    border-top-color:#00c26d;
+  }
+  50% {
+    border-bottom-color:#ff6d6d;
+    border-left-color:#ffca6d;
+    border-top-color:#6dcaff;
+    border-right-color:#00c26d;
+    background-size: 120%;
+  }
+  75% {
+    border-left-color:#ff6d6d;
+    border-top-color:#ffca6d;
+    border-right-color:#6dcaff;
+    border-bottom-color:#00c26d;
+  }
+  100% {
+    border-top-color:#ff6d6d;
+    border-right-color:#ffca6d;
+    border-bottom-color:#6dcaff;
+    border-left-color:#00c26d;
+    background-size: 110%;
+  }
+}
+
+/* eighteenth */
+/* -- */
+.collection:hover>:nth-child(18)
+.glasses>span {
+  height: 20px;
+  border-radius: 20px;
+}
+.collection:hover>:nth-child(18)
+.glasses>span:before {
+  text-indent: -3px;
+  font-size: 30px;
+  margin-top: -15px;
+}
+.collection:hover>:nth-child(18)
+.glasses>span:nth-child(1) {
+  border-color: white;
+}
+.collection:hover>:nth-child(18)
+.glasses>span:nth-child(2):after {
+  height: 12px;
+  opacity: 1;
+}
+.collection:hover>:nth-child(18)
+.mouth {
+  width: 8px;
+}
+
+.collection:hover>:nth-child(18)
+.moustache>span:before{
+  font-size: 30px;
+}
+
+/* nineteenth */
+.collection:hover>:nth-child(19)
+.glasses>span:before {
+  text-indent: 0px;
+  font-size: 20px;
+  margin-top: -4px;
+  font-family:sans-serif;
+}
+.collection:hover>:nth-child(19)
+.glasses>span:nth-child(1):before {
+  content: ">";
+}
+.collection:hover>:nth-child(19)
+.glasses>span:nth-child(2):before {
+  content: "<";
+}
+.collection:hover>:nth-child(19)
+.mouth {
+  height: 12px;
+  margin-top: 3px;
+  border: 2px solid black;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.collection:hover>:nth-child(19)
+{
+  animation-name: spinner; 
+  animation-timing-function: linear; 
+  animation-iteration-count: infinite; 
+  animation-delay: .3s;
+  animation-duration: 1s; 
+  transform-style: preserve-3d;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+@keyframes spinner { 
+   from {  
+    transform: rotateY(0deg); 
+   } 
+   to 
+   { 
+    transform: rotateY(-360deg); 
+   } 
+}
+
+/* twentieth */
+/* -- */
+.collection:hover>:nth-child(20) {
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+}
+.collection:hover>:nth-child(20):before {
+  opacity: 1;
+  height: 45px;
+  
+}
+.collection:hover>:nth-child(20)
+.glasses>span {
+  background: black;
+}
+.collection:hover>:nth-child(20)
+.glasses>span:before {
+  text-indent: 0px;
+  font-size: 40px;
+  margin-top: 10px;
+  font-family:sans-serif;
+  transform-origin: 50% 15%;
+  color: white;
+}
+.collection:hover>:nth-child(20)
+.glasses>span:nth-child(1):before {
+  content: "`";
+   transform: scale(-1, 1) rotate(120deg);
+  
+}
+.collection:hover>:nth-child(20)
+.glasses>span:nth-child(2):before {
+  content: "`";
+   transform: rotate(120deg);
+}
+.collection:hover>:nth-child(20)
+.mouth {
+  width: 8px;
+}
+.collection:hover>:nth-child(20)
+.ears {
+  opacity: 1;
+  margin-top: 0px;
+  
+}
+
+/* f21th */
+/* -- */
+.collection:hover>:nth-child(21) {
+/*   border-top-right-radius: 25px; */
+/*   border-top-left-radius: 25px; */
+  background:  red;
+}
+.collection:hover>:nth-child(21)
+.glasses>span:nth-child(1) {
+  border-bottom-right-radius: 20px 30px;
+  border-bottom-left-radius: 30px 30px;
+
+  transform: rotate(36deg);
+  margin-left: -2px;
+}
+.collection:hover>:nth-child(21)
+.glasses>span:nth-child(2) {
+  border-bottom-right-radius: 30px 30px;
+  border-bottom-left-radius: 20px 30px;
+
+  transform: rotate(-36deg);
+  margin-right: -2px;
+}
+.collection:hover>:nth-child(21)
+.glasses>span:before {
+  text-indent: 0px;
+  opacity: 0;
+}
+.collection:hover>:nth-child(21)
+.mouth {
+  width: 0px;
+  opacity: 0;
+}
