@@ -19,7 +19,7 @@ As mentioned in the first article:
 "--
   _[0 FPS](https://0fps.net/2013/01/22/commonjs-why-and-how/)_
 
-  Others:
+  Other Materials:
   * [AMD is Not the Answer](http://tomdale.net/2012/01/amd-is-not-the-answer/)
   * [On ES 6 Modules](http://blog.izs.me/post/25906678790/on-es-6-modules)
   * [React-howto#learning-npm](https://github.com/petehunt/react-howto#learning-npm)
