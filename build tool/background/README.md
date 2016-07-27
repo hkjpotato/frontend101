@@ -6,6 +6,7 @@ I was confused about the idea of using build tools when I first came into terms 
   * [npm vs bower vs browserify vs gulp vs grunt vs webpack](http://stackoverflow.com/questions/35062852/npm-vs-bower-vs-browserify-vs-gulp-vs-grunt-vs-webpack)
 
 As mentioned in the first article:
+
 _"	However, while there are many good reasons to use JavaScript, it has a reputation for scaling poorly with project size.  In my opinion, the main cause of this is that JavaScript lacks anything even remotely resembling a coherent module system.  This omission makes it inordinately difficult to apply sensible practices like:
 
 	1. Hiding implementation details behind interfaces.
