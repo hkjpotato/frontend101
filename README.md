@@ -83,8 +83,8 @@ A deep understanding of framework is essential in making the website to be a fun
 #### Build Tool:
 
 Gulp, Webpack, Bower, Preprocessor, Testing, Git...
-  * [Background](./build-tool/background)
-  * [Webpack](./build-tool/webpack)
+  * [Background](./build tool/background)
+  * [Webpack](./build tool/webpack)
 
 #### Algorithm:
 
