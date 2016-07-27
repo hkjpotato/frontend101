@@ -8,11 +8,11 @@ I was confused about the idea of using build tools when I first came into terms 
  As mentioned in the first article:
   "However, while there are many good reasons to use JavaScript, it has a reputation for scaling poorly with project size.  In my opinion, the main cause of this is that JavaScript lacks anything even remotely resembling a coherent module system.  This omission makes it inordinately difficult to apply sensible practices like:
 
-* Hiding implementation details behind interfaces
-* Splitting large projects into multiple files
-* Reusing functionality from libraries and other code bases"
+	* Hiding implementation details behind interfaces
+	* Splitting large projects into multiple files
+	* Reusing functionality from libraries and other code bases"
 
-_[0 FPS]((https://0fps.net/2013/01/22/commonjs-why-and-how/)_
+  _[0 FPS]((https://0fps.net/2013/01/22/commonjs-why-and-how/)_
 
   Others:
   * [AMD is Not the Answer](http://tomdale.net/2012/01/amd-is-not-the-answer/)
