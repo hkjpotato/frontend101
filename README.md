@@ -26,7 +26,11 @@ One challenge of learning front end development is that universities normally do
 
 How Browser works, Performance...
   * How broswer works
+    * [window.onload vs $(document).ready](http://stackoverflow.com/questions/3698200/window-onload-vs-document-ready)
+    * [window.onload vs document/onload](http://stackoverflow.com/questions/588040/window-onload-vs-document-onload)
   * [High Perfomance](https://developer.yahoo.com/performance/rules.html)
+    * [where to put script tag](http://stackoverflow.com/questions/436411/where-is-the-best-place-to-put-script-tags-in-html-markup)
+    * [Thinking Async](https://css-tricks.com/thinking-async/)
   * [CDN](https://www.nczonline.net/blog/2011/11/29/how-content-delivery-networks-cdns-work/)
 
 #### HTML:
