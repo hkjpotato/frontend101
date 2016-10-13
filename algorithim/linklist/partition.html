@@ -1,0 +1,59 @@
+<html>
+<body>
+  <script type="text/javascript">
+function print(node) {
+  var str = '';
+  while (node !== null) {
+    str = str + (node.val) + (node.next ? "->" : "");
+    node = node.next;
+  }
+  console.log(str);
+}
+function ListNode(val) {
+  this.val = val;
+  this.next = null;
+}
+
+head = new ListNode(1);
+head.next = new ListNode(4);
+head.next.next = new ListNode(3);
+head.next.next.next = new ListNode(2);
+head.next.next.next.next = new ListNode(5);
+head.next.next.next.next.next = new ListNode(2);
+
+
+
+
+
+function partition(head, x) {
+  if (head == null) {
+    return head;
+  }
+
+  var left = new ListNode(0);
+  var lefthead = left;
+  var right = new ListNode(0);
+  var righthead = right;
+
+  while (head !== null) {
+    if (head.val < x) {
+      left.next = head;
+      left = left.next;
+    } else {
+      right.next = head;
+      right = right.next;
+    }
+    head = head.next;
+  }
+
+  left.next = righthead.next;
+  right.next = null;
+  return lefthead.next;
+}
+print(head);
+print(partition(head, 3));
+
+
+  </script>
+</body>
+</html>

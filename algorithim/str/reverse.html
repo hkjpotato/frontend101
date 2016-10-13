@@ -1,0 +1,94 @@
+<html>
+<body>
+    <script type="text/javascript">
+    // var s = "a";
+    // var words = [];
+    // var i = 0;
+    // var currWord = "";
+    // while (i < s.length) {
+    //     if (s.charAt(i) !== " ") {
+    //         console.log('hit')
+    //         currWord += s.charAt(i);
+    //         console.log(currWord);
+    //     } else if (currWord.length !== 0) {
+    //         //a valid word
+    //         words.push(currWord);
+    //         currWord = "";
+            
+    //     }
+    //     i++;
+    // }
+    // words.reverse();
+    // words.join(" ");
+
+
+    // console.log(words);
+
+    // words.reverse();
+
+    // console.log(words);
+    // console.log(words.join(' '));
+
+
+    // console.log('A' - 1);
+var a= 'a';
+// var b = 'a';
+// var c = "abc".charAt(0);
+
+// if (a == c) {console.log('a==c')};
+// if (a === c) {console.log('a===c')};
+
+
+//countandsay
+
+var countAndSay = function(n) {
+    var seq = '1';
+    for (var i = 1; i < n; i++) {
+        console.log(seq);
+        seq = say(seq);
+    }
+    return seq;
+};
+
+
+var say = function(str) {
+    console.log('in say', str);
+
+    var currChar = str.charAt(0);
+    console.log('currChar', currChar);
+    console.log('str', str);
+
+    var i = 1;
+    var count = 1;
+    var newstr = '';
+
+
+    while (i < str.length) {
+        if (str.charAt(i) == currChar) {
+            count++;
+        } else {
+           //add the old one
+           newstr += (count + currChar);
+           //get the new one, not add
+           currChar = str.charAt(i);
+           count = 1;
+        }
+        i++;
+    }
+    //still need to add the current
+    newstr += (count + currChar);
+
+    //what if we still have sth to add
+    return newstr;
+
+};
+
+
+// console.log(countAndSay(5));
+
+
+var a = " ";
+console.log(a.split(' '));
+    </script>
+</body>
+</html>

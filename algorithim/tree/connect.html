@@ -1,0 +1,155 @@
+<script type="text/javascript">
+
+var TreeNode = function(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+    this.next = null;
+}
+
+var root = new TreeNode(1);
+root.left = new TreeNode(2);
+root.right = new TreeNode(3);
+root.right.left = new TreeNode(6);
+root.right.right = new TreeNode(7);
+
+
+
+console.log(JSON.stringify(root, null, 2));
+
+//level order
+var connect = function(root) {
+    if (root === null) {
+        return;
+    }
+    var queue = [];
+    queue.push(root);
+    while (queue.length !== 0) {
+        var levelLen = queue.length;
+        var dummy = new TreeNode(0);
+        var curr = dummy;
+        var next = null; 
+        for (var i = 0; i < levelLen; i++) {
+            next = queue.shift();
+            //connect
+            curr.next = next;
+            //move forward
+            curr = next;
+            next = null;
+            if (curr.left !== null) {
+                queue.push(curr.left);
+            }
+            if (curr.right !== null) {
+                queue.push(curr.right);
+            }
+        }
+        curr.next = next;
+        dummy.next = null;
+    }
+}
+
+
+//iterate
+var connect = function(root) {
+    if (root === null) {
+        return;
+    }
+    //say the parent level is already linked
+    var parent = root;
+    var nextStart = parent.left;
+    while (parent !== null && nextStart !== null) {
+        //current level
+        var prev = null;
+        while (parent !== null) {
+            if (prev === null) {
+                prev = parent.left;
+            } else {
+                prev.next = parent.left;
+                prev = prev.next;
+            }
+            prev.next = parent.right;
+            prev = prev.next;
+
+            //next subtree
+            parent = parent.next;
+        }
+        //ready for next level
+        parent = nextStart;
+        nextStart = parent.left;
+    }
+}
+
+var connect = function(root) {
+    if (root === null) {
+        return;
+    }
+
+    var parent = root;
+    var prev = null;
+    var nextStart = null;
+
+    while (parent !== null) {
+        prev = null;
+        nextStart = null;
+        while (parent !== null) {
+            //a trick to go through and find the next
+            if (nextStart === null){
+                nextStart = (parent.left !== null) ? parent.left: parent.right;
+            }
+
+            if (parent.left !== null){
+                if (prev === null) {
+                    prev = parent.left;
+                } else {
+                    prev.next = parent.left;
+                    prev = prev.next;
+                }
+            }
+
+            if (parent.right !== null) {
+                if (prev === null) {
+                    prev = parent.right;
+                } else {
+                    prev.next = parent.right;
+                    prev = prev.next;
+                }
+            }
+            parent = parent.next;
+        }
+        parent = nextStart;
+    }
+}
+var levelNext = function(root) {
+    var result = [];
+    var queue = [];
+    queue.push(root);
+    while (queue.length !== 0) {
+        var levelLen = queue.length;
+        var leftMost = queue[0];
+
+        var level = [];
+        while (leftMost !== null) {
+            level.push(leftMost.val);
+            leftMost = leftMost.next;
+        }
+        result.push(level.slice(0));
+        //level Order
+        for (var i = 0; i < levelLen; i++) {
+            var curr = queue.shift();
+            if (curr.left !== null) {
+                queue.push(curr.left);
+                // return;
+            }
+            if (curr.right !== null) {
+                queue.push(curr.right);
+                // return;
+            }
+        }
+    }
+    console.log(result)
+}
+
+connect(root);
+
+levelNext(root)
+</script>

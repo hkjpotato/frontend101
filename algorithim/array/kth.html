@@ -1,0 +1,144 @@
+<script type="text/javascript">
+
+
+var findKthLargest = function(nums, k) {
+    nums.sort(function(a, b) {
+        return b - a;
+    });
+    console.log(nums)
+    // return nums[k - 1];
+}
+
+
+// var nums = [1, 2];
+
+// findKthLargest(nums, 1)
+
+var nums = [3,2,1,5,6,4];
+
+
+var quicksort = function(nums) {
+    helper(nums, 0, nums.length - 1);
+    console.log(nums);
+};
+
+var helper = function(nums, start, end) {
+    if (start > end) {
+        return;
+    }
+    //get the pivot value
+    var pivot = nums[Math.floor((start + end) / 2)];
+    console.log(pivot);
+    var left = start, right = end;
+    while (left <= right) {
+        while (left <= right && nums[left] < pivot) {
+            left++;
+        }
+        while (left <= right && nums[right] > pivot) {
+            right--;
+        }
+        if (left <= right) {
+            var temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+            left++;
+            right--;
+        }
+    }
+
+    var pivotIndex = left;
+    console.log(pivot, nums[pivotIndex]);
+    //ending left > right
+    helper(nums, start, right)
+    helper(nums, left, end)
+
+};
+
+
+var partition = function(nums, start, end) {
+    if (start > end) {
+        return;
+    }
+    var left = start, right = end;
+    //set the nums left to be pivot
+    var pivot = nums[left];
+    while (left < right) {
+        while (left < right && nums[right] >= pivot) {
+            right--;
+        }
+        nums[left] = nums[right];
+        //after this left has been changed
+        //case 1: right is smaller than pivot, this value is assign to left
+        //case 2: right is ok, but left == right, thus the assignment does nothing
+        while (left < right && nums[left] <= pivot) {
+            left++;
+        }
+        nums[right] = nums[left];
+        //after this right has been changed
+        //case 1: left is larger than pivot, its value is assign to right, the original right value is already assigned
+        //follow up: what about the current left? dont worry, we deal with it after the while loop. it is our pivot
+    }
+
+    /*找到右边一个小于pivot的值，将其值放到left，left的值是变动的；找到左边一个大于pivot的值，将其值放到右边去，再将pivot的值放到左边 */
+    nums[left] = pivot; 
+    partition(nums, start, left - 1);
+    partition(nums, left + 1,  end);
+}
+
+var quicksort2 = function(nums) {
+    partition(nums, 0 , nums.length - 1)
+    console.log(nums);
+}
+
+
+var mypartition = function(nums, start, end) {
+    var left = start, right = end;
+    var pivot = nums[left];
+    while (left < right) {
+        while (left < right && nums[right] >= pivot) {
+            right--;
+        }
+        nums[left] = nums[right];
+        while (left < right && nums[left] <= pivot) {
+            left++;
+        }
+        nums[right] = nums[left];
+    }
+
+    nums[right] = pivot;
+    return left;
+}
+
+var findKthLargest2 = function(nums, k) {
+
+    return kthHelper(nums, 0, nums.length - 1, nums.length - k  + 1);
+    //find the pivot index and pivot, we know for this number, we have  pivot - start smaller than it and end - pivot larger than it, if we find to find kth largest
+}
+
+
+var kthHelper = function(nums, start, end, k) {
+    if (start == end) {
+        return nums[start];
+    }
+    var position = mypartition(nums, start, end);
+    console.log(position)
+    // if (position + 1 == k) {
+    //     return nums[position];
+
+    // } else if (position + 1 < k) {
+    //     return kthHelper(nums, position + 1, end,  k);
+    // } else {
+    //     return kthHelper(nums, start, position - 1, k);
+    // }
+}
+var nums = [3,3,3,3,4,4];
+// var nums = [2,1,3,2,3,2];
+
+
+// quicksort(nums);
+quicksort2(nums);
+// console.log(nums);
+console.log('hello', findKthLargest2(nums,2));
+
+
+</script>

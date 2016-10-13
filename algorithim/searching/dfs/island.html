@@ -1,0 +1,57 @@
+<html>
+<body>
+<script type="text/javascript">
+
+var grid = [
+[1,1,1,1,0],
+[1,1,0,1,0],
+[1,1,0,0,0],
+[0,0,0,0,0]
+]
+var nums = 0;
+var numIslands = function(grid) {
+    visited = new Array(grid.length);
+    for (var i = 0; i < grid.length; i++) {
+        visited[i] = new Array(grid[0].length).fill(0);
+    }
+    
+    var prev = 0;
+
+    search(0, 0, visited, grid, prev);
+    
+    return nums;
+};
+
+function search(row, col, visited, grid, prev) {
+    //reach boundary
+    if (row < 0 || row >= grid.length || col < 0 || col > grid[0].length) {
+        return;
+    }
+    //already visited
+    if (visited[row][col]) {
+        return;
+    }
+    var curr = grid[row][col];
+    visited[row][col] = 1;
+    if (prev === 0 && curr == 1) {
+        nums++;
+    }
+    //up
+    search(row - 1, col, visited, grid, curr);
+    //bottom
+    search(row + 1, col, visited, grid, curr);
+    //left
+    search(row, col - 1, visited, grid, curr);
+    //right
+    search(row, col + 1, visited, grid, curr);
+}
+
+console.log(numIslands(grid));
+
+
+
+
+
+</script>
+</body>
+</html>

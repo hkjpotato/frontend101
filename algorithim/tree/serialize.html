@@ -1,0 +1,123 @@
+<script type="text/javascript">
+/*
+    1
+   / \
+  2   3
+     / \
+    4   5
+*/
+
+function TreeNode(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+}
+
+var root = new TreeNode(1);
+root.left = new TreeNode(2);
+root.right = new TreeNode(3);
+root.right.left = new TreeNode(4);
+root.right.right = new TreeNode(5);
+
+
+// console.log(JSON.stringify(root, null, 2));
+
+
+
+var serialize = function(root) {
+    if (root == null) {
+        return "{}";
+    }
+    //we can make the tree from level order with null to a binary tree again
+    //get the level order
+    var result = [];
+    var queue = [];
+    queue.push(root);
+    var levelorder = [];
+    while(queue.length !== 0) {
+        var level = [];
+        var notNull = false;
+        var levelSize = queue.length;
+        for (var i = 0; i < levelSize; i++) {
+            var curr = queue.shift();
+            //update current level
+            if (curr) {notNull = true};
+            level.push(curr ? curr.val : curr);
+            //update next level
+            queue.push(curr ? curr.left : curr);
+            queue.push(curr ? curr.right : curr);
+        }
+
+        if (notNull) {
+            console.log(level);
+            result = result.concat(level);
+        } else {
+            //reaching the bottom
+            break;
+        }
+    }
+    return buildStr(result);
+}
+
+var buildStr = function(result) {
+    if (result == null) {
+        return "{}";
+    }
+    var str = "{";
+
+    str += result[0];
+    for (var i = 1; i < result.length; i++) {
+        str += ("," + (result[i] !== null ? result[i] : "#"));
+    }
+    return str + "}";
+}
+serialize(root);
+
+
+var deserialize = function(data) {
+    if (data === "{}") {
+        console.log('null tree');
+        return null;
+    }
+    var vals = data.substring(1, data.length - 1).split(",");
+    var root = new TreeNode(+vals.shift());
+    var prevLevel = [];
+    prevLevel.push(root);
+    while (vals.length !== 0) {
+        var prevLevelSize = prevLevel.length;
+        for (var i = 0; i < prevLevelSize; i++) {
+            //the parent, could be null
+            var curr = prevLevel.shift();
+            // console.log(curr.val);
+            var leftNode = null, rightNode = null;
+            //get the left and right
+            var left = vals.shift();
+            console.log('left', left)
+            var right = vals.shift();
+            console.log('right', right)
+            if (left !== "#") {
+                leftNode = new TreeNode(+left);
+            }
+            if (right !== "#") {
+                rightNode = new TreeNode(+right);
+            }
+            //make the connection
+            if (curr !== null) {
+                curr.left = leftNode;
+                curr.right = rightNode;
+            }
+            prevLevel.push(leftNode);
+            prevLevel.push(rightNode);
+        }
+    }
+    return root;
+}
+console.log(JSON.stringify(deserialize("{1,2,3,#,#,4,5}"), null, 2));
+
+
+
+var arr = [];
+arr.push(null);
+arr.push(null);
+console.log(arr.length)
+</script>

@@ -1,0 +1,40 @@
+<script type="text/javascript">
+// var twoSum = function(nums, target) {
+//     var visited = {}
+//     for (var i = 0; i < nums.length; i++) {
+//         var lookfor = target - nums[i];
+//         console.log(lookfor)
+//         console.log('what in visited', visited[lookfor]);
+//         if (typeof visited[lookfor] !== 'undefined') {
+//             console.log('got you');
+//             return [visited[lookfor], i];
+//         } else {
+//             console.log('visiting ', nums[i]);
+//             visited[nums[i]] = i;
+//         }
+//     }
+//     console.log(visited);
+// };
+
+var twoSum = function(nums, target) {
+    nums.sort(function(a, b) {return a - b});
+    console.log(nums);
+    var i = 0, j = nums.length - 1;
+    while (i < j) {
+        var lookfor = target - nums[i];
+        if (nums[j] > lookfor) {
+            j--;
+        } else if (nums[j] < lookfor) {
+            i++;
+        } else {
+            return [i, j];
+        }
+    }
+}
+
+var nums = [0, 4, 3, 0];
+
+console.log(twoSum(nums, 0));
+
+</script>
+

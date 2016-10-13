@@ -1,0 +1,205 @@
+<html>
+<script type="text/javascript">
+/*
+N-queens problem
+
+first let's see how to check if new position at row i is valid
+
+//first of first, let's see how we represent the result
+//we decide to do them row by row
+
+result[i] = pos means that at row i, the queen is position at index pos
+
+
+thus for a new row[i], the possible col index col should be that
+for j (0 ~ i - 1) 
+  { row[j] !== col}
+  besides, for diagonal (the line will be y = x + b or y = -x + c)
+  Math.abs(j - i) !== Math.abs(row[j] - col);
+
+
+*/
+
+//each result is an array where result[i] = j
+
+// var n = 4;
+// var results = [];
+// solveNQueens(n);
+// function solveNQueens(n) {
+//   var prevResult = [];
+//   // solveNQueensHelper(results, resultNode, -1, 0);
+//   // for (var i = 0; i < n; i++) {
+//   //   solveNQueensHelper(prevResult, 0, i);
+//   // }
+//   solveNQueensHelper(prevResult, 0);
+//   console.log(results);
+// }
+
+
+// var tryCount = 0;
+// //what is resultNode[0] ? the first row, isValid always to be true
+// function solveNQueensHelper(prevResult, rowIndex) {
+//   if (rowIndex == n) {
+//     //reach the leaf
+//     //the leaf node is the resultNode
+//     // return true;
+//     results.push(JSON.stringify(prevResult.slice(0)));
+//     console.log('reach the end!');
+//     // return;
+//   } 
+  
+//   for (var i = 0; i < n; i++) {
+//     //注意他的逻辑，一定要是solution tree的他才将其加入
+//     if (isValid(prevResult, rowIndex, i)) {
+//       prevResult[rowIndex] = i; //place the queen
+//       solveNQueensHelper(prevResult, rowIndex + 1); //check the next level
+//       prevResult.pop(); //for the next loop, backward
+//     }
+//     //对于不符合条件的直接截肢,if 就是一个截肢的
+//   }
+// }
+
+/*
+for each trial, if it the current position is ok, we can go to the next row, if no, we don't need to loop the next col, or next row, we stop here, return to the upper level, try the next one
+when to stop? until we reach the last row, which means i = n - 1; then we return the result
+
+
+*/
+
+// function isValid(result, newRow, newCol) {
+//   for (var i = 0; i < newRow; i++) {
+//     if (result[i] == newCol) {
+//       return false;
+//     }
+//     if (Math.abs(result[i] - newCol) == Math.abs(i - newRow)) {
+//       return false;
+//     }
+//   }
+//   return true;
+
+// }
+
+
+var solveNQueens = function(n) {
+    var resultList = [];
+    var prevResult = [];
+    solveNQueensHelper(resultList, prevResult, 0, n);
+    return resultList;
+};
+
+var solveNQueensHelper = function(resultList, prevResult, rowIndex, n) {
+    if (rowIndex >= n) {
+        //reach the leaf of the solution tree
+        resultList.push(arrayTostring(prevResult, n));
+        // resultList.push(prevResult.slice(0));
+        return;
+    }
+    
+    for (var i = 0; i < n; i++) {
+        //try to make the new node for the solution tree
+        //tricky, at this moment, rowIndex is the update one, on a new row already,
+        //we are just checking the position to place the queen at this new row
+        if (isValid(prevResult, rowIndex, i)) {
+            //become a new node of the solution tree, but it is not a solution, it is just node on the possible path!!!
+            //it might not be a good way to understand the solution tree
+            //because it could becomes a node that not being used by the result
+            prevResult.push(i);
+            solveNQueensHelper(resultList, prevResult, rowIndex + 1, n);
+            prevResult.pop();
+        }
+        //we use the if statement to chop all the under possible solutions but fail to meet the constraint
+    }
+}
+var arrayTostring = function(arr, n) {
+    var result = [];
+    arr.forEach(function(pos) {
+        // var currStr = "....";
+        // var newStr = currStr.substring(0, pos) + "Q" + currStr.substring(pos + 1);
+        var newStr = "";
+        for (var i = 0; i < n; i++) {
+          // var nextChar = i == pos ? "Q" : ".";
+          // console.log(nextChar);
+          newStr = newStr.concat(i == pos ? "Q" : ".");
+        }
+        result.push(newStr);
+    });
+    return result;
+}
+
+var isValid = function(prevResult, row, col) {
+    for (var i = 0; i < row; i++) {
+        if (prevResult[i] == col) {
+            return false;
+        }
+        if (Math.abs(prevResult[i] - col) == Math.abs(i - row)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+console.log(solveNQueens(4));
+
+
+console.log('testing');
+
+s  = 'hello';
+
+
+
+console.log(s.substring(0, 0));
+var swap = function(s, i, j) {
+    var newStr = s.substring(0, i) + s.charAt(j) + s.substring(i + 1, j) + s.charAt(i) + s.substring(j + 1);
+    return newStr;
+}
+
+console.log(swap(s, 0, 4));
+
+console.log("---palindrome---");
+
+var s = "aab";
+
+var partition = function(s) {
+    //this is a searching question rather than dp.
+    //since we want to know the all the possible result
+    var results = [];
+    var path = [];
+    partitionHelper(0, s, results, path);
+    return results;
+};
+
+var partitionHelper = function(startIndex, s, results, path) {
+    if (startIndex >= s.length) {
+        console.log(startIndex);
+        results.push(path.slice(0));
+        return;
+    }
+
+    for (var i = startIndex; i < s.length; i++) {
+        var newWord = s.substring(startIndex, i + 1);
+        console.log(newWord);
+        console.log(isPalindrome(newWord));
+        if (isPalindrome(newWord)) {
+            path.push(newWord);
+            console.log(path);
+            partitionHelper(i + 1, s, results, path);
+            path.pop();
+        }
+    }
+}
+var isPalindrome = function(s) {
+    var i = 0, j = s.length - 1;
+    while(i < j) {
+        if (s.charAt(i) !== s.charAt(j)) {
+            return false;
+        }
+        i++;
+        j--;
+    }
+    return true;
+}
+console.log(partition(s));
+
+
+</script>
+</html>

@@ -1,0 +1,62 @@
+<script type="text/javascript">
+var threeSum = function(nums) {
+    var result = [];
+    if (nums === null || nums.length < 3) {
+        return result;
+    }
+
+
+    nums.sort(function(a, b) {return a - b});
+    console.log(nums);
+
+    //we look the smallest first (a <= b <= c)
+    //a + b + c = 0 means b + c = -a
+    //find a, then find b + c = - a
+    //a could be any one, but it is the smallest, thus, b and c should be larger than a
+    for (var i = 0; i < nums.length - 2; i++) {
+        //have to skip the duplicate one, meaningless, just need to use the last one
+        if (i !== 0 && nums[i - 1] == nums[i]) {
+            //this number has been used as a before, we already know the result of using it as a
+            //we can confidently jump this trial, because its b and c space is smaller than the previous a trial
+            //thus we cannot come up with any new solution
+            continue;
+        }
+        var a = nums[i];
+        console.log(a);
+        var target = -a; //b + c = -a
+        var start = i + 1; end = nums.length - 1;
+        while (start < end) {
+            var b = nums[start];
+            var c = target - b;
+            if (nums[end] == c) {
+                result.push([a, b, c]);
+                //find one group of b and c combination
+                //we should skip the duplicate to avoid adding them later
+                
+                //first skip the duplicate b
+                while (start < end && b == nums[start]) {
+                    start++;
+                }
+                //then skip the dubplicate c
+                while (start < end && c == nums[end]) {
+                    end--;
+                }
+                //we wont addidentally remove dubplicate b but actually its c
+                //this mistake is happen for a because we dont know if the next one = a can be used as a
+                //if the next one = b is going to be used as c. it wont create a new solution simply because for this b and c, we already store the result
+                // start++;
+                // end--;
+            } else if (nums[end] > c) {
+                end--;
+            } else {
+                start++;
+            }
+        }
+    }
+    return result;
+};
+var nums = [-1,0,1,2,-1,-4];
+console.log(threeSum(nums));
+
+</script>
+

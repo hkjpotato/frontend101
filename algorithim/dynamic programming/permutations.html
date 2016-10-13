@@ -1,0 +1,267 @@
+<script type="text/javascript">
+  var nums = [1, 2, 3, 4];
+  var k = 3;
+
+  //from nums, make permutation (meaning [1, 2] ! = [2, 1])
+
+
+  function permute(nums, k) {
+    var results = [];
+    var path = [];
+    //visit map
+    var visited = new Array(nums.length).fill(0);
+    helper_permute(nums, k, results, path, visited);
+    return results;
+  }
+
+
+  function helper_permute(nums, k, results, path, visited) {
+    if (path.length == k) {
+        results.push(JSON.stringify(path.slice(0)));
+        return;
+    }
+
+    for (var i = 0; i < nums.length; i++) {
+        // if (path.indexOf(nums[i]) == -1) {
+        if (visited[i] == 0) {
+            //the route is not in the path yet
+            //for permute, we care about the current path, we wanna to ensure it is not in the current path
+            //and that's enough, we dont care if it is in the previous path
+            path.push(nums[i]);
+            visited[i] = 1;
+            helper_permute(nums, k, results, path, visited);
+            path.pop();
+            visited[i] = 0;
+        }
+    }
+  }
+  // console.log(permute(nums, k));
+
+  /* ----------------------------------------------- */
+
+  //if the nums has duplicate, such as [1,1,1,3] -> result is [1,1,1], [1,1,3], [1,3,1], [3,1,1]
+          /* 
+            originally, we use value to check if it is a new "node" for this level, now because we have duplicate value, this is not correct, because 1(2) !== 1(3) for this level
+
+            so basically, we can still use value to check if we have has this not before, but just in this level
+
+            it is ok to have same value for different level
+
+            how to deal with same value in different level?
+        */  
+  function permuteUnique(nums, k) {
+    var results = [];
+    var path = [];
+    nums.sort(function(a, b) {
+        return a - b;
+    })
+    var visited = new Array(nums.length).fill(0);
+    helper_permuteunqiue(nums, k, results, path, visited);
+    console.log(visited)
+    return results;
+  }
+
+
+  function helper_permuteunqiue(nums, k, results, path, visited) {
+    if (path.length == k) {
+        results.push(JSON.stringify(path.slice(0)));
+        return;
+    }
+
+    for (var i = 0; i < nums.length; i++) {
+        if (visited[i] == 0) {
+            //path has visit this index
+            path.push(nums[i]);
+            visited[i] = 1;
+            helper_permuteunqiue(nums, k, results, path, visited);
+            path.pop();
+            visited[i] = 0;
+
+            //skip the same value for same level
+            while (i < nums.length - 1 && nums[i] == nums[i + 1]) {
+                console.log('hit same')
+                i++;
+            }
+            //after this i will becomes the index of the last similar value
+            //next round for the same level will become a different value
+        }
+
+        // //use continue
+        // if (visited[i]) {
+        //     //skip if this node has been used before
+        //     continue;
+        // } 
+
+        // if ( i != 0 && nums[i] == nums[i - 1] && visited[i-1] == 0) {
+        //     //if this node has the same value as the previous one
+
+        //     //why even it has same value, we cant skip it if the previous one has been visited?
+        //     //because,if the previous one has been visited, it is used in another level
+        //     //thus even with same value, it can be used in the new level
+        //     continue;
+        // }
+    }
+  }
+  // console.log(permuteUnique([1, 1, 1, 3], k));
+
+
+
+  /* ----------------------------------------------- */
+
+
+  function combine(nums, k) {
+    var results = [];
+    var path = [];
+    helper_combine(nums, k, results, path, 0);
+    return results;
+  }
+
+  function helper_combine(nums, k, results, path, index) {
+    if (path.length == k) {
+        results.push(JSON.stringify(path.slice(0)));
+    }
+
+    for (var i = index; i < nums.length; i++) {
+        //do I need to check if this nums already in the path??
+        //we use index parameter to ensure we are on the new track
+        //in combine, we also care about the previous path, we wanna to ensure it is not in the previous path as well
+        path.push(nums[i]);
+        helper_combine(nums, k, results, path, i + 1);
+        path.pop();
+    }
+  }
+
+  // console.log(combine(nums, k));
+
+
+  /* ----------------------------------------------- */
+
+  // var combinationSum = function(candidates, target) {
+  //   var results = [];
+  //   var path = [];
+
+  //   candidates.sort(function(a, b) {
+  //       return a - b;
+  //   });
+
+  //   helper_combinationSum(candidates, target, results, path, 0);
+  //   return results;
+  // }
+
+  // var helper_combinationSum = function(candidates, target, results, path, index) {
+  //   var sum = path.reduce(function (prev, curr) {
+  //       return prev + curr
+  //   }, 0);
+  //   console.log(sum);
+  //   if (sum == target) {
+  //       results.push(JSON.stringify(path.slice(0)));
+  //       return;
+  //   } else if (sum > target) {
+  //       return;
+  //   } else {
+  //       for (var i = index; i < candidates.length; i++) {
+  //           path.push(candidates[i]);
+  //           helper_combinationSum(candidates, target, results, path, i + 1);
+  //           path.pop();
+  //           //skip all the same value in the same level
+  //           while (i < candidates.length - 1 && candidates[i] == candidates[i + 1]) {
+  //               i++;
+  //           }
+  //       }
+  //   }
+  // }
+
+var combinationSum = function(candidates, target) {
+    var results = [];
+    var path = [];
+    candidates.sort(function(a, b) {
+        return a - b;
+    });
+    helper_cs(candidates, target, results, path, 0);
+    return results;
+    
+};
+
+var helper_cs = function(candidates, target, results, path, index) {
+    if (target === 0) {
+        results.push(JSON.stringify(path.slice(0)));
+        return;
+    }
+    for (var i = index; i < candidates.length; i++) {
+        //from i = index, no backward
+        if (candidates[i] > target) {
+            break;
+            //directly break the for loop and return
+        }
+        
+        path.push(candidates[i]);
+        helper_cs(candidates, target - candidates[i], results, path, i); //not i+1 because different level can be duplicate
+        path.pop();
+        
+        while (i < candidates.length - 1 && candidates[i] == candidates[i + 1]) {
+            i++;
+            //skip all the same value for the same level
+        }
+    }
+}
+  var candidates = [1,2,7,6,1,5, 7] , target = 8;
+  // console.log(combinationSum(candidates, target));
+
+
+/*
+n*2 position, select n to place open, the other n to place close
+
+actually we only need to pay attention to the n open, no need to consider the close
+open can be at [0 ~ n*2 - 1) 
+
+for (var i = 0; i < n * 2 - 1; i++) {
+    position for open,  but not all of them can be choosed
+}
+
+
+*/
+
+var generateParenthesis = function(n) {
+  var results = [];
+  var path = [];
+  helper(n, results, path, 0);
+  console.log(results)
+  return results.map(function(data) {
+      return generate(data);
+  });
+};
+
+var helper = function(n, results, path, index) {
+    if (path.length  == n) {
+        //if finish n 
+        results.push(path.slice(0));
+        return;
+    }
+    
+    for (var i = index; i < n * 2 - 1; i++) {
+        //i is the index of the new open
+        //path.length is the exisiting open
+        //i is also the number of parenthese before this new open
+        //we have to ensure the number of close is not larger than the number of open
+        if (i - path.length <= path.length) {
+          path.push(i);
+          helper(n, results, path, i + 1);
+          path.pop();
+        }
+    }
+};
+
+var generate = function(data) {
+    var str = "";
+    for (var i = 0; i < data.length * 2; i++) {
+        if (data.indexOf(i) !== -1) {
+            str+="(";
+        } else {
+            str+=")";
+        }
+    }
+    return str;
+};
+
+console.log(generateParenthesis(3));
+</script>

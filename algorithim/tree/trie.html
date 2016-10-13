@@ -1,0 +1,81 @@
+<script type="text/javascript">
+/**
+Implement a trie with insert, search, and startsWith methods.
+
+Note:
+You may assume that all inputs are consist of lowercase letters a-z.
+
+*/
+/**
+ * @constructor
+ * Initialize your data structure here.
+ */
+var TrieNode = function() {
+    this.children = [];
+};
+
+var Trie = function() {
+    this.root = TrieNode();
+};
+
+/**
+ * @param {string} word
+ * @return {void}
+ * Inserts a word into the trie.
+ */
+Trie.prototype.insert = function(word) {
+    var insertHelper = function(root, word) {
+        var letters = word.split('');
+        if (letters.length > 0) {
+            var currLetter = letters[0];
+            if (!root.children[currLetter]) {
+                root.children[currLetter] = new TrieNode();
+            }
+            insertHelper(root.children[currLetter], word.substring(1));
+        } else {
+            return;
+        }
+
+    }
+    insertHelper(this.root, word);
+};
+
+/**
+ * @param {string} word
+ * @return {boolean}
+ * Returns if the word is in the trie.
+ */
+Trie.prototype.search = function(word) {
+    var searchHelper = function(root, word) {
+        if (word.length == 0) return true;
+        var letters = word.split('');
+        var currLetter = letters[0];
+        if (root.children[currLetter]) {
+            return searchHelper(root.children[currLetter], word.substring(1));
+        } else {
+            return false;
+        }
+    }
+    if (word.length == 0) return false;
+    return searchHelper(this.root, word);
+};
+
+/**
+ * @param {string} prefix
+ * @return {boolean}
+ * Returns if there is any word in the trie
+ * that starts with the given prefix.
+ */
+Trie.prototype.startsWith = function(prefix) {
+    return this.search(prefix);
+    
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * var trie = new Trie();
+ * trie.insert("somestring");
+ * trie.search("key");
+ */
+
+</script>

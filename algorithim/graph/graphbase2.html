@@ -1,0 +1,368 @@
+<script type="text/javascript">
+
+/*
+The nodeAttrsAsArray is a reference to
+    
+              0 (name, attrs)
+                              |
+    [1,                       2,               3]
+       |                       |               |    
+[4,  5, 6]                 [7,   8]           [9]
+  |                        |     |             |
+[10]                   [11]     [12]        [13, 14]
+*/
+
+
+//above is a multi-tree(DAG), to represent it, we use node, and its neighbour
+//we use several way to represent it
+
+// pure path set 
+var path = [
+  [0, 1, 4, 10],
+  [0, 1, 5],
+  [0, 1, 6],
+  [0, 2, 7, 11],
+  [0, 2, 8, 12],
+  [0, 3, 9, 13],
+  [0, 3, 9, 14]
+]
+
+//node and edge list
+var nodeEdge = {
+  0 : [1, 2, 3],
+  1 : [4, 5, 6],
+  2 : [7, 8],
+  3 : [9],
+  // .
+  // .
+  // .
+  9: [13, 14],
+  10: [],
+  11: [],
+  12: [],
+  13: [],
+  14: []
+}
+
+// console.log(nodeEdge)
+
+//object or adjcent list
+var obj = {
+  val: 0,
+  children: [
+    {
+      val: 1,
+      children: [
+        {
+          val: 4, children: [
+            {
+              val: 10, children: []
+            }
+          ]
+        },
+        {
+          val: 5, children: []
+        },
+        {
+          val: 6, children: []
+        }
+      ]
+    },
+    {
+      val: 2,
+      children: [
+        {
+          val: 7,
+          children: [
+            {
+              val: 11, children: []
+            }
+          ]
+        },
+        {
+          val: 8, children: [
+            {
+              val: 12, children: []
+            }
+          ]
+        }
+      ],
+    },
+    {
+      val: 3,
+      children: [
+        {
+          val: 9, children: [
+            {
+              val: 13, children: []
+            },
+            {
+              val: 14, children: []
+
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+var objToPath = function(obj) {
+  var results = [];
+  var path = [];
+  path.push(obj.val);
+  dfsHelper(obj, results, path);
+  return results;
+}
+
+
+function dfsHelper(node, results, path) {
+  if (node === null) {
+    console.log('how come I hit the null?');
+    return;
+  }
+  if (node.children.length === 0) {
+    //heat the leaf
+    results.push(path.slice(0));
+    return;
+  }
+  node.children.forEach(function(node) {
+    path.push(node.val);
+    dfsHelper(node, results, path);
+    path.pop();
+  })
+}
+
+result = objToPath(obj);
+// result.forEach(function(path) {
+//   console.log(path);
+// })
+
+
+var Node = function(val) {
+  this.val = val; 
+  this.children = [];
+}
+function pathToObj(result) {
+  var obj = new Node(result[0][0]);
+  result.forEach(function(path) {
+    addPath(path, obj);
+  });
+  return obj;
+}
+function addPath(path, obj) {
+  for (var i = 1; i < path.length; i++) {
+    var currVal = path[i];
+    if (obj.children.length !== 0 && obj.children.filter(function(node) {return node.val === currVal}).length !== 0) {
+      obj = obj.children.filter(function(node) {return node.val === currVal})[0]
+    } else {
+      //make new node
+      var currNode = new Node(currVal);
+      obj.children.push(currNode);
+      obj = currNode;
+    }
+  }
+}
+
+
+// console.log(JSON.stringify(pathToObj(result), null, 2));
+// console.log("-----");
+// console.log(JSON.stringify(obj, null, 2));
+
+// var a = "a";
+// var b = "ab".substring(0, 1);
+// console.log(a===b);
+console.log(JSON.stringify(pathToObj(result)) === JSON.stringify(obj));
+// console.log(JSON.stringify(pth))
+//dfs given to get the preorder
+// var preorder = [];
+// function dfs(obj) {
+//   if (obj == null) {
+//     // console.log(obj.val);
+//     console.log('null reach');
+//     return;
+//   }
+//   console.log(obj.val);
+//   preorder.push(obj.val);
+//   obj.children.forEach(function(child) {
+//     dfs(child);
+//   });
+// }
+
+
+// dfs(obj);
+// console.log(preorder)
+
+
+//let's look at the preorder of a tree
+/* 
+  function preorder(root) {
+    if (root == null) {
+      console.log('null reach');
+      return;
+    }
+    preorder.push(root.val);
+    //the difference comes here, it already knows about the next level
+    //and can reference them directly
+    preorder(root.left);
+    preorder(root.right);
+
+  }
+*/
+
+
+//how to use dfs with backtracking
+//construct the tree, while traverse
+
+
+
+/* let's see we wanna find the path
+   the solution is a tree, which is the same as itself,
+   the only constraint is that it has children
+*/
+
+// var searchRoute = [];
+// searchRoute.push(obj.val);
+// var result = [];
+// var backtracking = function(obj, searchRoute, result) {
+//   // result.push(searchRoute.slice(0));
+//   // console.log(obj);
+//   if (obj.children.length === 0) {
+//     result.push(searchRoute.slice(0))
+//     return;
+//   }
+//   for (var i = 0; i < obj.children.length; i++) {
+//     // searchRoute.push(obj);
+//     var currTrial = obj.children[i];
+//     searchRoute.push(currTrial.val);
+//     backtracking(currTrial, searchRoute, result);
+//     //回溯
+//     searchRoute.pop();
+//   }
+// }
+// backtracking(obj, searchRoute, result);
+// console.log(JSON.stringify(result, null, 2));
+
+//同志，我想index这种做法是集合特有的，因为他没有直接的children让你用push pop的方式去做到dfs
+
+
+//review of subset
+// var num = [1,2,3];
+// var treeNode = [];
+// var treeCollection = [];
+//finding subset by backtracking of a solutiontree, so it is dfs
+// var subset= function(nums) {
+//   subsetHelper(nums, treeNode, treeCollection);
+// }
+
+// var subsetHelper = function(nums, treeNode, treeCollection) {
+//   treeCollection.push(treeNode.slice(0));
+//   //try next level
+//   //who is the children of this treeNode?? to get them, check the last element in the current node
+//   //two case
+//   var lastIndex;
+//   //root: treeNode = [];
+//   if (treeNode.length === 0) {
+//     lastIndex = - 1;
+//   } else {
+//     lastIndex = nums.indexOf(treeNode[treeNode.length - 1]);
+//   }
+//   //reach the root
+//   if (lastIndex >= nums.length - 1) {
+//     //just like the node== null in the dfs of a tree
+//     return;
+//   }
+
+//   //thus we can try i from lastIndex + 1, to nums.length - 1
+//   for (var i = lastIndex + 1; i < nums.length; i++) {
+//     //loop through all the possible child
+//     //making new node for the tree
+//     treeNode.push(nums[i]);
+//     subsetHelper(nums, treeNode, treeCollection);
+//     treeNode.pop();
+//   }
+// }
+
+// subset(num, treeNode, treeCollection);
+// console.log(treeCollection);
+
+
+var TreeNode = function(val) {
+  //val就是答案中的一个
+  this.val = val;
+  this.children = [];
+}
+//找如下input的集合
+var num = [1,2,3];
+//这是我们的解空间的树，目前他是空滴
+var solutionTree = null;
+
+function subset(num) {
+  if (num === null || num.length === 0) {
+    return [];
+  }
+  //root of the solution tree,树的根是空集
+  var root = [];
+  var result = [];
+
+  //update solutionTree node 我们一边遍历一边构造这个解的树
+  solutiontree = new TreeNode(root);
+
+  subsetHelper(num, root, result, 0, solutiontree);
+  return result;
+}
+
+/*
+  @treeNode 是解树中的一个node.可以理解为当前node的指针，一开始他是指向根的
+  @node 理解为当前node的值，也就是解之一
+*/
+function subsetHelper(num, node, result, pos, treeNode) {
+  //先把当前的解推入答案中，类似于preorder
+  result.push(node.slice(0));
+  //loop through the possible children
+  //这个步骤，就像是bfs的preorder中，去遍历左右子树
+  //区别在于，在bfs中，我们已经有了左右子树。所以不需要创建。
+  for (var i = pos; i < num.length; i++) {
+    //become a new child node 得到新节点的值（即一个新的解）
+    node.push(num[i]);
+    //making a new node for the solution tree
+    //在解的树中创建新节点。
+    treeNode.children[treeNode.children.length] = new TreeNode(node.slice(0));
+    //这就是那个子节点的reference了，传入下一个递归。
+    var newChildNode = treeNode.children[treeNode.children.length - 1];
+    //dfs
+    subsetHelper(num, node, result, i + 1, newChildNode);
+    //这一步，乃回溯的体现。。吗？是为了我们创建下一个树的节点
+    //back to the parent node
+    node.pop();
+  }
+  result.push(node.slice(0));
+
+}
+
+// console.log(subset(num));
+// console.log(JSON.stringify(solutiontree, null, 2));
+
+//preorder by backchecking
+function preorder(root) {
+  if (root == null) {
+    return;
+  }
+
+  //root is unchange. we already have it as well as its children node.
+  //no need to try to construct, and thus no need to push and pop
+  if (root.left !== null) {
+    root.left
+  }
+  if (root.right !== null) {
+    root.right
+  }
+}
+
+
+
+
+
+
+</script>
+

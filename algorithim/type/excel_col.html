@@ -1,0 +1,15 @@
+<script type="text/javascript">
+
+
+
+var convertToTitle = function(n) {
+    if (n < 1) {return ""};
+    var curr = (n  - 1) % 26 + 1;
+
+    var currChar = String.fromCharCode(curr + 64);
+    var rest = (n - curr) / 26;
+    return convertToTitle(rest) + currChar;
+}
+
+console.log(convertToTitle(53))
+</script>

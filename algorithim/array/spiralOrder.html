@@ -1,0 +1,214 @@
+<script type="text/javascript">
+/*
+
+Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+
+For example,
+Given the following matrix:
+
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+You should return [1,2,3,6,9,8,7,4,5].
+
+
+*/
+
+var arr = [];
+// var matrix = new Array(3).fill([]);
+// matrix.forEach(function(row, i) {
+//     matrix[i].forEach(function(data, j) {
+//         console.log(i,j)
+//         matrix[i][j] = j + i * 3;
+//     });
+// });
+// console.log(arr);
+
+// for (var i = 0; i < 3; i++) {
+//     for (var j = 0; j < 3; j++) {
+//         matrix[i][j] = (j + 1 + i * 3);
+//     }
+// }
+// var matrix = [
+//  [ 1, 2, 3 ],
+//  [ 4, 5, 6 ],
+//  [ 7, 8, 9 ]
+// ]
+
+var matrix = new Array(3);
+for (var i = 0; i < 3; i++) {
+    matrix[i] = new Array(3);
+}
+for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < 3; j++) {
+        matrix[i][j] = (j + 1 + i * 3);
+    }
+}
+
+
+console.log(matrix);
+
+matrix = [[2, 3]]
+matrix = [[2,5],[8,4],[0,-1]]
+matrix = [[1,2,3],[4,5,6],[7,8,9]];
+// matrix = [[1, 2], [3, 4]]
+// matrix = [[1]]
+
+
+
+/**
+ * @param {number[][]} matrix
+ * @return {number[]}
+ */
+var spiralOrder = function(matrix) {
+    var result = [];
+
+    var m = matrix.length;
+    var n = matrix[0].length;
+    console.log(m, n)
+    var x0 = 0, x1 = m - 1, y0 = 0, y1 = n - 1;
+
+    while (x0 < x1 && y0 < y1) {
+        // -> right
+        for (var j = y0; j <= y1; j++) {
+            result.push(matrix[x0][j]);
+        }
+        // | down
+        for (var i = x0 + 1; i <= x1; i++) {
+            result.push(matrix[i][y1]);
+        }
+        // <- left
+        for (var j = y1 - 1; j >= y0; j--) {
+            result.push(matrix[x1][j]);
+        }
+        // ^ up
+        for (var i = x1 - 1; i >= x0 + 1; i--) {
+            result.push(matrix[i][y0]);
+        }
+        x0++;
+        x1--;
+        y0++;
+        y1--;
+    }
+    if (x0 < x1) {
+        console.log('hi')
+        for (var i = x0; i < x1; i++) {
+            result.push(matrix[i][y0]);
+        }
+    }
+    if (y0 < y1) {
+        console.log('hi')
+
+        for (var j = y0; j < y1; j++) {
+            result.push(matrix[x0][j]);
+        }  
+    }
+
+    if (x0 == x1) {
+        result.push(matrix[x0][y1]);
+    }
+
+    if (y0 == y1) {
+        result.push(matrix[x1][y0]);
+
+    }
+    console.log(result)
+};
+
+
+
+// var Direction = {
+//     DOWN: 0,
+//     RIGHT: 1,
+//     LEFT: 2,
+//     UP: 3,
+//     dx: [1, 0, 0, -1],
+//     dy:[0, 1, -1, 0],
+//     turnRight: function(direction) {
+//         if (direction == this.DOWN) {
+//             return this.LEFT;
+//         } else if (direction  == this.RIGHT) {
+//             return this.DOWN;
+//         } else if (direction == this.LEFT) {
+//             return this.UP;
+//         } else if (direction == this.UP) {
+//             return this.RIGHT;
+//         }
+//         return -1;
+//     },
+//     move: function(cursor, direction) {
+//         var nextCursor = new Array(2);
+//         nextCursor[0] = cursor[0] + this.dx[direction];
+//         nextCursor[1] = cursor[1] + this.dy[direction];
+//         return nextCursor;
+//     }
+// }
+
+
+var Direction = (function() {
+    //scope
+    var DOWN = 0, RIGHT = 1, LEFT = 2, UP = 3;
+    var dx = [1, 0, 0, -1], dy = [0, 1, -1, 0];
+    return {
+
+        turnRight: function(direction) {
+            if (direction == DOWN) {
+                return LEFT;
+            } else if (direction  == RIGHT) {
+                return DOWN;
+            } else if (direction == LEFT) {
+                return UP;
+            } else if (direction == UP) {
+                return RIGHT;
+            }
+            return -1;
+        },
+        move: function(cursor, direction) {
+            var nextCursor = new Array(2);
+            nextCursor[0] = cursor[0] + dx[direction];
+            nextCursor[1] = cursor[1] + dy[direction];
+            return nextCursor;
+        }
+    }
+}());
+
+var spiralOrder = function(matrix) {
+    var order = [];
+    //check corner case
+    if (matrix === null || matrix.length === 0) {
+        return order;
+    }
+    var m = matrix.length;
+    if (matrix[0] === null || matrix[0].length === 0) {
+        return order;
+    }
+    var n = matrix[0].length;
+
+    var direction = 1;
+    var cursor = [0, 0];
+
+    for (var i = 0; i < m * n; i++) {
+        order.push(matrix[cursor[0]][cursor[1]]);
+        //mark the visited position as -1 
+        matrix[cursor[0]][cursor[1]] = false;
+        //try to get the next cursor
+        var nextCursor = Direction.move(cursor, direction);
+        //if outside of matrix or marked before, turn right
+        if (nextCursor[0] < 0 || nextCursor[0] >= m ||
+            nextCursor[1] < 0 || nextCursor[1] >= n ||
+            matrix[nextCursor[0]][nextCursor[1]] === false) {
+            direction = Direction.turnRight(direction);
+            nextCursor = Direction.move(cursor, direction);
+        }
+        cursor = nextCursor;
+    }
+    return order;
+}
+
+if (undefined === null) {
+    console.log('hi');
+}
+console.log(spiralOrder(matrix));
+</script>

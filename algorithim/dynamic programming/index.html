@@ -1,0 +1,193 @@
+<script type="text/javascript">
+
+  var s = 'hello world';
+  var test = 'llo';
+
+  // console.log(s.indexOf(test));
+
+  console.log(s.substring(0, s.length - 1));
+
+
+
+// var minCut = function(s) {
+//     var isPalindromCallCount = 0;
+//     function isPalindrom(s) {
+//         for (var i = 0, j = s.length - 1; i < j; i++, j--) {
+//             isPalindromCallCount++;
+//             if (s.charAt(i) === s.charAt(j)) {
+//                 continue;
+//             } else {
+//                 return false;
+//             }
+//         }
+//         return true;
+//     }
+
+
+
+
+
+//     var record = [];
+//     for (var i = 0; i <= s.length; i++) {
+//         record.push(i);
+//     }
+//     //record[0] = 0;
+//     for (var i = 1; i <= s.length; i++) {
+//         // var min = record[i];
+//         for (var j = i - 1; j >= 0; j--) {
+//             var currStr = s.substring(j, i) //ending at index i, meaning 0 ~ i - 1
+//             // the first currStr is s.substring(i - 1, i) meaning the character at index = i - 1, which is the last character of the first i character.
+//             if (isPalindrom(currStr)) {
+//                 record[i] = Math.min(record[j] + 1, record[i]);
+//             }
+//         }
+//     }
+
+//     console.log(record);
+//     console.log(isPalindromCallCount)
+//     return record[s.length] - 1;
+// };
+
+
+// var s = "aaaaaaaaaax";
+
+
+
+// console.log(minCut(s));
+// var word = ['leet', 'code'];
+
+// var wordBreak = function(s, wordDict) {
+//     //try not to use the -1 = 0
+//     var record = new Array(s.length).fill(false);
+//     record[-1] = true;
+//     var max = Number.MIN_VALUE;
+//     wordDictMap = {};
+//     wordDict.forEach(function(word) {
+//         max = Math.max(word.length, max);
+//         wordDictMap[word] = true;
+//     });
+    
+//     // if (wordDictMap[s.substring(0, 1)] === true) {
+//     //     record[0] = true;
+//     // }
+    
+//     for (var i = 0; i < s.length; i++) {
+//         // record[i] = false;
+//         // if (i == 3) {
+//         //     console.log(max);
+//         //     console.log(i - max + 1);
+//         //     console.log(s.substring(i - max + 1, i + 1));
+//         // }
+//         if (wordDictMap[s.substring(i, i + 1)] && record[i - 1]) {
+//             //check the word length = 1
+//             record[i] = true;
+//         } else {
+//             //check the word length from 0 to max
+//             for (var j = i; j >= i - max + 1 && j >= 0; j--) {
+
+//                 //j = i s.substring(i, i + 1) return s[i]
+//                 if (wordDictMap[s.substring(j, i + 1)] && record[j - 1]) {
+//                     record[i] = true;
+//                     break;
+//                 }
+//             }
+//         }
+//     }
+    
+//     console.log(wordDictMap);
+//     console.log(record);
+
+//     return record[s.length - 1];
+// };
+
+// var str = "leetcode";
+// console.log(wordBreak(str, word));
+
+
+// // var minimumTotal = function(triangle) {
+// //     var hashMemory = [];
+
+// //     triangle.forEach(function(layer) {
+// //         hashMemory.push(new Array(layer.length).fill(null));
+// //     });
+    
+
+// //     var getMinPathHelper = function(triangle, coord) {
+// //         var layerIndex = coord.layerIndex, 
+// //             location = coord.location;
+// //         //base case, end at the bottom layer
+// //         if (layerIndex == triangle.length - 1) {
+// //             // if reach the end of the second bottom layer
+// //             // in this case, we notice that location will not exceed the bounday
+// //             return triangle[layerIndex][location];
+// //         }
+        
+// //         if (hashMemory[layerIndex][location] !== null) {
+// //             return hashMemory[layerIndex][location];
+// //         } else {
+// //             var fromLeft = getMinPathHelper(triangle, {
+// //                 layerIndex: layerIndex + 1,
+// //                 location: location
+// //             });
+            
+// //             var fromRight = getMinPathHelper(triangle, {
+// //                 layerIndex: layerIndex + 1,
+// //                 location: location + 1
+// //             });
+// //             var updateMin = Math.min(fromLeft, fromRight) + triangle[layerIndex][location];
+// //             hashMemory[layerIndex][location] = updateMin;
+// //             return hashMemory[layerIndex][location];
+// //         }
+        
+// //     };
+    
+    
+// //     var startCoord = {
+// //         layerIndex: 0,
+// //         location: 0
+// //     };
+
+// //     var result = getMinPathHelper(triangle, startCoord);
+// //     console.log(hashMemory);
+// //     return result;
+// // }
+
+// // var triangle =  [
+// //     [2],
+// //     [3, 4],
+// //     [6, 5, 7],
+// //     [4, 1, 8, 3]
+// // ];
+// // console.log(minimumTotal(triangle))
+
+
+// var uniquePaths = function(m, n) {
+    
+//     //init to be 0
+//     var uniquePathsRecord = new Array(m);
+//     uniquePathsRecord.forEach(function(row, index) {
+//         console.log('index is ', index);
+//         uniquePathsRecord[index] = new Array(n).fill(0);
+//     });
+
+//     console.log('record is ', uniquePathsRecord);
+    
+//     //init first row all to be 1, first col all to be 1
+//     // for (var i = 0; i < m; i++) {
+//     //     uniquePathsRecord[i][0] = 1;
+//     // }
+//     // for (var j = 0; j < n; j++) {
+//     //     uniquePathsRecord[0][j] = 1;
+//     // }
+    
+//     // for (var i = 1; i < m; i++) {
+//     //     for (var j = 1; j < n; j++) {
+//     //         uniquePathsRecord[i][j] = uniquePathsRecord[i - 1][j] + uniquePathsRecord[i][j - 1];
+//     //     }
+//     // }
+//     // return uniquePathsRecord[m - 1][n - 1];
+// };
+
+// console.log(uniquePaths(3, 2))
+
+</script>

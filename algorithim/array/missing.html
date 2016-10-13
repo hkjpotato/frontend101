@@ -1,0 +1,16 @@
+<script type="text/javascript">
+var missingNumber = function(nums) {
+    nums.sort(function(a, b) {return a - b});
+    console.log(nums);
+    nums.forEach(function(data, index) {
+        console.log(data, index);
+        if (data !== index) {
+            console.log('hit')
+            return index;
+        }
+    });
+    return nums.length;
+}
+
+console.log(missingNumber([1]));
+</script>

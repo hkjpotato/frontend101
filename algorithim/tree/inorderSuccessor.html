@@ -1,0 +1,134 @@
+<script type="text/javascript">
+var TreeNode = function(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+
+}
+
+var root = new TreeNode(2);
+root.right = new TreeNode(3);
+
+
+var succHelper = function(root, p) {
+    if (root !== null) {
+        console.log('hi')
+        if (root.val < p.val) {
+            //go to the right
+            console.log('1')
+            return succHelper(root.right, p);
+        } else if (root.val > p.val) {
+            console.log('2')
+            //go to the left
+            var result = succHelper(root.left, p);
+            if (result !== null) {
+                if (result.successor !== null) {
+                    return result;
+                } else {
+                    return {
+                        successor: root
+                    }
+                }
+            } else {
+                return result;
+            }
+        } else {
+            console.log('3')
+            //find it
+            if (root.right === null) {
+                return {
+                    successor: null
+                }
+            } else {
+                root = root.right;
+                while(root.left !== null) {
+                    root = root.left;
+                }
+                return {
+                    successor: root
+                }
+            }
+        }
+    } else {
+        return null;
+    }
+}
+var inorderSuccessor = function(root, p) {
+    //2 cases
+    //case 1: the node has right subtree, return the leftmost child of its right subtree
+
+    //case 2: the node has null right subtree,Travel up using the parent pointer until you see a node which is left child of it’s parent. The parent of such a node is the succ.
+    var result = succHelper(root, p);
+    // console.log(result)
+    if (result !== null) {
+        return result.successor;
+    } else {
+        return result;
+    }
+}
+
+// var inorderSuccessor = function(root, p) {
+//     //2 cases
+//     //case 1: the node has right subtree, return the leftmost child of its right subtree
+
+//     //case 2: the node has null right subtree,Travel up using the parent pointer until you see a node which is left child of it’s parent. The parent of such a node is the succ.
+//     if (root === null) {
+//         return null;
+//     }
+//     if (root.val <= p.val) {
+//         return inorderSuccessor(root.right, p);
+//     } else {
+//         var left = inorderSuccessor(root.left, p);
+//         return (left !== null) ? left : root;
+//     }
+// };
+
+// var inorderSuccessor = function(root, p) {
+//     //2 cases
+//     //case 1: the node has right subtree, return the leftmost child of its right subtree
+
+//     //case 2: the node has null right subtree,Travel up using the parent pointer until you see a node which is left child of it’s parent. The parent of such a node is the succ.
+//     var successor = null;
+//     while (root !== null && root.val !== p.val) {
+//         if (root.val > p.val) {
+//             successor = root;
+//             root = root.left;
+//         } else {
+//             root = root.right;
+//         }
+//     } 
+//     if (root == null) {
+//         return null;
+//     }
+//     if (root.right == null) {
+//         return successor;
+//     }
+//     root = root.right;
+//     while(root.left !== null) {
+//         root = root.left;
+//     }
+//     return root;
+// };
+
+
+console.log(inorderSuccessor(root, root.right));
+// var test = {
+//     succ: null
+// }
+// if (test) {
+//     console.log('hello')
+//     if (test.succ) {
+//         console.log('world')
+//     }
+// }
+
+
+// var inorderSuccessor(root, p) {
+//     if (root == null) {
+//         return null;
+//     }
+
+//     if (root.val <=)
+// }
+
+</script>

@@ -1,0 +1,50 @@
+<script type="text/javascript">
+var s = "abcabcbb";
+var s = "dvdf";
+var s = "bbtablud";
+
+
+
+/*
+let's maintain a max, currlen; start, , lastchar
+
+for i = 0; i < len; i++
+    if (currChar !== lastchar) {
+        //a valid char, add to the curr length
+        currlen ++
+
+        if (currlen > max.length) {
+            max = s.substr(start, i - start + 1)
+        }
+    } else {
+        //not a valid
+        start update to current
+    }
+*/
+
+
+var lengthOfLongestSubstring = function(s) {
+    var maxStr = '';
+    var startIndex = 0;
+    for (var i = 0; i < s.length; i++) {
+        var checkIndex = i - 1;
+        while(checkIndex >= startIndex) {
+            if (s.charAt(checkIndex) == s.charAt(i)) {
+                startIndex = checkIndex + 1;
+                break;
+            }
+            checkIndex--;
+        }
+        if (i - startIndex + 1 > maxStr.length) {
+            maxStr = s.substr(startIndex, i - startIndex + 1);
+        }
+        // if (checkIndex == startIndex) {
+        //     if (i - startIndex + 1 > maxStr.length) {
+        //         maxStr = s.substr(startIndex, i - startIndex + 1);
+        //     }
+        // }
+    }
+    return maxStr;
+}
+console.log(lengthOfLongestSubstring(s))
+</script>

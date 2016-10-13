@@ -1,0 +1,73 @@
+<script type="text/javascript">
+var TreeNode = function(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+
+}
+var root = new TreeNode(10);
+root.left = new TreeNode(5);
+root.right = new TreeNode(15);
+root.right.right = new TreeNode(7);
+root.left.left = new TreeNode(1);
+root.left.right = new TreeNode(8);
+
+/*
+
+    10
+    / \
+   5  15
+  / \   \ 
+ 1   8   7
+
+ largest size is 3 
+   5  
+  / \  
+ 1   8 
+
+*/
+
+
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var largestBSTSubtree = function(root) {
+    //think about DFS by devide and conquer
+    return dfs(root).size;
+}
+
+
+//dfs by devide + conquer : bottom up recursion
+var dfs = function(root) {
+    if (root == null) {
+        //leaf node
+        return {
+            isBST: true,
+            size: 0,
+            max: -Number.MAX_VALUE,
+            min: Number.MAX_VALUE
+        }
+    }
+    //devide
+    var left  = dfs(root.left);
+    var right = dfs(root.right);
+
+    //conquer
+    if (left.isBST && right.isBST && left.max < root.val && right.min > root.val) {
+        return {
+            isBST: true,
+            size: left.size + right.size + 1,
+            max: (right.max === -Number.MAX_VALUE) ? root.val : right.max,
+            min: (left.min === Number.MAX_VALUE) ? root.val : left.min
+        }
+    } else {
+        return {
+            isBST: false,
+            size: Math.max(left.size, right.size),
+            max: Number.MAX_VALUE,
+            min: -Number.MAX_VALUE
+        }
+    }
+}
+</script>

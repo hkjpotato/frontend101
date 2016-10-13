@@ -1,0 +1,249 @@
+<html>
+<body>
+<script type="text/javascript">
+function swap(arr, index1, index2) {
+  var temp = arr[index1];
+  arr[index1] = arr[index2];
+  arr[index2] = temp;
+  return;
+}
+
+var test_case = [
+  [1],
+  [1, 2, 3],
+  [3, 2, 1],
+  [2, 2, 2],
+]
+
+var test_case2 = [
+ {val:1, index: 0},
+ {val:1, index: 1},
+ {val:1, index: 2},
+ {val:1, index: 3},
+ {val:1, index: 4},
+ {val:1, index: 5},
+]
+
+var test_case3 = [
+ {val:3, index: 0},
+ {val:2, index: 1},
+ {val:1, index: 2},
+ {val:5, index: 3},
+ {val:6, index: 4},
+ {val:1, index: 5},
+]
+
+function print(testcase) {
+  var str = '';
+  testcase.forEach(function(ele) {
+    str = str + ele.val + '(' + ele.index + '),'; 
+  });
+  console.log(str);
+}
+function comparator(a, b) {
+  return a.val - b.val;
+}
+
+function bubblesort(arr) {
+  // At each round, find the maximum one,
+  // shift it to the right where sorted
+  // continue on the rest element
+  // keep doing so until all are sorted
+  // meaning that 1. only 1 element rest 2.need swap is false
+  var numofrest = arr.length;
+  var needSwap = true;
+  while (numofrest > 1 && needSwap) {
+    console.log('loop once');
+    //each time we assume it is already ok
+    needSwap = false;
+    //why you wanna to record this, because you wanna stop if the last one does not involve any swap, meaning you are have the right sequence
+    //every while loop. you can only ensure the largest go to the right
+    for (var i = 0; i < numofrest - 1; i++) {
+      if (arr[i] > arr[i + 1]) {
+        swap(arr, i, i + 1);
+        needSwap = true;
+      }
+    }
+    numofrest--;
+  }
+  return arr;
+}
+
+// console.log(bubblesort(test_case[1]));
+
+
+function insertionsort(arr, comparator) {
+  //inplace and stable
+  for (var i = 0; i < arr.length; i++) {
+    //for the number before i [0, i - 1], they are sort, we wanna to insert i in to them to make up a sorted [0, i];
+    var index = i;
+    //similar to buble, we can only do it one by one
+    while (index > 0 && comparator(arr[index], arr[index - 1]) < 0) {
+      console.log('loop once');
+      swap(arr, index, index - 1);
+      index--;
+    }
+  }
+}
+
+// print(test_case3);
+
+// insertionsort(test_case3, comparator);
+
+// print(test_case3);
+
+
+//the simplified version, always place the pivot at the 
+/*
+3 2 1 5 6 1
+
+2 3 1 5 6 1
+
+2 1 3 5 6 1
+
+2 1 3
+
+2 1 1
+*/
+function quickSort1(arr, comparator) {
+  quicksorthelper1(arr, 0, arr.length - 1, comparator);
+  //lets make sure one since, for each round, we are trying to find the right pivot location for the current pivot
+}
+
+function quicksorthelper1(arr, start, end, comparator) {
+  if (start >= end) {
+    return;
+  }
+  var pivotIndex = Math.floor((start + end)/2);
+  //swap pivot to the end -> which should help us later
+  swap(arr, pivotIndex, end);
+  pivotIndex = end;
+  var left = start, right = end;
+  while (left < right) {
+    while (left < right && comparator(arr[left], arr[pivotIndex]) <= 0) {
+      left++;
+    }
+    if (left < right) {
+      //meaning that the while loop end because a larger a[i] occurs
+      swap(arr, pivotIndex, left);
+      pivotIndex = left;
+      right--;
+    }
+    while (left < right && comparator(arr[right], arr[pivotIndex]) >= 0) {
+      right--;
+    }
+    if (left < right) {
+      //meaning a smaller one encouter
+      swap(arr, pivotIndex, right);
+      pivotIndex = right;
+      left++;
+    }
+  }
+  //end at i == j. which should be pivot Index
+  quicksorthelper1(arr, start, left - 1, comparator);
+  quicksorthelper1(arr, right + 1, end, comparator);
+}
+
+// quickSort1(test_case3, comparator);
+
+print(test_case3)
+
+
+
+function quicksort2(arr, comparator) {
+    quicksorthelper2(arr, 0, arr.length - 1, comparator);
+}
+
+function quicksorthelper2(arr, start, end) {
+  if (start >= end) {
+    return;
+  }
+
+  var left = start, right = end;
+  // key point 1: pivot is the value, not the index
+
+  // console.log(parseInt(start + end) / 2);
+  var pivot = arr[Math.floor((start + end) / 2)];
+  console.log('pivot is' , pivot);
+  // key point 2: every time you compare left & right, it should be left <= right not left < right
+  // meaning that when left == right, we still need to go into the loop
+  while (left <= right) {
+    //key point 3: arr[left] < pivot not arr[left] <= pivot
+    //thus, even though for pivot itself, we have to compare and switch it
+    while (left <= right && arr[left].val < pivot.val) {
+      left++;
+    }
+    // key point 3: A[right] > pivot not A[right] >= pivot
+    while (left <= right && arr[right].val > pivot.val) {
+      right--;
+    }
+    if (left <= right) {
+      var temp = arr[left];
+      arr[left] = arr[right];
+      arr[right] = temp;
+      left++;
+      right--;
+    }
+  }
+  //because when jump out this loop,  left = right + 1;
+  quicksorthelper2(arr, start, right);
+  quicksorthelper2(arr, left, end);
+}
+
+// quicksort2(test_case3);
+// print(test_case3)
+
+
+function mergesort(arr) {
+  var tempArr = new Array(arr.length).fill(null);
+  mergesorthelper(arr, tempArr, 0, arr.length - 1);
+}
+
+function mergesorthelper(arr, tempArr, start, end) {
+  if (start >= end) {
+    // console.log('reach end');
+    return;
+  }
+  //partition (devide)
+  var mid = Math.floor((start + end) / 2);
+  console.log(start, mid, end);
+
+  mergesorthelper(arr, tempArr, start, mid);
+  mergesorthelper(arr, tempArr, mid + 1, end);
+
+  //combination(conquer)
+  for (var i = start; i <= end; i++) {
+    tempArr[i] = arr[i];
+  }
+
+  var i = start, j = mid + 1;
+  var k = start;
+
+  while (i <= mid && j <= end) {
+    if (tempArr[i].val > tempArr[j].val) {
+      arr[k] = tempArr[j];
+      j++;
+    } else {
+      arr[k] = tempArr[i];
+      i++;
+    }
+    k++;
+  }
+
+  while(i <= mid) {
+    arr[k] = tempArr[i];
+    k++;
+    i++;
+  }
+}
+
+mergesort(test_case3);
+print(test_case3)
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<script type="text/javascript">
+var minDistance = function(word1, word2) {
+    /*
+       0 1 2 3 .... word2
+       1
+       2
+       3
+       .
+       .
+       .
+       w
+       o
+       r
+       d
+       1
+    
+    */
+    
+    
+    var min = new Array(word1.length + 1).fill(null);
+    min.forEach(function(row, index) {
+        min[index] = new Array(word2.length + 1).fill(0);
+    });
+
+    console.log(min);
+    
+    min[0][0] = 0;
+    for (var i = 1; i < min[0].length; i++) {
+        min[0][i] = min[0][i - 1] + 1;
+    }
+    
+    for (var j = 1; j < min.length; j++) {
+        min[j][0] = min[j - 1][0] + 1;
+    }
+    
+    for (var i = 1; i < min.length; i++) {
+        //ith row
+        for (var j = 1; j < min[i].length; j++) {
+            //jth col
+            
+            //3 operations
+            
+            //case1: inerst the jth char of word2
+            var insertion = min[i][j - 1] + 1;
+            
+            //case2: delete the ith char of word1
+            var deletion = min[i - 1][j] + 1;
+            
+            //case3: substitue the ith of word1 to jth word2
+            var substition = min[i - 1][j - 1] + (word1.charAt(i - 1) === word2.charAt(j - 1) ? 0 : 1);
+
+            min[i][j] = Math.min(insertion, deletion, substition);
+        }
+    }
+    
+    return min[word1.length][word2.length];
+};
+
+console.log(minDistance('cats', 'networks'));
+</script>

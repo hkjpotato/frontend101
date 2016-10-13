@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    console.log('hello world'.charAt(0));
+    console.log('A'.charCodeAt());
+
+    /*
+
+    i % A
+
+    (i - 1 % A + 1) == i % A if i !== N * A
+    (i - 1 % A + 1) == A if i == N * A
+
+    */
+
+    var titleToNumber = function(s) {
+        var sum = 0;
+        // for (var i = s.length - 1; i >= 0; i--) {
+        //     sum += (s.charAt(i).charCodeAt() - 64) * Math.pow(26, s.length - 1 - i)
+        // }
+        // return sum;
+
+        for (var i = 0; i < s.length; i++) {
+            sum = sum * 26 + (s.charAt(i).charCodeAt() - 64);
+        }
+        return sum;
+    }
+
+    console.log(titleToNumber('AA'))
+</script>

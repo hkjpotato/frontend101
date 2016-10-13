@@ -54,9 +54,9 @@ var findLIS = function(inputArray) {
 		console.log('dealing with index i = ' + i);
 
 		for (var j = 0; j < i; j++) {
-
 			console.log('	checking if previous index j = ' + j + " is smaller than current [i] = " + inputArray[i]);
 			if (inputArray[j] <= inputArray[i]) {
+				//attention, must follow the order to ensure that state[j] is updated and correct
 				state[i] = state[i] > state[j] + 1 ? state[i] : state[j] + 1;
 				// state[i] = currentLIS < (state[j] + 1) ? (state[j] + 1) : currentLIS;
 				console.log('		oh yes index j  = ' + j + " is smaller than current, currentLIS is update to " + state[i]);
@@ -80,4 +80,4 @@ var findLIS = function(inputArray) {
 
 var inputArray3 = [1, 2, 3];
 
-console.log('LIS is ', findLIS(inputArray2));
+console.log('LIS is ', findLIS(inputArray1));

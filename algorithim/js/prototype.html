@@ -1,0 +1,79 @@
+
+  <script type="text/javascript">
+var Dog = function(name) {
+  this.name = name;
+  var test = 'haha';
+  var privateCounter = 0;
+  privateCounter++;
+  this.getCounter = function() {
+    //get access to closure
+    test;
+    return privateCounter;
+  }
+  if (typeof Dog.size == 'undefined') {
+    Dog.size =0
+  }
+  Dog.size++;
+}
+
+// Dog.size = 0;
+
+
+Dog.prototype.getCounter = function() {
+  // console.log("hello");
+  return 'mlgb'
+}
+
+
+var dog1 = new Dog("yellow");
+var dog2 = new Dog("blue");
+var dog3 = new Dog("pink");
+
+console.log(dog3.getCounter());
+//dog3 has a property which is getCounter, defined in constructor, 
+//it is in a closure of the constructor function, with privateCounter
+console.log(dog3);
+
+
+console.log(Dog.size);
+
+console.log(Dog.prototype.constructor);
+
+console.log(dog1.__proto__);
+console.log(Dog.prototype == dog1.__proto__);
+console.log(Dog.__proto__);
+console.log(Dog.__proto__.__proto__);
+
+
+
+
+
+/*
+  new cstr_func -> 
+    1.return instance of this
+    2. also making a closure, which only the method attached to 'this' instance can access it
+  ...cstr_func itself maintain a closure ? does it shared by all the instance created? no!!
+  ...it just help to create a new instance with property set as this.xxx, this.xxx
+
+  cstr_func.prototype -> common set by all instance
+
+  cstr_func itself is also an object, make use of this to maintain static variable
+
+
+
+
+
+  (cstr_func) -prototype-> (cstr_func.prototype)
+  (cstr_func.prototype) -constructor-> (cstr_func)
+  new cstr_func -> (instance) {
+    .property / can also access the closure created by cstr_func
+    .cstr_func.prototype.property
+  }
+  (instance) -__proto__ -> (cstr_func.prototype)
+  (cstr_func) itself is an instance, thus
+  (cstr_func) -__proto__ -> constructor of cstr_func(Function).prototype = Function.prototype
+  (xxx.prototype) -__proto__ -> constructor of prototype(Object).prototype 
+  
+*/
+  </script>
+

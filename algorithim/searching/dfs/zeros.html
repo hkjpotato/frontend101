@@ -1,0 +1,97 @@
+<script type="text/javascript">
+
+var matrix = [[0,0,0,5],[4,3,1,4],[0,1,1,4],[1,2,1,3],[0,0,1,1]];
+//m + n space
+var setZeroes = function(matrix) {
+    var m = matrix.length;
+    var n = matrix[0].length;
+
+    clearRows = new Array(m).fill(false);
+    clearCols = new Array(n).fill(false);
+
+    for (var i = 0; i < m; i++) {
+        for (var j = 0; j < n; j++) {
+            if (matrix[i][j] == 0) {
+                clearRows[i] = true;
+                clearCols[j] = true;
+            } 
+        }
+    }
+    clearRows.forEach(function(clear, index) {
+        if (clear) {
+            for (var j = 0; j < n; j++) {
+                matrix[index][j] = 0;
+            }
+        }
+    });
+    clearCols.forEach(function(clear, index) {
+        if (clear) {
+            for (var i = 0; i < n; i++) {
+                matrix[i][index] = 0;
+            }
+        }
+    });
+
+};
+
+//inplace
+var setZeroes = function(matrix) {
+    var m = matrix.length;
+    var n = matrix[0].length;
+    var zeros = new Array(m);
+
+    var clear1throw;
+    var clear1thcol;
+    for (var j = 0; j < n; j++) {
+        if (matrix[0][j] === 0) {
+            clear1throw = true;
+            break;
+        }
+    }
+    for (var i = 0; i < m; i++) {
+        if (matrix[i][0] === 0) {
+            clear1thcol = true;
+        }
+    }
+
+    for (var i = 1; i < m; i++) {
+        for (var j = 1; j < n; j++) {
+            if (matrix[i][j] === 0) {
+                matrix[i][0] = 0; //mark row
+                matrix[0][j] = 0; //mark col
+            }
+        }
+    }
+
+    for (var i = 1; i < m; i++) {
+        for (var j = 1; j < n; j++) {
+            if (matrix[0][j] == 0 || matrix[i][0] == 0) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    if (clear1throw) {
+        for (var j = 0; j < n; j++) {
+            matrix[0][j] = 0;
+        }
+    }
+
+    if (clear1thcol) {
+        for (var i = 0; i < m; i++) {
+            matrix[i][0] = 0;
+        }
+    }
+};
+
+
+setZeroes(matrix);
+
+matrix.forEach(function(row) {
+    console.log(JSON.stringify(row));
+})
+
+// using O(m+n) is easy, to enable O(1), we have to use the space within the matrix   
+
+
+</script>

@@ -1,0 +1,176 @@
+<html>
+<body>
+  <script type="text/javascript">
+  // var TreeNode = function(val) {
+  //   this.val = val;
+  //   this.left = null;
+  //   this.right = null;
+  // }
+
+  // var root = new TreeNode('root');
+  // root.left = new TreeNode('left');
+  // root.left.left = new TreeNode('left.left');
+  // root.left.left.left = new TreeNode('left.left.left');
+  // root.left.left.right = new TreeNode('left.left.right');
+
+
+  // root.left.right = new TreeNode('left.right');
+  // root.right = new TreeNode('right');
+
+  // json = JSON.stringify(root, null, 4);
+
+  // console.log(json);
+
+
+  // var stack = [];
+  // stack.push(root);
+  // var result = [];
+  // while(stack.length !== 0) {
+  //   // console.log(JSON.stringify(stack, '', 4));
+  //   // printStack(stack);
+
+
+  //   var node = stack.pop();
+  //   result.push(node.val);
+  //   if (node.right !== null) {
+  //     stack.push(node.right);
+  //   }
+  //   if (node.left !== null) {
+  //     stack.push(node.left);
+  //   }
+  // }
+
+  // console.log(result)
+
+
+  /*
+  queue 1 + 2 + 3 (push)
+        -> 1 -> 2 -> 3 (shift)
+
+  stack 1 + 2 + 3 (push)
+        -> 3 -> 2 -> 3 (pop)
+  
+  queue 3 + 2 + 1 (unshift)
+        -> 3 -> 2 -> 1 (shift)
+
+
+  unshift + shift is also FILO
+  push + pop is also FILO
+  */
+
+
+//deep understanding about DFS
+
+/**
+      1
+  2       5
+3   4   6    7
+
+result of preorder
+1, 2, 3, 4, 5, 6, 7
+
+result of postorder
+3, 4, 2, 6, 7, 5, 1
+
+result of inorder
+3, 2, 4, 1, 6, 5, 7
+
+result of levelorder
+1, 2, 5, 3, 4, 6, 7
+
+
+
+
+*/
+
+  var TreeNode = function(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+  }
+
+  var root = new TreeNode(1);
+  root.left = new TreeNode(2);
+  root.left.left = new TreeNode(3);
+  root.left.right = new TreeNode(4);
+  root.right = new TreeNode(5);
+  root.right.left = new TreeNode(6);
+  root.right.right = new TreeNode(7);
+
+  console.log(JSON.stringify(root, null, 2));
+
+
+  // var result = [];
+  // var stack = [];
+  // curr = root;
+  // var i = 10
+  // while(curr !== null || stack.length !== 0) {
+  //   while(curr !== null) {
+  //     stack.push(curr);
+  //     curr = curr.left;
+  //   }
+  //   currNode = stack.pop();
+  //   console.log(currNode.val);
+  //   result.push(currNode.val);
+  //   curr = currNode.right;
+  //   i--;
+  // }
+  // console.log(result);
+
+
+  //try to use backtracking to traverse a tree
+  function dfsByStack(node) {
+    if (node === null) {
+      return null;
+    }
+    var stack = [];
+    stack.push(node);
+    //very tricky method
+    //it use the lifo of stack to achieve dfs
+    //the node in the stack, is actually the solution tree of the curr node
+    //the pop action is like a back tracking, however, it comes with two possible push action
+    //the pop action ensure that it goes back to the upmost level where
+    //it has not try to touch
+
+    //in back tracking, you need to go back one level by one level
+    //until you reach the level with other solution（with next ajacent node)
+    while (stack.length !== 0) {
+      printStack(stack);
+      var curr = stack.pop();
+      if (curr.right !== null) {
+        stack.push(curr.right);
+      }
+      if (curr.left !== null) {
+        stack.push(curr.left);
+      }
+    }
+  }
+
+  dfsByStack(root);
+
+
+  function printStack(stack) {
+      var stackArr = [];
+      stackArr.push('bottom');
+      stack.forEach(function(node) {
+        stackArr.push(node.val);
+      });
+      stackArr.push('top');
+      console.log(stackArr);
+  }
+
+  /*
+
+  four common step in dfs
+  1.find
+  2.forward
+  3.done
+  4.back
+  */
+
+
+  
+
+  </script>
+</body>
+</html>

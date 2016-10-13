@@ -1,0 +1,113 @@
+<script type="text/javascript">
+  /*based on OJ
+  */
+  //a graph node in js is like
+  function UndirectedGraphNode(label) {
+    this.label = label;
+    this.neighbors = []; //empty array
+  }
+
+  /* an example
+    1
+      / \
+     /   \
+    0 --- 2
+         / \
+         \_/
+  */
+
+  var node0 = new UndirectedGraphNode(0);
+  var node1 = new UndirectedGraphNode(1);
+  var node2 = new UndirectedGraphNode(2);
+
+  //like the linkist structure, we first have the node, then construct the relationship
+  node0.neighbors.push(node1, node2);
+  node1.neighbors.push(node2);
+  node2.neighbors.push(node2);
+
+  console.log(node0);
+
+
+  //copy of the version1
+  function cloneGraph(node) {
+    if (node === null) {
+      return node;
+    }
+
+    // use bfs or dfs to traverse the graph and get all nodes
+    var oldNodes = getNodes_dfs(node);
+
+    //
+    var mapping = {};
+    oldNodes.forEach(function(old) {
+      //for Each node, make the new node, and also create a mapping for this new node
+      //we want to link them later
+      var newNode = new UndirectedGraphNode(old.label);
+      // newNode.kj = true;
+      mapping[node2key(old)] = newNode;
+    });
+    oldNodes.forEach(function(old) {
+      //get the corresponding new node
+      var newNode = mapping[node2key(old)];
+      //attach the neighbors
+      old.neighbors.forEach(function(oldneighbor) {
+        var newNeighbor = mapping[node2key(oldneighbor)];
+        newNode.neighbors.push(newNeighbor);
+      });
+    });
+    return mapping[node2key(node)];
+  }
+
+
+
+  var getNodes_dfs = function(node) {
+    var stack = []; //all the unvisited
+    var visited = {}; //its value is what we wanna to return // better make a set structure
+
+    stack.push(node);
+    visited[node2key(node)] = node;
+
+    while (stack.length !== 0) {
+      var curr = stack.pop();
+      visited[node2key(curr)] = curr;
+      curr.neighbors.forEach(function(node) {
+        if (!visited[node2key(node)]) {
+          stack.push(node);
+        }
+      })
+    }
+    return Object.keys(visited).map(function(key) {return visited[key]});
+  }
+
+  var getNodes_bfs = function(node) {
+    var queue = []; //FIFO //always the one that has not been visited
+    var visited = {};
+    //think about tree
+    queue.push(node);
+    visited[node2key(node)] = node;
+    while(queue.length !== 0) {
+      var curr = queue.shift();
+      //not need to check if it has been visited, we want to ensure that queue contains all unvisited
+      curr.neighbors.forEach(function(node) {
+        if (!visited[node2key(node)]) {
+          visited[node2key(node)] = node;
+          queue.push(node);
+        }
+      })
+    }
+    return Object.keys(visited).map(function(key) {return visited[key]});
+  }
+
+  function node2key(node) {
+    var neighbors = '';
+    node.neighbors.forEach(function(n, index) {
+      neighbors += ((index !== 0 ? ',' : '') + n.label);
+    });
+    // console.log('neighbors', neighbors)
+    return node.label + (neighbors.length == 0  ? '' : (',' + neighbors))
+  }
+  
+  console.log(cloneGraph(node0));
+
+
+</script>

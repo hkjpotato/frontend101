@@ -6,6 +6,7 @@ var triangle =  [
 ];
 
 
+
 console.log("-----START RUNING-----" + "\n");
 
 //-----------Devide and Conquer-------------

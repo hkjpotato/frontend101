@@ -1,0 +1,62 @@
+<html>
+<body>
+<script type="text/javascript">
+nums =   [0, 1, 2, 1, 1, 0, 2];
+/*
+
+0 0 1 2 1 0 1 2 2
+
+0 0 0 1 1 1 2 2 2
+
+0 0 0 1 1 1 2 2 2
+*/
+//result [0, 0, 1, 1, 1, 2, 2]
+
+var sortColors = function(nums) {
+    /*
+    basic idea:
+    from left to right check, maintain a marker after left 0 and before right 2
+
+    */
+
+
+    var after0 = 0, before2 = nums.length - 1;
+    var checkIndex = 0;
+
+
+
+
+    while (checkIndex <= before2) {
+        //also check i == before2 because we want to make sure the the before2 is checked
+        if (nums[checkIndex] == 0) {
+            swap(nums, after0, checkIndex);
+            after0++;
+            //can confidently move the checkIndex
+            //because we know after 0, it is either 1 or 2
+            //more importantly, we have check (old after0)
+            checkIndex++;
+        } else if (nums[checkIndex] == 1) {
+            checkIndex++;
+        } else {
+            //nums[checkIndex] == 2
+            swap(nums, checkIndex, before2);
+            before2--;
+            //should not move the checkIndex here due to the one direction check
+            //why? because after swapping, you dont know what is at checkIndex(old before 2)
+            //since you dont know what is before2
+            //you have have to check the current checkIndex position as well
+            // checkIndex++;
+        }
+    }
+}
+
+var swap = function(arr, i, j) {
+    var temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+sortColors(nums)
+console.log(nums);
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<script type="text/javascript">
+  function ListNode(val) {
+    this.val = val;
+    this.next = null;
+  }
+
+  ListNode.prototype.getLength = function() {
+    var counter = 0;
+    var self = this;
+    while ( self!== null) {
+      counter++;
+      self = self.next;
+    }
+    return counter;
+  }
+
+  ListNode.prototype.get = function(n) {
+    var i = 1, curr = this;
+    while (i < n) {
+      //jump n times
+      curr = curr.next;
+      i++;
+    }
+    return curr;
+  }
+
+  ListNode.prototype.toArray = function() {
+    var result = [];
+    var curr = this;
+    while (curr != null) {
+      result.push(curr.val);
+      curr = curr.next;
+    }
+    return result;
+  }
+  //try to make my first linklist l1
+  var l1 = new ListNode(1);
+  l1.next = new ListNode(2);
+  l1.next.next = new ListNode(3);
+  l1.next.next.next = new ListNode(4);
+  l1.next.next.next.next = new ListNode(5);
+
+
+  // console.log(l1);
+
+  //delete the second node
+  var head = l1;
+  var node2 = l1.next;
+  var node3 = node2.next;
+
+
+  // console.log(head.toArray());
+  // console.log(head.get(2));
+  // node2 = null; //wrong
+  // head.next = null;
+  // head.next = node3;
+  // head.next = head.next.next;
+  // console.log(l1.getLength());
+
+  function reverseList2(list, m, n) {
+    var pos = 1; //list
+    var curr = list,
+        prev = null;
+    while (pos < m) {
+      pos++;
+      prev = curr;
+      curr = curr.next; 
+    }
+    // console.log(pos); //pos = 2 = m
+    // console.log(prev.val);
+    // console.log(curr.val);
+
+
+
+    // var curr = list;
+    var start = prev ? prev : head;
+        end = curr; //head
+    console.log('the start now is', start.val, start.next)
+
+    prev = null;
+    while (pos <= n) {
+      var next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
+      pos++;
+    }
+
+
+    console.log('the prev now is', prev.val)
+
+    start.next = prev;
+    end.next = curr;
+
+    // console.log(list.toArray())
+    console.log(start.toArray())
+
+    // console.log(start.val);
+    // console.log(end.val);
+
+    // console.log(curr.toArray());
+    // console.log(prev.toArray());
+
+    // console.log(curr);
+  }
+
+  reverseList2(head, 1, 1);
+
+  function reverseList(list) {
+    /* 
+      1 -> 2 -> 3 -> 4 -> null
+      1 <-> 2 -> 3 -> 4 -> null
+      ...
+      1 <- 2 <- 3 <- 4 -> null
+
+  
+      for a single
+      prev = curr.next;
+      next.next = curr;
+      curr.next = prev;
+    */
+    var prev, head;
+    prev = null;
+    head = list;
+    while(head !== null) {
+      next = head.next;
+      head.next = prev;
+      prev = head;
+      head = next;
+    }
+    return prev;
+  }
+
+  // console.log(reverseList(l1));
+</script>
+

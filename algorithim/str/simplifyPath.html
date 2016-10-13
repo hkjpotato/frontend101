@@ -1,0 +1,38 @@
+<script type="text/javascript">
+/**
+path = "/home/", => "/home"
+path = "/a/./b/../../c/", => "/c"
+*/
+var path = "/a/./b/../../c/";
+/**
+ * @param {string} path
+ * @return {string}
+ */
+var simplifyPath = function(path) {
+    var result = "/";
+    var stubs = path.split("/");
+    var paths = [];
+    for (var i = 0; i < stubs.length; i++) {
+        if (stubs[i] === "..") {
+            if (paths.length > 0) {
+                paths.pop();
+            }
+        }
+        else if (stubs[i] !== "." && stubs[i] !== "") {
+            paths.push(stubs[i]);
+        }
+    }
+    paths.forEach(function(s) {
+        result += s + "/";
+    });
+    if (result.length > 1) {
+        result = result.substring(0, result.length - 1);
+    }
+    return result;
+};
+
+simplifyPath(path);
+
+// var s = "abc";
+// console.log(s.substring(0, s.length - 1))
+</script>
