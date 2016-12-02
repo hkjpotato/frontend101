@@ -1,0 +1,58 @@
+<script type="text/javascript">
+/*
+109. ng
+https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+*/
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {TreeNode}
+ */
+
+//thinkings: give the preorder "LINKLIST(only the head given)", make the BST, another useful information is that it is a balanced tree
+var sortedListToBST = function(head) {
+    
+};
+//function to get list length
+function getListLength(head) {
+    var size = 0;
+    while (head !== null) {
+        head = head.next;
+        size++;
+    }
+    return size;
+}
+function sortedListToBSTHelper(findLeftMostSteps, currListNode) {
+    if (findLeftMostSteps <= 0) {
+        return null;
+    }
+
+    var left = sortedListToBSTHelper(Math.floor(findLeftMostSteps / 2), );
+    var root = new TreeNode(currListNode.val);
+    currListNode = currListNode.next;
+    var right = sortedListToBSTHelper(findLeftMostSteps - 1 - Math.floor(findLeftMostSteps / 2));
+
+    root.left = left;
+    root.right = right;
+
+    return root;
+}
+
+
+
+</script>

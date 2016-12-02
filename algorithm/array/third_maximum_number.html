@@ -1,0 +1,173 @@
+<script type="text/javascript">
+/*
+414. Third Maximum Number
+Given a non-empty array of integers, return the third maximum number in this array. If it does not exist, return the maximum number. The time complexity must be in O(n).
+
+Example 1:
+Input: [3, 2, 1]
+
+Output: 1
+
+Explanation: The third maximum is 1.
+Example 2:
+Input: [1, 2]
+
+Output: 2
+
+Explanation: The third maximum does not exist, so the maximum (2) is returned instead.
+Example 3:
+Input: [2, 2, 3, 1]
+
+Output: 1
+
+Explanation: Note that the third maximum here means the third maximum distinct number.
+Both numbers with value 2 are both considered as second maximum.
+*/
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+
+//more than O(n)
+var thirdMax = function(nums) {
+    var set = {};
+    var max = -Number.MAX_VALUE;
+    for (var i = 0; i < nums.length; i++) {
+        if (!(nums[i] in set)) {
+            set[nums[i]] = 1;
+        }
+    }
+
+    var keys = Object.keys(set);
+    keys.sort(function(a, b) {
+        return b - a;
+    });
+    if (keys.length < 3) {
+        return +keys[0];
+    } else {
+        return +keys[2];
+    }
+};
+
+//stupid but right logic
+var thirdMax = function(nums) {
+    var distinct_max1 = -Number.MAX_VALUE;
+    var distinct_max2 = -Number.MAX_VALUE;
+    var distinct_max3 = -Number.MAX_VALUE;
+    var distinct_counter = 0;
+
+    var update_max1 = function(currmax) {
+        //unnessary
+        if (distinct_max3 !== distinct_max2) {
+            distinct_max3 = distinct_max2;
+        }
+        if (distinct_max2 !== distinct_max1) {
+            distinct_max2 = distinct_max1;
+        }
+        distinct_max1 = currmax;
+        distinct_counter++; 
+    }
+
+    var update_max2 = function(currmax) {
+        if (currmax === distinct_max1) {
+            //duplicate
+            return;
+        }
+        if (distinct_max3 !== distinct_max2) {
+            distinct_max3 = distinct_max2;
+        }
+        distinct_max2 = currmax;
+        distinct_counter++; 
+    }
+
+    var update_max3 = function(currmax) {
+        if (currmax === distinct_max2) {
+            //duplicate
+            return;
+        }
+        if (distinct_max3 !== distinct_max2) {
+            distinct_max3 = distinct_max2;
+        }
+        distinct_max3 = currmax;
+        distinct_counter++; 
+    }
+
+    for (var i = 0; i < nums.length; i++) {
+        var curr = nums[i];
+        if (curr > distinct_max1) {
+            update_max1(curr);
+        } else if (curr > distinct_max2) {
+            update_max2(curr);
+        } else if (curr > distinct_max3) {
+            update_max3(curr);
+        }
+    }
+    if (distinct_counter < 3) {
+        return distinct_max1;
+    } else {
+        return distinct_max3;
+    }
+};
+
+var thirdMax = function(nums) {
+    var top = new Array(3).fill(-Number.MAX_VALUE);
+    var count = 0;
+    for (var i = 0; i < nums.length; i++) {
+        var curr = nums[i];
+        if (curr > top[0]) {
+            // top = top.slice(0, 2);
+            // top.unshift(curr);
+            top = [curr, top[0], top[1]];
+            count++;
+        } else if (curr !== top[0] && curr > top[1]) {
+            // top.splice(1, 2, curr, top[1]);
+            top = [top[0], curr, top[1]];
+            count++;
+        } else if (curr !== top[0] && curr !== top[1] && curr > top[2]) {
+            top[2] = curr;
+            count++;
+        }
+    }
+    if (count < 3) {
+        return top[0];
+    } else {
+        return top[2];
+    }
+};
+
+//test
+console.log(thirdMax([2,2,3,1]))
+
+
+//slice, splice, +, concat
+var arr1 = [3, 2, 1];
+
+var arr2 = arr1.slice(1);
+console.log(arr2); // [2, 1]
+console.log(arr1); //[3, 2, 1]
+
+arr1.splice(1, 0, 100);
+console.log(arr1); // [3, 100, 2, 1]
+arr1.splice(1, 1, 50);
+console.log(arr1); // [3, 50, 2, 1]
+
+var nums1 = [1, 2];
+var nums2 = [3, 4];
+console.log(nums1 + nums2); //'1,23,4' array does not support '+' concat, make it into string
+console.log(nums1.concat(nums2)); //[1, 2, 3, 4]
+
+var test = [100, 200, 300];
+console.log([1].concat(test.slice(1))); //[1, 200, 300], concat with new array, old keep the same
+console.log(test); //[100, 200, 300];
+console.log([1].concat(test.splice(1)));
+    //[1, 200, 300], concat with new array(removed elements), old change
+console.log(test); //[100]
+
+
+var test = [1, 2, 3];
+test = [test[1], test[2], test[0]];
+console.log(test); //[2, 3, 1]
+
+
+</script>

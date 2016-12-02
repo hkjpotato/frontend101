@@ -1,0 +1,41 @@
+<script type="text/javascript">
+
+/**
+Given a roman numeral, convert it to an integer.
+
+Input is guaranteed to be within the range from 1 to 3999.
+
+
+ * @param {string} s
+ * @return {number}
+ */
+
+var str =  "XI";
+var romanToInt = function(s) {
+    if (s === null || s.length === 0) {
+        return 0;
+    }
+    var map = {
+        'I': 1,
+        'V': 5,
+        'X': 10,
+        'L': 50,
+        'C': 100,
+        'D': 500,
+        'M': 1000
+    };
+    var strLen = s.length;
+    var result = map[s.charAt(strLen - 1)];
+    for (var i = strLen - 2; i >= 0; i--) {
+        if (map[s.charAt(i + 1)] <= map[s.charAt(i)]) {
+            result += map[s.charAt(i)];
+        } else {
+            result -= map[s.charAt(i)];
+        }
+    }
+    return result;
+
+};
+
+console.log(romanToInt(str));
+</script>

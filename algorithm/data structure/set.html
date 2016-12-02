@@ -1,0 +1,36 @@
+<script type="text/javascript">
+/**
+http://stackoverflow.com/questions/7958292/mimicking-sets-in-javascript
+
+If you are programming in an ES6-capable environment (such as node.js, a specific browser with the ES6 capabilities you need or transpiling ES6 code for your environment), then you can use the Set object built into ES6. It has very nice capabilities and can be used as is right in your environment.
+
+For many simple things in an ES5 environment, using an Object works very well. If obj is your object and A is a variable that has the value you want to operate on in the set, then you can do these:
+
+Initialization code:
+
+// create empty object
+var obj = {};
+
+// or create an object with some items already in it
+var obj = {"1":true, "2":true, "3":true, "9":true};
+Question 1: Is A in the list:
+
+if (A in obj) {
+    // put code here
+}
+Question 2: Delete 'A' from the list if it's there:
+
+delete obj[A];
+Question 3: Add 'A' to the list if it wasn't already there
+
+obj[A] = true;
+For completeness, the test for whether A is in the list is a little safer with this:
+
+if (Object.prototype.hasOwnProperty.call(obj, A))
+    // put code here
+}
+because of potential conflict between built-in methods and/or properties on the base Object like the constructor property.
+*/
+
+
+</script>

@@ -1,0 +1,91 @@
+<script type="text/javascript">
+/*
+
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+*/
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {number[]} preorder
+ * @param {number[]} inorder
+ * @return {TreeNode}
+ */
+
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+var preorder = [4, 7, 8];
+var inorder = [7, 4, 8];
+
+
+var preorder = [1, 2, 4, 7, 8, 6, 3, 5, 11];
+var inorder = [7, 4, 8, 2, 6, 1, 5, 3, 11];
+
+//memory used exit, because slice always create new array
+var buildTree = function(preorder, inorder) {
+    if (preorder === null || preorder.length === 0) {
+        return null;
+    }
+    var rootVal = preorder[0];
+    var root = new TreeNode(rootVal);
+    var rootIndex = inorder.indexOf(rootVal);
+
+    var leftPre = preorder.slice(1, rootIndex + 1);
+    var leftIn = inorder.slice(0, rootIndex);
+
+    var rightPre = preorder.slice(rootIndex + 1);
+    var rightIn = inorder.slice(rootIndex + 1);
+
+    root.left = buildTree(leftPre, leftIn);
+    root.right = buildTree(rightPre, rightIn);
+    return root;
+};
+
+var buildTree = function(preorder, inorder) {
+    return dfsHelper(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+}
+
+var dfsHelper = function(preorder, ps, pe, inorder, is, ie) {
+    if (ps > pe || is > ie) {
+        return null;
+    }
+
+    var currLen = pe - ps + 1;
+
+    var rootVal = preorder[ps];
+    var root = new TreeNode(rootVal);
+    var rootIndex = inorder.indexOf(rootVal);
+
+    var leftLen = rootIndex - is;
+    var rightLen = currLen - leftLen - 1;
+
+    var lps = ps + 1;
+    var lpe = lps + leftLen - 1;
+    var lis = is;
+    var lie = rootIndex - 1;
+
+    var rps = lpe + 1;
+    var rpe = pe;
+    var ris = rootIndex + 1
+    var rie = ie;
+
+    root.left = dfsHelper(preorder, lps, lpe, inorder, lis, lie);
+    root.right = dfsHelper(preorder, rps, rpe, inorder, ris, rie);
+    return root;
+};
+
+console.log(JSON.stringify(buildTree(preorder, inorder), null, 4));
+
+
+</script>

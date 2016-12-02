@@ -1,0 +1,47 @@
+<script type="text/javascript">
+// Given an integer, write a function to determine if it is a power of two.
+
+// Follow up:
+// Could you do it without using any loop / recursion?
+
+// Credits:
+// Special thanks to @dietpepsi for adding this problem and creating all test cases.
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+var isPowerOfTwo = function(n) {
+    while (n > 1) {
+        if (n % 2 !== 0) {
+            return false;
+        }
+        n = n / 2;
+    }
+    return n > 0;
+};
+//Improved
+//iterative
+var isPowerOfTwo = function(n) {
+    if (n > 1) {
+        while (n % 2 == 0) {
+            n = n / 2;
+        }
+    }
+    return n === 1;
+};
+var isPowerOfTwo = function(n) {
+    while (n % 2 == 0) {
+        n = n / 2;
+    }
+    return n === 1;
+};
+//recursion
+var isPowerOfTwo = function(n) {
+    return n === 1 || (n > 1 && (n % 2 === 0 && isPowerOfTwo(n / 2)));
+}
+//bit manipulation: Power of 2 means only one bit of n is '1', so use the trick n&(n-1)==0 to judge whether that is the case
+var isPowerOfTwo = function(n) {
+    return (n >= 1 && (n&(n - 1)) === 0);
+}
+console.log(isPowerOfTwo(1))
+</script>

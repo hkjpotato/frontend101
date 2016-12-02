@@ -66,16 +66,9 @@
       prev = curr;
       curr = curr.next; 
     }
-    // console.log(pos); //pos = 2 = m
-    // console.log(prev.val);
-    // console.log(curr.val);
 
-
-
-    // var curr = list;
     var start = prev ? prev : head;
         end = curr; //head
-    console.log('the start now is', start.val, start.next)
 
     prev = null;
     while (pos <= n) {
@@ -86,13 +79,9 @@
       pos++;
     }
 
-
-    console.log('the prev now is', prev.val)
-
     start.next = prev;
     end.next = curr;
 
-    // console.log(list.toArray())
     console.log(start.toArray())
 
     // console.log(start.val);
@@ -106,7 +95,7 @@
 
   reverseList2(head, 1, 1);
 
-  function reverseList(list) {
+
     /* 
       1 -> 2 -> 3 -> 4 -> null
       1 <-> 2 -> 3 -> 4 -> null
@@ -119,18 +108,23 @@
       next.next = curr;
       curr.next = prev;
     */
-    var prev, head;
-    prev = null;
-    head = list;
-    while(head !== null) {
-      next = head.next;
-      head.next = prev;
-      prev = head;
-      head = next;
+  function reverseList(head) {
+    if (head == null) {
+      return head;
     }
+    var prev = null;
+    var curr = head;
+
+    while (curr !== null) {
+      //general operation
+      var next = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = next;
+    }
+
     return prev;
   }
-
   // console.log(reverseList(l1));
 </script>
 

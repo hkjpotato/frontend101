@@ -1,0 +1,59 @@
+<script type="text/javascript">
+/**
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+Example:
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> Returns -3.
+minStack.pop();
+minStack.top();      --> Returns 0.
+minStack.getMin();   --> Returns -2.
+
+*/
+
+
+function MinStack() {
+    this.min = Number.MAX_VALUE;
+    this.stack = [];
+}
+MinStack.prototype.push = function(x) {
+    if (x <= this.min) {
+        //push last min
+        console.log('last min bad')
+        this.stack.push(this.min);
+        this.min = x;
+    } 
+    this.stack.push(x);
+
+}
+MinStack.prototype.pop = function() {
+    if (this.stack[this.stack.length - 1] === this.min) {
+        this.stack.pop();
+        // update min to the last min
+        this.min = this.stack.pop();
+    } else {
+        this.stack.pop();
+    }
+}
+MinStack.prototype.top = function() {
+    return this.stack[this.stack.length - 1];
+}
+MinStack.prototype.getMin = function() {
+    return this.min;
+}
+
+var minStack = new MinStack();
+minStack.push(1);
+minStack.pop();
+console.log(minStack.top());
+
+arr = [1, 2, 3]
+console.log(arr[1])
+</script>

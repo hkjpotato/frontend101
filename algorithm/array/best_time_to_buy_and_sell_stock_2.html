@@ -1,0 +1,55 @@
+<script type="text/javascript">
+/**
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+*/
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+//version 1 : my dump method which try to find the increase intervals
+var maxProfit = function(prices) {
+    var profit = 0;
+    var hasStock = false;
+    var buyPrice = 0;
+    
+    for (var i = 0; i < prices.length - 1; i++) {
+        if (prices[i + 1] > prices[i]) {
+            //increase
+            if (!hasStock) {
+                hasStock = true;
+                buyPrice = prices[i];
+            } else {
+                //do nothing
+            }
+        } else {
+            //decrease
+            if (hasStock) {
+                profit += (prices[i] - buyPrice);
+                hasStock = false;
+            } else {
+                //do nothing
+            }
+        }
+    }
+    
+    if (hasStock && prices[i] > buyPrice) {
+        profit += (prices[i] - buyPrice);
+    }
+    return profit;
+};
+
+//general method
+var maxProfit = function(prices) {
+    var profit = 0;
+    if (prices === null || prices.length <= 1) {
+        return profit;
+    }
+    for (var i = 1; i < prices.length; i++) {
+        profit += (prices[i] - prices[i - 1]) > 0 ? (prices[i] - prices[i - 1]) : 0;
+    }
+    return profit;
+}
+
+</script>

@@ -1,0 +1,56 @@
+<script type="text/javascript">
+/*
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Determine if you are able to reach the last index.
+
+For example:
+A = [2,3,1,1,4], return true.
+
+A = [3,2,1,0,4], return false.
+*/
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+
+//greedy
+var canJump = function(nums) {
+    var farthest = 0 + nums[0];
+    for (var i = 1; i < nums.length; i++) {
+        if (i > farthest) {
+            return false;
+        } else if (i + nums[i] > farthest) {
+            farthest = i + nums[i];
+        }
+    }
+    return true;
+}
+
+//dp
+var canJump = function(nums) {
+    //init them to be false
+    var canRecord = new Array(nums.length).fill(false);
+    
+    //base
+    canRecord[0] = true;
+    
+    //general loop
+    for (var i = 1; i < nums.length; i++) {
+        //back searching is safe as we must have canRecord[k] where k - [0, i - 1]
+        for (var j = i - 1; j >=0; j--) {
+            if (canRecord[j] && nums[j] + j >= i) {
+                canRecord[i] = true;
+                break;
+            }
+        }
+    }
+    
+    return canRecord[nums.length - 1];
+};
+
+
+
+</script>

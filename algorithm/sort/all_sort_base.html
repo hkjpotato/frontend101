@@ -1,5 +1,3 @@
-<html>
-<body>
 <script type="text/javascript">
 function swap(arr, index1, index2) {
   var temp = arr[index1];
@@ -114,7 +112,6 @@ function quicksorthelper1(arr, start, end, comparator) {
   if (start >= end) {
     return;
   }
-  var pivotIndex = Math.floor((start + end)/2);
   //swap pivot to the end -> which should help us later
   swap(arr, pivotIndex, end);
   pivotIndex = end;
@@ -150,15 +147,14 @@ print(test_case3)
 
 
 
-function quicksort2(arr, comparator) {
-    quicksorthelper2(arr, 0, arr.length - 1, comparator);
+function quicksort2(arr) {
+    quicksorthelper2(arr, 0, arr.length - 1);
 }
 
 function quicksorthelper2(arr, start, end) {
   if (start >= end) {
     return;
   }
-
   var left = start, right = end;
   // key point 1: pivot is the value, not the index
 
@@ -173,14 +169,15 @@ function quicksorthelper2(arr, start, end) {
     while (left <= right && arr[left].val < pivot.val) {
       left++;
     }
+
     // key point 3: A[right] > pivot not A[right] >= pivot
     while (left <= right && arr[right].val > pivot.val) {
       right--;
     }
     if (left <= right) {
-      var temp = arr[left];
-      arr[left] = arr[right];
-      arr[right] = temp;
+      // var temp = arr[left];
+      // arr[left] = arr[right];
+      // arr[right] = temp;
       left++;
       right--;
     }
@@ -241,9 +238,4 @@ mergesort(test_case3);
 print(test_case3)
 
 
-
-
-
 </script>
-</body>
-</html>

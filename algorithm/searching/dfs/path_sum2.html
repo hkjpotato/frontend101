@@ -1,0 +1,136 @@
+<script type="text/javascript">
+/*
+#113: https://leetcode.com/problems/path-sum-ii/
+
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+For example:
+Given the below binary tree and sum = 22,
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+return
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+*/
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {number} sum
+ * @return {number[][]}
+ */
+
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+
+root = new TreeNode(5);
+root.left = new TreeNode(4);
+root.right = new TreeNode(8);
+
+
+//bad, doesn't fully utilize the dfs
+var pathSum = function(root, sum) {
+
+    var result = [];
+    var path = [];
+    if (root === null) {
+        return result;
+    }
+
+    path.push(root.val);
+
+    dfs(root, sum - root.val, result, path);
+    return result;
+};
+
+function dfs(root, target, result, path) {
+    if (root.left === null && root.right === null) {
+        //reach the leaf
+        if (target === 0) {
+            result.push(path.slice(0));
+        }
+        return;
+    }
+
+    if (root.left !== null) {
+        path.push(root.left.val);
+        dfs(root.left, target - root.left.val, result, path);
+        path.pop();
+    }
+
+    if (root.right !== null) {
+        path.push(root.right.val);
+        dfs(root.right, target - root.right.val, result, path);
+        path.pop();
+    }
+};
+
+//update version
+var pathSum = function(root, sum) {
+    var result = [];
+    var path = [];
+    if (root === null) {
+        return result;
+    }
+
+    dfs(root, sum, result, path);
+    return result;
+};
+
+function dfs(root, target, result, path) {
+    var target = target - root.val;
+
+    path.push(root.val);
+    if (root.left === null && root.right === null) {
+        //reach the leaf
+        if (target === 0) {
+            result.push(path.slice(0));
+        }
+        path.pop();
+        return;
+    }
+    if (root.left !== null) {
+        dfs(root.left, target, result, path);
+    }
+    if (root.right !== null) {
+        dfs(root.right, target, result, path);
+    }
+    path.pop();
+};
+
+//update dfs, better understand of recursion
+function dfs(root, target, result, path) {
+    if (root === null) {return;}
+
+    var target = target - root.val;
+    path.push(root.val);
+    if (root.left === null && root.right === null) {
+        //reach the leaf
+        if (target === 0) {
+            result.push(path.slice(0));
+        }
+        path.pop();
+        return;
+    }
+
+    dfs(root.left, target, result, path);
+    dfs(root.right, target, result, path);
+    path.pop();
+};
+console.log(pathSum(root, 9));
+</script>

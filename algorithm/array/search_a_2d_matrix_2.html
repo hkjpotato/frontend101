@@ -1,0 +1,80 @@
+<script type="text/javascript">
+/*
+Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+
+Integers in each row are sorted in ascending from left to right.
+Integers in each column are sorted in ascending from top to bottom.
+For example,
+
+Consider the following matrix:
+
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+Given target = 5, return true.
+
+Given target = 20, return false.
+*/
+/**
+ * @param {number[][]} matrix
+ * @param {number} target
+ * @return {boolean}
+ */
+var searchMatrix = function(matrix, target) {
+    //empty case
+    if (matrix === null || matrix.length === 0) {
+        return false;
+    }
+    if (matrix[0] === null || matrix[0].length === 0) {
+        return false;
+    }
+    var m = matrix.length;
+    var n = matrix[0].length;
+    //from left bottom
+    var x = m - 1, y = 0;
+    while (x >= 0 && y < n) {
+        if (matrix[x][y] > target) {
+            x--;
+        } else if (matrix[x][y] < target) {
+            y++;
+        } else {
+            return true;
+        }
+    }
+    return false;
+};
+
+//Improved version, what if it asks you to count the number of occurrence.
+var searchMatrix = function(matrix, target) {
+    //empty case
+    if (matrix === null || matrix.length === 0) {
+        return 0;
+    }
+    if (matrix[0] === null || matrix[0].length === 0) {
+        return 0;
+    }
+    var m = matrix.length;
+    var n = matrix[0].length;
+    var count = 0;
+    //from left bottom
+    var x = m - 1, y = 0;
+    while (x >= 0 && y < n) {
+        if (matrix[x][y] > target) {
+            x--;
+        } else if (matrix[x][y] < target) {
+            y++;
+        } else {
+            count++;
+            x--;
+            y++;
+        }
+    }
+    return count;
+};
+
+
+</script>

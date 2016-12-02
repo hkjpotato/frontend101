@@ -1,0 +1,78 @@
+<script type="text/javascript">
+/**
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”
+
+        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+
+
+*/
+
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+
+var root = new TreeNode(3);
+root.left = new TreeNode(5);
+root.left.left = new TreeNode(6);
+root.left.right = new TreeNode(2);
+root.left.right.left = new TreeNode(7);
+root.left.right.right = new TreeNode(4);
+root.right = new TreeNode(1);
+root.right.left = new TreeNode(0);
+root.right.right = new TreeNode(8);
+
+var p = root.left;
+var q = root.left.right.right;
+
+var lowestCommonAncestor = function(root, p, q) {
+    if (root === null || root === p  || root === q) {
+        return root; //could be null
+    }
+
+    //use devide and conquer
+    //devide
+    var left = lowestCommonAncestor(root.left, p, q);
+    var right = lowestCommonAncestor(root.right, p, q);
+
+    //conquer
+    if (left !== null && right !== null) {
+        //case1: if left !== null && right !== null, thus p and q are in separate tree, now to root become LCA
+        return root;
+    } else if (left !== null) {
+        //case1: if left !== null && right == null, thus p or/and q are in the left
+        //it should be ok since the two nodes are IN the tree
+        return left;
+    } else if (right !=== null) {
+        return right;
+    }
+    //both are null
+    return null;
+};
+
+
+</script>

@@ -1,0 +1,124 @@
+<script type="text/javascript">
+/**
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+*/
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+function ListNode(val) {
+    this.val = val;
+    this.next = null;
+}
+
+var head = new ListNode(1);
+head.next = new ListNode(2);
+head.next.next = new ListNode(2);
+head.next.next = new ListNode(1);
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var isPalindrome = function(head) {
+    
+};
+
+var head = new ListNode(1);
+head.next = new ListNode(2);
+// head.next.next = new ListNode(0);
+
+var isPalindrome = function(head) {
+    if (head === null) {return true}
+    if (head.next === null) {
+        return true;
+    }
+    
+    var slow = head;
+    var fast = head.next;
+    while (fast && fast.next !== null) {
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+
+    // console.log(slow, fast);
+
+    //slow is at the mid
+    
+    var prev = null;
+    var curr = slow.next;
+    while (curr !== null) {
+        var next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+
+    }
+    
+    // console.log(prev);
+    // //prev is now the tail 
+    
+    while (prev !== null) {
+        if (prev.val !== head.val) {
+            return false;
+        }
+        prev = prev.next;
+        head = head.next;
+    }
+    return true;
+};
+
+//Improved version, do the reverse when finding the mid
+
+var isPalindrome = function(head) {
+    if (head === null) {return true}
+    if (head.next === null) {
+        return true;
+    }
+    var prev = null;
+    var slow = head;
+    var fast = head.next;
+    while (fast && fast.next !== null) {
+        fast = fast.next.next;
+        var next = slow.next;
+        slow.next = prev;
+        prev = slow;
+        slow = next;
+    }
+
+    var firstHalf, secondHalf;
+    if (fast !== null) {
+        //even
+        secondHalf = slow.next;
+        slow.next = prev;
+        firstHalf = slow;
+    } else {
+        //odd
+        secondHalf = slow.next;
+        firstHalf = prev;
+    }
+ 
+    //slow is at the mid, and it has not been reverse
+    while (firstHalf !== null) {
+        if (firstHalf.val !== secondHalf.val) {
+            return false;
+        }
+        firstHalf = firstHalf.next;
+        secondHalf = secondHalf.next;
+    }
+    return true;
+};
+
+
+isPalindrome(head);
+
+
+//TODO 
+
+</script>

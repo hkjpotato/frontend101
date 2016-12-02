@@ -1,0 +1,98 @@
+<script type="text/javascript">
+/*
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+
+Follow up:
+What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+
+Hint:
+
+Try to utilize the property of a BST.
+What if you could modify the BST node's structure?
+The optimal runtime complexity is O(height of BST).
+*/
+
+
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {number} k
+ * @return {number}
+ */
+
+//simplest, get the inorder travese and return the k - 1
+var kthSmallest = function(root, k) {
+    var stack = [];
+    var result = [];
+    var curr = root;
+    while(curr !== null || stack.length !== 0) {
+        //checking left
+        while(curr !== null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        curr = stack.pop();
+        //curr is the curr smallest
+        result.push(curr.val);
+        if (result.length == k) {
+            return curr.val; 
+        }
+        //update curr to the next possible starting point, or null!! making it null can help us get rid of the left checking left
+        curr = curr.right ;
+    }
+    return null;
+};
+//get rid of the result
+var kthSmallest = function(root, k) {
+    var stack = [];
+    var curr = root;
+    while(curr !== null || stack.length !== 0) {
+        k--;
+        //checking left
+        while(curr !== null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        curr = stack.pop();
+        //curr is the curr smallest
+        if (k === 0) {
+            return curr.val;
+        }
+        //update curr to the next possible starting point, or null!! making it null can help us get rid of the left checking left
+        curr = curr.right ;
+    }
+    return null;
+};
+
+//very basic binary search recursive dfs
+var kthSmallest = function(root, k) {
+    var nums = numOfNodes(root.left);
+    if (nums + 1 < k) {
+        return kthSmallest(root.right, k - 1- nums);
+    } else if(k <= nums) {
+        return kthSmallest(root.left, k);
+    } else {
+        //left nums + 1 == k
+        return root.val;
+    }
+};
+
+var numOfNodes = function(root) {
+    if (root === null) {
+        return 0;
+    }
+    return 1 + numOfNodes(root.left) + numOfNodes(root.right);
+}
+
+
+</script>

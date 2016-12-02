@@ -1,0 +1,139 @@
+<script type="text/javascript">
+
+/**
+ QuestionEditorial Solution  My Submissions
+Total Accepted: 95460
+Total Submissions: 313067
+Difficulty: Easy
+Contributors: Admin
+Write a program to find the node at which the intersection of two singly linked lists begins.
+
+
+For example, the following two linked lists:
+
+A:          a1 → a2
+                   ↘
+                     c1 → c2 → c3
+                   ↗            
+B:     b1 → b2 → b3
+begin to intersect at node c1.
+
+
+Notes:
+
+If the two linked lists have no intersection at all, return null.
+The linked lists must retain their original structure after the function returns.
+You may assume there are no cycles anywhere in the entire linked structure.
+Your code should preferably run in O(n) time and use only O(1) memory.
+Credits:
+
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+ function ListNode(val) {
+    this.val = val;
+    this.next = null;
+ }
+
+var c1 = new ListNode('c1');
+c1.next = new ListNode('c2');
+c1.next.next = new ListNode('c3');
+
+var a1 = new ListNode('a1');
+a1.next = new ListNode('a2');
+a1.next.next = c1;
+
+var b1 = new ListNode('b1');
+b1.next = new ListNode('b2');
+b1.next.next = new ListNode('b3');
+b1.next.next.next = c1;
+
+
+/**
+ * @param {ListNode} headA
+ * @param {ListNode} headB
+ * @return {ListNode}
+ */
+var getIntersectionNode = function(headA, headB) {
+    if (headA === null || headB === null) {
+        return null;
+    }
+    var lenA = 0, lenB = 0;
+    var currA = headA, currB = headB;
+    while (currA !== null) {
+        lenA++;
+        currA = currA.next;
+    }
+    while (currB !== null) {
+        lenB++;
+        currB = currB.next;
+    }
+
+    var pA = headA, pB = headB;
+
+    if (lenA > lenB) {
+        for (var i = 0; i < lenA - lenB; i++) {
+            pA = pA.next;
+        }
+    } else if (lenB > lenA) {
+        for (var i = 0; i < lenB - lenA; i++) {
+            pB = pB.next;
+        }
+    }
+
+    while(pA.next !== null && pB !== pA) {
+        pA = pA.next;
+        pB = pB.next;
+    }
+    if (pB === pA) {
+        return pB;
+    } else {
+        return null;
+    }
+};
+
+var getIntersectionNode = function(headA, headB) {
+    if (headA === null || headB === null) {
+        return null;
+    }
+    var commonLen = 0;
+    var currA = headA, currB = headB;
+    while (currA !== null && currB !== null) {
+        commonLen++;
+        currA = currA.next;
+        currB = currB.next;
+    }
+    while (currB !== null) {
+        lenB++;
+        currB = currB.next;
+    }
+
+    var pA = headA, pB = headB;
+
+    if (lenA > lenB) {
+        for (var i = 0; i < lenA - lenB; i++) {
+            pA = pA.next;
+        }
+    } else if (lenB > lenA) {
+        for (var i = 0; i < lenB - lenA; i++) {
+            pB = pB.next;
+        }
+    }
+
+    while(pA.next !== null && pB !== pA) {
+        pA = pA.next;
+        pB = pB.next;
+    }
+    if (pB === pA) {
+        return pB;
+    } else {
+        return null;
+    }
+};
+
+console.log(getIntersectionNode(a1, b1));
+</script>

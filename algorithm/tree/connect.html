@@ -79,29 +79,69 @@ var connect = function(root) {
     }
 }
 
-var connect = function(root) {
-    if (root === null) {
-        return;
-    }
+/*
+Follow up for problem "Populating Next Right Pointers in Each Node".
 
-    var parent = root;
+What if the given tree could be any binary tree? Would your previous solution still work?
+
+Note:
+
+You may only use constant extra space.
+For example,
+Given the following binary tree,
+         1
+       /  \
+      2    3
+     / \    \
+    4   5    7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \    \
+    4-> 5 -> 7 -> NULL
+
+
+
+    general case
+                    parent
+                    /   \
+nextStart   prev  left  right
+
+
+
+*/
+
+
+var connect = function(root) {
+    if (root == null) {
+        return null;
+    }
+    //global
     var prev = null;
+    var parent = root;
+    //wait, we don't know it at this moment
     var nextStart = null;
 
-    while (parent !== null) {
+    while(parent !== null) {
+        //for each level
         prev = null;
-        nextStart = null;
+        nextStart =null;
         while (parent !== null) {
-            //a trick to go through and find the next
-            if (nextStart === null){
-                nextStart = (parent.left !== null) ? parent.left: parent.right;
+            //get the next start
+            if (nextStart === null) {
+                nextStart = parent.left ? parent.left : parent.right;
             }
+            //connect the child of the current parent
 
-            if (parent.left !== null){
+            if (parent.left !== null) {
                 if (prev === null) {
+                    //when prev is still null, point to the left
                     prev = parent.left;
                 } else {
+                    //connect left
                     prev.next = parent.left;
+                    //move to left
                     prev = prev.next;
                 }
             }
@@ -110,15 +150,19 @@ var connect = function(root) {
                 if (prev === null) {
                     prev = parent.right;
                 } else {
+                    //connect right
                     prev.next = parent.right;
+                    //move to right
                     prev = prev.next;
                 }
             }
+            //move parent
             parent = parent.next;
         }
         parent = nextStart;
     }
 }
+
 var levelNext = function(root) {
     var result = [];
     var queue = [];

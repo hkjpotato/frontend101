@@ -1,0 +1,52 @@
+<script type="text/javascript">
+/*
+Given a binary tree, return the inorder traversal of its nodes' values.
+
+For example:
+Given binary tree [1,null,2,3],
+   1
+    \
+     2
+    /
+   3
+return [1,3,2].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+*/
+//recursion version
+var inorderTraversal = function(root) {
+    var result = [];
+    traverseHelper(root, result);
+    return result;
+};
+var traverseHelper = function(root, result) {
+    if (root === null) {
+        return;
+    }
+    traverseHelper(root.left, result);
+    result.push(root.val)
+    traverseHelper(root.right, result);
+};
+//iterative with stack, note the double for loop here, we also use a curr pointer!!
+var inorderTraversal = function(root) {
+    var stack = [];
+    var result = [];
+    var curr = root;
+    while(curr !== null || stack.length !== 0) {
+        //checking left
+        while(curr !== null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        curr = stack.pop();
+        //curr is the curr smallest
+        result.push(curr.val);
+        //update curr to the next possible starting point, or null!! making it null can help us get rid of the left checking left
+        curr = curr.right ;
+
+    }
+    return result;
+
+};
+
+</script>

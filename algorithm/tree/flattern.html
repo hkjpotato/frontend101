@@ -1,0 +1,104 @@
+<script type="text/javascript">
+/**
+Given a binary tree, flatten it to a linked list in-place.
+
+For example,
+Given
+
+         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+The flattened tree should look like:
+   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+*/
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+
+
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+
+var root = new TreeNode(1);
+root.left = new TreeNode(2);
+root.left.left = new TreeNode(3);
+root.left.right = new TreeNode(4);
+root.right = new TreeNode(5);
+root.right.right = new TreeNode(6);
+
+/**
+ * @param {TreeNode} root
+ * @return {void} Do not return anything, modify root in-place instead.
+ */
+ var flatten = function(root) {
+    //similar to a postorder traverse
+    if (root === null) {
+        return;
+    }
+    var stack = [];
+    stack.push(root);
+
+    var dummy = prev = new TreeNode(0);
+    while (stack.length !== 0) {
+        curr = stack.pop();
+        prev.right = curr;
+        prev.left = null;
+        prev = prev.right;
+        if (curr.right !== null) {
+            stack.push(curr.right);
+        }
+        if (curr.left !== null) {
+            stack.push(curr.left);
+        }
+    }
+    dummy.right = null;
+ }
+
+ //get rid of dummy node
+var flatten = function(root) {
+    if (root == null) {
+        return;
+    }
+    
+    var stack = [];
+    stack.push(root);
+    
+    while (stack.length !== 0) {
+        var node = stack.pop();
+        if (node.right != null) {
+            stack.push(node.right);
+        }
+        if (node.left != null) {
+            stack.push(node.left);
+        }
+        
+        // connect 
+        node.left = null;
+        if (stack.length === 0) {
+            node.right = null;
+        } else {
+            node.right = stack[stack.length - 1];
+        }
+    }
+};
+ 
+</script>

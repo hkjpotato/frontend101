@@ -16,23 +16,16 @@ var sortColors = function(nums) {
     /*
     basic idea:
     from left to right check, maintain a marker after left 0 and before right 2
-
     */
-
-
     var after0 = 0, before2 = nums.length - 1;
     var checkIndex = 0;
-
-
-
-
     while (checkIndex <= before2) {
         //also check i == before2 because we want to make sure the the before2 is checked
         if (nums[checkIndex] == 0) {
             swap(nums, after0, checkIndex);
             after0++;
             //can confidently move the checkIndex
-            //because we know after 0, it is either 1 or 2
+            //because we know after 0, it is definite 1 
             //more importantly, we have check (old after0)
             checkIndex++;
         } else if (nums[checkIndex] == 1) {
@@ -47,6 +40,28 @@ var sortColors = function(nums) {
             //you have have to check the current checkIndex position as well
             // checkIndex++;
         }
+    }
+}
+
+var sortColors = function(nums) {
+    if (nums === null || nums.length === 0) {
+        return;
+    }
+    var after0 = 0, before2 = nums.length - 1;
+    var checkIndex = 0;
+    while (after0 <= before2) {
+        if (nums[checkIndex] === 0) {
+            swap(nums, checkIndex, after0);
+            checkIndex++;
+            after0++;
+        } else if (nums[checkIndex] === 1) {
+            checkIndex++;
+        } else {
+            swap(nums, checkIndex, before2);
+            before2--;
+            //checkIndex++??
+        }
+
     }
 }
 

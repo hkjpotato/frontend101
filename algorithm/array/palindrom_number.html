@@ -1,0 +1,70 @@
+<script type="text/javascript">
+/**
+Determine whether an integer is a palindrome. Do this without extra space.
+
+click to show spoilers.
+
+Some hints:
+Could negative integers be palindromes? (ie, -1)
+
+If you are thinking of converting the integer to string, note the restriction of using extra space.
+
+You could also try reversing an integer. However, if you have solved the problem "Reverse Integer", you know that the reversed integer might overflow. How would you handle such case?
+
+There is a more generic way of solving this problem.
+*/
+
+/**
+ * @param {number} x
+ * @return {boolean}
+ */
+//my dump version
+var isPalindrome = function(x) {
+    if (x < 0) {return false}
+    var digits = [];
+    while (x > 0) {
+        digits.push(x % 10);
+        x = parseInt(x / 10);
+    }
+    
+    for (var i = 0, j = digits.length - 1; i < j; i++, j--) {
+        if (digits[i] === digits[j]) {
+            continue;
+        } else {
+            return false;
+        }
+    }
+    return true;
+};
+//no extra space or O(1) space version , still hasn't consider overflow
+var isPalindrome = function(x) {
+    if (x < 0) {return false}
+    //reverse a number
+    var reverse = 0;
+    var rest = x;
+    while (rest > 0) {
+        reverse = reverse * 10 + rest % 10;
+        rest = parseInt(rest / 10);
+    }
+    if (reverse === x) {
+        return true;
+    }
+    return false;
+};
+//this is how to reverse a number
+var reverse = function(x) {
+    //reverse a number
+    var reverse = 0;
+    var rest = x;
+    while (rest > 0) {
+        reverse = reverse * 10 + rest % 10;
+        rest = parseInt(rest / 10);
+    }
+    return reverse;
+}
+var x = 123321;
+var x = 123456;
+
+
+reverse(x);
+</script>

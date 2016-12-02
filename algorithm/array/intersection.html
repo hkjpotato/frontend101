@@ -1,0 +1,106 @@
+<script type="text/javascript">
+/**
+Given two arrays, write a function to compute their intersection.
+
+Example:
+Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2].
+
+Note:
+Each element in the result must be unique.
+The result can be in any order.
+
+where, it is like to find the same nums of two array, but they should be unique.
+*/
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+
+
+//version 1. using set (in js, it is just an object) O(n)
+var intersection = function(nums1, nums2) {
+    //remember a set is like an object {'value': true}
+    var set = {};
+    var intersect = {};
+    for (var i = 0; i < nums1.length; i++) {
+        set[nums1[i]] = true;
+    }
+
+    for (var i = 0; i < nums2.length; i++) {
+        if (nums2[i] in set) {
+            intersect[nums2[i]] = true;
+        }
+    }
+    return Object.keys(intersect).map(function(d) {
+        //change the string key to number type
+        return +d;
+    })
+};
+
+
+//version 2. using two pointers O(nlogn) --> due to sort by quick sort
+var intersection = function(nums1, nums2) {
+    //remember a set is like an object {'value': true}
+    var set = {};
+    nums1.sort(function(a, b) {return a - b});
+    nums2.sort(function(a, b) {return a - b});
+    var i = j = 0;
+    while (i < nums1.length && j < nums2.length) {
+        if (nums1[i] < nums2[j]) {
+            //get larger i
+            i++;
+        } else if (nums1[i] > nums2[j]) {
+            //get larger j
+            j++;
+        } else {
+            //they are equals
+            set[nums1[i]] = true;
+            i++;
+            j++;
+        }
+    }
+
+    return Object.keys(set).map(function(d) {return +d});
+};
+
+
+
+
+//version 3. binary search O(nlogn)
+var intersection = function(nums1, nums2) {
+    //remember a set is like an object {'value': true}
+    var set = {};
+    nums1.sort(function(a, b) {return a - b});
+    for (var i = 0; i < nums2.length; i++) {
+        if (binarySearch(nums1, nums2[i])) {
+            set[nums2[i]] = true;
+        }
+    }
+
+    return Object.keys(set).map(function(d) {return +d});
+};
+
+
+function binarySearch(nums, target) {
+    var start = 0, end = nums.length - 1;
+    while (start + 1 < end) {
+        var mid = Math.floor((start + end) / 2);
+        if (nums[mid] === target) {
+            return true;
+        } else if (nums[mid] > target) {
+            end = mid;
+        } else {
+            start = mid;
+        }
+    }
+    if (nums[start] === target || nums[end] === target) {
+        return true;
+    }
+    return false;
+}
+
+
+
+</script>

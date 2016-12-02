@@ -1,0 +1,72 @@
+<script type="text/javascript">
+/*
+Given two strings s and t, write a function to determine if t is an anagram of s.
+
+For example,
+s = "anagram", t = "nagaram", return true.
+s = "rat", t = "car", return false.
+
+Note:
+You may assume the string contains only lowercase alphabets.
+
+Follow up:
+What if the inputs contain unicode characters? How would you adapt your solution to such case?
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+//hash map methods
+var isAnagram = function(s, t) {
+    if (s.length !== t.length) {
+        return false;
+    }
+    var map = {};
+    for (var i = 0; i < s.length; i++) {
+        if (s.charAt(i) in map) {
+            map[s.charAt(i)]++;
+        } else {
+            map[s.charAt(i)] = 1;
+        }
+    }
+    // console.log(map);
+    for (var i = 0; i < t.length; i++) {
+        if (!(t.charAt(i) in map)) {
+            return false;
+        } else {
+            map[t.charAt(i)]--; //could be negative
+            if (map[t.charAt(i)] === 0) {
+                delete map[t.charAt(i)];
+            }
+        }
+    }
+    return Object.keys(map).length === 0;
+};
+// console.log(isAnagram('A', 'A'));
+//console.log('A'.charCodeAt())
+//buckets method
+var isAnagram =function(s, t) {
+    if (s.length !== t.length) {
+        return false;
+    }
+    var count = new Array(26).fill(0);
+    var initCode = 'a'.charCodeAt();
+    for (var i = 0; i < s.length; i++) {
+        count[s.charAt(i).charCodeAt() - initCode]++
+    }
+
+    for (var i = 0; i < t.length; i++) {
+        count[t.charAt(i).charCodeAt() - initCode]--;
+        if (count[t.charAt(i).charCodeAt() - initCode] < 0) {
+            return false;
+        }
+    }
+    //at this moment, all of them must be zero as t and s has same length
+    return true;
+};
+
+
+console.log(isAnagram('a', 'a'));
+
+
+</script>

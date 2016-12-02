@@ -1,0 +1,66 @@
+<script type="text/javascript">
+
+var matrix = new Array(3);
+
+for (var i = 0; i < 3; i++) {
+    matrix[i] = new Array(3).fill(0);
+}
+
+matrix.forEach(function(row, i) {
+    row.forEach(function(item, j) {
+        row[j] = i * 3 + j + 1;
+    })
+})
+
+console.log(matrix);
+
+/*
+[
+ [1, 2, 3],
+ [4, 5, 6],
+ [7, 8, 9]
+
+
+]
+
+[
+ [7, 4, 1],
+ [8, 5, 2],
+ [9, 6, 3]
+]
+4 (1, 0) -> (0, 1)
+7 (2, 0) -> (0, 0)
+1 (0, 0) -> (0, 2)
+
+
+i = len - j - 1
+j = len - i - 1
+
+*/
+
+
+/**
+ * @param {number[][]} matrix
+ * @return {void} Do not return anything, modify matrix in-place instead.
+ */
+
+var rotate = function(matrix) {
+    var len = matrix.length;
+
+    for (var i = 0; i < Math.floor(len / 2); i++) {
+        for (var j = 0; j < Math.floor((len + 1) / 2); j++) {
+            // console.log(matrix[i][j])
+
+            var temp = matrix[i][j];
+            matrix[i][j] = matrix[len - 1 - j][i];
+            matrix[len - j - 1][i] = matrix[len - i - 1][len - j - 1];
+            matrix[len - i - 1][len - j - 1] = matrix[j][len - i - 1];
+            matrix[j][len - i - 1] = temp;
+
+        }
+    }
+};
+
+rotate(matrix);
+console.log(JSON.stringify(matrix));
+</script>

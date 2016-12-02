@@ -1,0 +1,113 @@
+<script type="text/javascript">
+/*
+3. Longest Substring Without Repeating Characters
+https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+Given a string, find the length of the longest substring without repeating characters.
+
+Examples:
+
+Given "abcabcbb", the answer is "abc", which the length is 3.
+
+Given "bbbbb", the answer is "b", with the length of 1.
+
+Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+*/
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function(s) {
+    var max = 0;
+    var currStr = ''
+    for (var i = 0; i < s.length; i++) {
+        for (var index = i; index < s.length; index++) {
+            var currChar = s.charAt(index);
+            if (currStr.indexOf(currChar) >= 0) {
+                //dont update here
+                //if update max here, then loose the reach the end condition, bad...
+                break;
+            } else {
+                currStr += currChar;
+            }
+        }
+        //update outside the for loop, because we have two terminated condition, 1. reach the end, 2.reach a duplicated
+        max = Math.max(max, currStr.length);
+        currStr = '';
+    }
+    return max;
+};
+
+
+//version2, backtracking, the old one is to find a substring start at i, this one is to find a substring end at i
+var lengthOfLongestSubstring = function(s) {
+    var maxStr = '';
+    var startIndex = 0;
+    for (var i = 0; i < s.length; i++) {
+        var checkIndex = i - 1;
+        while(checkIndex >= startIndex) {
+            if (s.charAt(checkIndex) == s.charAt(i)) {
+                startIndex = checkIndex + 1;
+                break;
+            }
+            checkIndex--;
+        }
+        if (i - startIndex + 1 > maxStr.length) {
+            maxStr = s.substr(startIndex, i - startIndex + 1);
+        }
+    }
+    return maxStr.length;
+};
+
+
+//answers with better time complexity
+
+//version3 
+var lengthOfLongestSubstring = function(s) {
+    var visited = new Array(256).fill(0); // map from character's ASCII to its last occured index
+
+    var startIndex = 0;
+    var checkIndex = 0;
+    var max = 0;
+    for (startIndex = 0; startIndex < s.length; startIndex++) {
+        while(checkIndex < s.length && visited[s.charCodeAt(checkIndex)] === 0) {
+            visited[s.charCodeAt(checkIndex)] = 1;
+            //new length
+            max = Math.max(max, checkIndex - startIndex + 1);
+            checkIndex++;
+        }
+        visited[s.charCodeAt(startIndex)] = 0;
+        console.log(startIndex, checkIndex);
+    }
+    return max;
+}
+
+
+//version 4, only one loop
+var lengthOfLongestSubstring2 = function(s) {
+    var max = 0;
+    var left = 0; //the left boundary of a good string
+    var last_occurrence = {}; //last occurence of a character
+    for (var i = 0; i < s.length; i++) {
+        if ((s.charAt(i) in last_occurrence) && last_occurrence[s.charAt(i)] > left) {
+            //only move it when the last ocurrence is within the current check boundary(>left)
+            //move the left boundary to the next possible location
+            left = last_occurrence[s.charAt(i)] + 1;
+        }
+        last_occurrence[s.charAt(i)] = i;
+        max = Math.max(max, i - left + 1);
+        console.log(last_occurrence, left);
+    }
+    console.log(last_occurrence);
+    return max;
+
+}
+
+
+
+var s = "abcabcbb";
+var s = "abba";
+console.log(lengthOfLongestSubstring(s));
+
+</script>

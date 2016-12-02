@@ -1,0 +1,39 @@
+<script type="text/javascript">
+var num = 123;
+var digits = [];
+while (num > 0) {
+    digits[digits.length] = num % 10;
+    num = parseInt(num / 10);
+}
+// console.log(digits);
+
+// console.log(parseInt(2.9));
+
+
+
+var isHappy = function(n) {
+    var visited = [];
+    while (!visited[n]) {
+        // console.log(n);
+        visited[n] = 1;
+        n = getSquareSum(n);
+    }
+    if (n === 1) {
+        return true;
+    }
+    return false;
+};
+
+var getSquareSum = function(n) {
+    var sum = 0;
+    while (n > 0) {
+        var currDigit = n % 10;
+        sum += Math.pow(currDigit, 2);
+        n = parseInt(n / 10);
+    }
+    return sum;
+};
+
+
+isHappy(2);
+</script>

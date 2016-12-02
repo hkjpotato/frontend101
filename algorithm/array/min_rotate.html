@@ -1,0 +1,73 @@
+<script type="text/javascript">
+
+/**
+Suppose a sorted array is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+Find the minimum element.
+
+You may assume no duplicate exists in the array.
+
+it is like a reverse of find peak
+
+
+ * @param {number[]} nums
+ * @return {number}
+ */
+
+var nums = [4, 5, 6, 7, 0, 1, 2];
+var nums = [1, 2, 3];
+
+//idea borrow from finding peak I guess
+var findMin = function(nums) {
+    if (nums === null || nums.length === 0) {
+        return null;
+    }
+
+    var low = 0, high = nums.length - 1;
+    while (low + 1 < high) {
+        var midIndex = Math.floor((low + high) / 2);
+        var left = nums[low], right = nums[high], mid = nums[midIndex];
+        if (left < mid && mid < right) {
+            return left;
+        } else {
+            var leftDiff = Math.abs(left - mid), rightDiff = Math.abs(right - mid);
+            if (leftDiff > rightDiff) {
+                high = midIndex;
+            } else {
+                low = midIndex;
+            }
+        }
+    }
+    if (nums[low] < nums[high]) {
+        return nums[low];
+    } else {
+        return nums[high];
+    }
+};
+
+var findMin = function(nums) {
+    if (nums === null || nums.length === 0) {
+        return null;
+    }
+
+    var low = 0, high = nums.length - 1;
+    var target = nums[nums.length - 1];
+    while (low + 1 < high) {
+        var midIndex = Math.floor((low + high) / 2);
+        if (nums[midIndex] <= target) {
+            high = midIndex;
+        } else {
+            low = midIndex;
+        }
+    }
+    if (nums[low] < nums[high]) {
+        return nums[low];
+    } else {
+        return nums[high];
+    }
+};
+
+console.log(findMin(nums));
+</script>

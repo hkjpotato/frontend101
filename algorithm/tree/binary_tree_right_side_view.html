@@ -1,0 +1,104 @@
+<script type="text/javascript">
+/*
+Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+
+For example:
+Given the following binary tree,
+   1            <---
+ /   \
+2     3         <---
+ \     \
+  5     4       <---
+You should return [1, 3, 4].
+*/
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+var TreeNode = function(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+
+}
+var root = new TreeNode(1);
+root.left = new TreeNode(2);
+root.right = new TreeNode(3);
+root.right.right = new TreeNode(4);
+root.left.right = new TreeNode(5);
+
+
+
+//the simpliest is to do a level order traverse and then get the first/last element of each level
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var rightSideView = function(root) {
+    var result = [];
+    if (root === null) {return result};
+    var queue = [];
+    queue.push(root);
+    while (queue.length !== 0) {
+        var level = [];
+        var levelLen = queue.length;
+        for (var i = 0; i < levelLen; i++) {
+            var curr = queue.shift();
+            level.push(curr.val);
+            if (curr.right !== null) {
+                queue.push(curr.right);
+            }
+            if (curr.left !== null) {
+                queue.push(curr.left);
+            }
+        }
+        result.push(level[0]);
+    }
+    return result;
+};
+//review of level order BFS
+var rightSideLevelOrder = function(root) {
+    var result = [];
+    if (root === null) {return result};
+    var queue = [];
+    queue.push(root);
+    while (queue.length !== 0) {
+        var level = [];
+        var levelLen = queue.length;
+        for (var i = 0; i < levelLen; i++) {
+            var curr = queue.shift();
+            level.push(curr.val);
+            if (curr.right !== null) {
+                queue.push(curr.right);
+            }
+            if (curr.left !== null) {
+                queue.push(curr.left);
+            }
+        }
+        result.push(level);
+    }
+    console.log(result);
+}
+
+//DFS trick version, do a preorder traverse with right child first and then left right, only add one element for each level
+var rightSideView = function(root) {
+    var result = [];
+    dfs(root, result, 0);
+    return result;
+};
+
+var dfs = function(root, result, currDepth) {
+    if (root === null) {
+        return;
+    }
+    if (currDepth === result.length) {
+        result.push(root.val);
+    }
+    dfs(root.right, result, currDepth + 1);
+    dfs(root.left, result, currDepth + 1);
+};
+rightSideLevelOrder(root);
+</script>

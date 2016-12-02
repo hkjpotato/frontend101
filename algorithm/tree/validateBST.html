@@ -1,0 +1,80 @@
+<script type="text/javascript">
+/**
+Given a binary tree, determine if it is a valid binary search tree (BST).
+
+Assume a BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+Example 1:
+    2
+   / \
+  1   3
+Binary tree [2,1,3], return true.
+Example 2:
+    1
+   / \
+  2   3
+Binary tree [1,2,3], return false.
+*/
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+
+var root = new TreeNode(2);
+root.left = new TreeNode(1);
+root.right = new TreeNode(3);
+
+/**
+ * @param {TreeNode} root
+ * @return 
+     {
+        isBST:
+        min:
+        max:
+     }
+ */
+var isValidHelper = function(root) {
+    if (root === null) {
+        return {
+            isBST: true,
+            min: Number.MAX_VALUE,
+            max: -Number.MAX_VALUE
+        }
+    }
+    //devide 
+    var left = isValidHelper(root.left);
+    var right = isValidHelper(root.right);
+
+    //conquer
+    if (left.isBST && right.isBST && root.val > left.max && root.val < right.min) {
+        var min = Math.min(left.min, root.val);
+        var max = Math.max(right.max, root.val);
+        return {
+            isBST: true,
+            min: min,
+            max: max
+        }
+    } else {
+        return {
+            isBST: false,
+            min: 0,
+            max: 0.
+        }
+    }
+}
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isValidBST = function(root) {
+    return isValidHelper(root).isValid;
+};
+
+
+
+
+
+</script>

@@ -1,0 +1,90 @@
+<script type="text/javascript">
+/*
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Your goal is to reach the last index in the minimum number of jumps.
+
+For example:
+Given array A = [2,3,1,1,4]
+
+The minimum number of jumps to reach the last index is 2. (Jump 1 step from index 0 to 1, then 3 steps to the last index.)
+
+Note:
+You can assume that you can always reach the last index.
+*/
+
+//version 1 dp time limit exceed o(n^2)
+// var jump = function(nums) {
+//     //used to store the minumum number of jumps
+//     var min = new Array(nums.length).fill(Number.MAX_VALUE);
+//     min[0] = 0;
+    
+//     for (var i = 1; i < nums.length; i++) {
+//         for (var j = 0; j < i; j++) {
+//             if (min[j] != Number.MAX_VALUE && j + nums[j] >= i) {
+//                 min[i] = Math.min(min[i], min[j] + 1);
+//             }
+//         }
+//     }
+    
+//     return min[nums.length - 1];
+// };
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+ 
+//dp time exceed
+var jump = function(nums) {
+    //state[i] define: min to i
+    var state = new Array(nums.length).fill(Number.MAX_VALUE);
+
+    //initialize //no need to jump
+    state[0] = 0; 
+
+    //function: state[i] = min{state[j] + 1} where state[j] + j >= i
+    for (var i = 1; i < state.length; i++) {
+        for (var j = 0; j < i; j++) {
+            if (state[j] !== Number.MAX_VALUE && nums[j] + j >= i) {
+                state[i] = Math.min(state[i], state[j] + 1)
+            }
+        }
+    }
+    //answer
+    return state[state.length - 1];
+}
+
+//version2 greedy o(n), jump interval, not a specific index
+var jump = function(nums) {
+    if (nums === null || nums.length === 0) {
+        return -1;
+    }
+    //information about current interval
+    var intervalStart = 0, intervalEnd = 0, jumpTime =0;
+    while (intervalEnd < nums.length - 1) {
+        jumpTime++;
+        //find the next interval
+        var nextIntervalEnd = intervalEnd;
+        for (var i = intervalStart; i <= intervalEnd; i++) {
+            nextIntervalEnd = Math.max(nextIntervalEnd, nums[i] + i);
+        }
+        intervalStart = intervalEnd + 1;
+        intervalEnd = nextIntervalEnd;
+    }
+    return jumpTime;
+}
+
+//version3 python version
+var jump = function(nums) {
+    var p = [0];
+    for (var i = 0; i < nums.length - 1; i++) {
+        while ((nums[i] + i) >= p.length && p.length < nums.length) {
+            p.push(p[i] + 1);
+        }
+    }
+    return p[p.length - 1];
+}
+
+</script>

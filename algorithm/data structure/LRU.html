@@ -1,0 +1,169 @@
+<script type="text/javascript">
+
+/*
+Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and set.
+
+get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+*/
+/**
+ * @constructor
+ */
+
+var Node = function(key, value) {
+    this.key = key;
+    this.value = value;
+    this.prev = this.next = null;
+}
+
+var LRUCache = function(capacity) {
+    this.capacity = capacity;
+    this.hashMap = {};
+    this.head = new Node(-1, -1);
+    this.tail = new Node(-1, -1);
+    this.tail.prev = this.head;
+    this.head.next = this.tail;
+
+    this._move2tail = function(curr) {
+        curr.prev = this.tail.prev;
+        this.tail.prev = curr;
+        curr.prev.next = curr;
+        curr.next = this.tail;
+    }
+};
+
+/**
+ * @param {number} key
+ * @returns {number}
+ */
+LRUCache.prototype.get = function(key) {
+    if (!this.hashMap[key]) {
+        return -1;
+    }
+    var current = this.hashMap[key];
+    //remove current from the linklist
+    current.prev.next = current.next;
+    current.next.prev = current.prev;
+
+    //move current to tail
+    this._move2tail(current);
+
+    return this.hashMap[key].value;
+};
+
+/**
+ * @param {number} key
+ * @param {number} value
+ * @returns {void}
+ */
+LRUCache.prototype.set = function(key, value) {
+    if (this.get(key) !== -1) {
+        this.hashMap[key].value = value;
+        return;
+    }
+
+    if (this.hashMap.length === this.capacity) {
+        delete this.hashMap[this.head.next.key];
+        this.head.next = this.head.next.next;
+        this.head.next.prev = this.head;
+    }
+    var insert = new Node(key, value);
+    this.hashMap[key] = insert;
+    this._move2tail(insert);
+};
+
+var Hash = function() {
+    this.hash = {};
+    this.node = null;
+}
+var node = {
+    "val": "kj"
+}
+Hash.prototype.put = function(key, value) {
+    this.hash[key] = node;
+}
+Hash.prototype.remove = function(key) {
+    delete this.hash[key];
+}
+
+var hash = new Hash();
+hash.put('hkj', 'sb');
+console.log(hash);
+// hash.remove('hkj');
+console.log(hash);
+console.log(node);
+
+
+
+var Node = function(key, value) {
+    this.key = key;
+    this.value = value;
+    this.prev = this.next = null;
+}
+
+var LRUCache = function(capacity) {
+    this.capacity = capacity;
+    this.hashMap = {};
+    this.head = new Node(-1, -1);
+    this.tail = new Node(-1, -1);
+    this.tail.prev = this.head;
+    this.head.next = this.tail;
+
+    this._move2tail = function(curr) {
+        curr.prev = this.tail.prev;
+        this.tail.prev = curr;
+        curr.prev.next = curr;
+        curr.next = this.tail;
+    }
+};
+
+/**
+ * @param {number} key
+ * @returns {number}
+ */
+LRUCache.prototype.get = function(key) {
+    if (!this.hashMap[key]) {
+        return -1;
+    }
+    var current = this.hashMap[key];
+    // //remove current from the linklist
+    current.prev.next = current.next;
+    current.next.prev = current.prev;
+    
+    // //move current to tail
+    // this._move2tail(current);
+    delete this.hashMap[key];
+    return current.value;
+};
+
+/**
+ * @param {number} key
+ * @param {number} value
+ * @returns {void}
+ */
+LRUCache.prototype.set = function(key, value) {
+    if (this.hashMap[key]) {
+        this.hashMap[key].value = value;
+        
+        var current = this.hashMap[key];
+        // //remove current from the linklist
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
+        
+        this._move2tail(current);
+        return;
+    }
+
+    if (this.hashMap.length === this.capacity) {
+        delete this.hashMap[this.head.next.key];
+        this.head.next = this.head.next.next;
+        this.head.next.prev = this.head;
+    }
+    var insert = new Node(key, value);
+    this.hashMap[key] = insert;
+    this._move2tail(insert);
+};
+
+var lru = new LRUCache(2);
+lru.set(2, 1);
+</script>

@@ -1,0 +1,71 @@
+<script type="text/javascript">
+/*
+Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.
+
+Examples:
+
+s = "leetcode"
+return 0.
+
+s = "loveleetcode",
+return 2.
+Note: You may assume the string contain only lowercase letters.
+*/
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var firstUniqChar = function(s) {
+    var array = new Array(26);
+    for (var i = 0; i < s.length; i++) {
+        if (typeof array[s.charAt(i).charCodeAt() - 'a'.charCodeAt()] !== 'undefined') {
+            array[s.charAt(i).charCodeAt() - 'a'.charCodeAt()] = false;
+        } else {
+            array[s.charAt(i).charCodeAt() - 'a'.charCodeAt()] = i;
+        }
+    }
+    var index = array.reduce(function(prev, curr) {
+        if (curr !== false) {
+            prev =  Math.min(prev, curr);
+        }
+        return prev;
+    }, Number.MAX_VALUE);
+    return (index === Number.MAX_VALUE ? -1 : index);
+};
+
+//version2
+var firstUniqChar = function(s) {
+    var array = new Array(26);
+    for (var i = 0; i < s.length; i++) {
+        if (typeof array[s.charAt(i).charCodeAt() - 'a'.charCodeAt()] !== 'undefined') {
+            array[s.charAt(i).charCodeAt() - 'a'.charCodeAt()] = false;
+        } else {
+            array[s.charAt(i).charCodeAt() - 'a'.charCodeAt()] = i;
+        }
+    }
+    var index = array.reduce(function(prev, curr) {
+        if (curr !== false) {
+            prev =  Math.min(prev, curr);
+        }
+        return prev;
+    }, Number.MAX_VALUE);
+    return (index === Number.MAX_VALUE ? -1 : index);
+};
+
+
+console.log(firstUniqChar("leetcode"));
+
+// arr[5] = false;
+// // for (var i = 0; i < arr.length; i++) {
+// //     console.log(arr[i]);
+// // }
+
+// arr.forEach(function(data) {
+//     // console.log(data);
+// })
+// arr.reduce(function(prev, curr) {
+//     console.log(curr);
+//     return curr;
+// }, 0);
+</script>

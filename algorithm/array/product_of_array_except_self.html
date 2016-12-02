@@ -1,0 +1,59 @@
+<script type="text/javascript">
+/**
+Given an array of n integers where n > 1, nums, return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+
+Solve it without division and in O(n).
+
+For example, given [1,2,3,4], return [24,12,8,6].
+
+Follow up:
+Could you solve it with constant space complexity? (Note: The output array does not count as extra space for the purpose of space complexity analysis.)
+
+Show Company Tags
+Show Tags
+Show Similar Problems
+*/
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+//version1 my own very easy to understand version....
+var productExceptSelf = function(nums) {
+    var result = [];
+    if (nums.length <= 1) {
+        return result;
+    }
+    var numsOfZero = 0;
+    var product = nums.reduce(function(prev, curr) {
+        if (curr === 0) {
+            numsOfZero++;
+            return prev;
+        } else {
+            return prev * curr;
+        }
+    }, 1);
+    
+    if (numsOfZero > 1) {
+        result = new Array(nums.length).fill(0);
+    } else if (numsOfZero === 1) {
+        result = nums.map(function(num) {
+            if (num === 0) {
+                return product;
+            }
+            return 0;
+        });
+    } else {
+        result = nums.map(function(num) {
+            return product / num;
+        });
+    }
+    return result;
+};
+
+//version2 amazing ideas
+</script>

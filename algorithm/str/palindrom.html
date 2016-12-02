@@ -1,0 +1,57 @@
+<script type="text/javascript">
+console.log(s.substring(0, 0));
+var swap = function(s, i, j) {
+    var newStr = s.substring(0, i) + s.charAt(j) + s.substring(i + 1, j) + s.charAt(i) + s.substring(j + 1);
+    return newStr;
+}
+
+console.log(swap(s, 0, 4));
+
+console.log("---palindrome---");
+
+var s = "aab";
+
+var partition = function(s) {
+    //this is a searching question rather than dp.
+    //since we want to know the all the possible result
+    var results = [];
+    var path = [];
+    partitionHelper(0, s, results, path);
+    return results;
+};
+
+var partitionHelper = function(startIndex, s, results, path) {
+    if (startIndex >= s.length) {
+        console.log(startIndex);
+        results.push(path.slice(0));
+        return;
+    }
+
+    for (var i = startIndex; i < s.length; i++) {
+        var newWord = s.substring(startIndex, i + 1);
+        console.log(newWord);
+        console.log(isPalindrome(newWord));
+        if (isPalindrome(newWord)) {
+            path.push(newWord);
+            console.log(path);
+            partitionHelper(i + 1, s, results, path);
+            path.pop();
+        }
+    }
+}
+var isPalindrome = function(s) {
+    var i = 0, j = s.length - 1;
+    while(i < j) {
+        if (s.charAt(i) !== s.charAt(j)) {
+            return false;
+        }
+        i++;
+        j--;
+    }
+    return true;
+}
+console.log(partition(s));
+
+
+
+</script>

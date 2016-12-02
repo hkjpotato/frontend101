@@ -58,13 +58,18 @@ Even though developers are generally dealing with coding language like javascrip
 #### Javascript:
 
 JS is the key for front end development. Javascript basics: scope, closure, array manipulation, callback ...
+
+Before going into the JS algorithm part, understand the below concepts is essential. I use a lot of JS specific coding style in the leetcode JS algorithm answers.
   * Object
   * Scope
-  * Array mainipulation
+  * Prototype chain
+  * Array mainipulation, such as map, forEach, reduce, filter.
   * Apply, call and bind
   * [Event delegation](./javascript/event delegation)
   * IIFE
-  * Asynchronous
+  * [var vs function](http://stackoverflow.com/questions/336859/javascript-function-declaration-syntax-var-fn-function-vs-function-fn)
+  * [Hositing](http://adripofjavascript.com/blog/drips/variable-and-function-hoisting)
+  * Asynchronous (callback)
   * ES6
 
 #### Design&#32;Pattern:

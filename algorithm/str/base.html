@@ -1,0 +1,11 @@
+<script type="text/javascript">
+
+var letters = "abc";
+var result = [];
+for (var i = 0; i < 5; i++) {
+    letters += i;
+    result.push(letters);
+    letters = letters.substring(0, letters.length - 1);
+}
+console.log(result);
+</script>

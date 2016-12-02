@@ -1,0 +1,112 @@
+<script type="text/javascript">
+//The very basic of DP, try to compare the traditional DFS and DP here
+
+/*
+Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+For example, given the following triangle
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
+
+Note:
+Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
+*/
+
+
+var triangle = [
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+];
+ /**
+ * @param {number[][]} triangle
+ * @return {number}
+ */
+
+
+//devide & conquer -> time exit
+var minimumTotal = function(triangle) {
+    return dchelper(triangle, 0, 0);
+}
+
+var dchelper = function(triangle, i, j) {
+    if (i === triangle.length - 1) {
+        return triangle[i][j];
+    }
+    return Math.min(dchelper(triangle, i + 1, j), dchelper(triangle, i + 1, j + 1)) + triangle[i][j];
+}
+
+//devide & conquer + memory
+var minimumTotal = function(triangle) {
+    var memory = new Array(triangle.length);
+    for (var i = 0; i < triangle.length; i++) {
+        memory[i] = [];
+        for (var j = 0; j < triangle.length; j++) {
+            memory[i][j] = Number.MAX_VALUE;
+        }
+    }
+    return dchelper(triangle, 0, 0, memory);
+}
+
+var dchelper = function(triangle, i, j, memory) {
+    if (i === triangle.length - 1) {
+        return triangle[i][j];
+    }
+    if (memory[i][j] !== Number.MAX_VALUE) {
+        return memory[i][j];
+    }
+
+    memory[i][j] = Math.min(dchelper(triangle, i + 1, j, memory), dchelper(triangle, i + 1, j + 1, memory)) + triangle[i][j];
+    return memory[i][j];
+}
+
+//iterative
+var minimumTotal = function(triangle) {
+
+    var n = triangle.length;
+    //state definition: from i, j to root, the min path
+    var state = new Array(n);
+    for (var i = 0; i < n; i++) {
+        state[i] = new Array(i + 1);
+    }
+    console.log(state);
+    //initialzie state
+    state[0][0] = triangle[0][0];
+    for (var i = 1; i < n; i++) {
+        state[i][0] = state[i - 1][0] + triangle[i][0];
+        state[i][i] = state[i - 1][i - 1] + triangle[i][i];
+    }
+
+    //top down (relation function)
+    for (var i = 1; i < n; i++) {
+        for (var j = 1; j < i; j++) {
+            state[i][j] = Math.min(state[i - 1][j - 1], state[i - 1][j]) + triangle[i][j];
+        }
+    }
+
+    return state[n - 1].reduce(function(prev, curr) {
+        return Math.min(prev, curr);
+    }, Number.MAX_VALUE);
+}
+
+
+
+
+// //traverse (top down)
+// var minimumTotal = function(triangle) {
+//     var result = [];
+//     return traverseHelper(triangle, 0, 0, result);
+// }
+
+// var traverseHelper = function(triangle, 0, 0, result) {
+
+// }
+
+console.log(minimumTotal(triangle));
+</script>
