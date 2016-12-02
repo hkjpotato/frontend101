@@ -1,6 +1,6 @@
-# Popular algorithims-questions-by-javascript
+# Leetcode Javascript Solution
 
-My JS solution to some LeetCode algorithims questions
+My JS solution to LeetCode algorithims questions.I will keep updating them.
 
 Will organize the file later.
 

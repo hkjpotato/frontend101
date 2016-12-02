@@ -99,7 +99,7 @@ Gulp, Webpack, Bower, Preprocessor, Testing, Git...
   * [Webpack](./build tool/webpack)
 
 #### Algorithm:
-  * [JS solutions to Algorithim Problems](./algorithm/)
+  * [Leetcode Javascript Solution](./algorithm/)
 
 #### Server Side:
 
