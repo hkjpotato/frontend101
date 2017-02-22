@@ -1,0 +1,88 @@
+<html>
+<form id="myform">
+    <input name="first" type="text" />
+    <input name="second" type="text" />
+</form>
+<script type="text/javascript">
+/*
+How to make new object from js1.2
+1. Object Initializer
+2. Constructor function and New
+3. Object.create
+Object Initializer is also referred to as creating objects with literal notation 
+*/
+
+var obj = { property_1:   'value_1',   // property_# may be an identifier...
+            2:            'value_2',   // or a number...
+            // ...,
+            "property n": 'value_n' }; // or a string
+
+console.log(obj);
+
+console.log(obj["2"]);
+
+
+/*
+Object initializers are expressions, and each object initializer results in a new object being created whenever the statement in which it appears is executed. Identical object initializers create distinct objects that will not compare to each other as equal. Objects are created as if a call to new Object() were made; that is, objects made from object literal expressions are instances of Object.
+*/
+
+/*
+Use constructor function
+use new to make the instance
+'this' refer to the instance created
+*/
+
+/*
+Use Object.create
+Objects can also be created using the Object.create() method. This method can be very useful, because it allows you to choose the prototype object for the object you want to create, without having to define a constructor function.
+*/
+// Animal properties and method encapsulation
+var Animal = {
+  type: 'Invertebrates', // Default value of properties
+  displayType: function() {  // Method which will display type of Animal
+    console.log(this.type);
+  }
+};
+
+// Create new animal type called animal1 
+var animal1 = Object.create(Animal);
+animal1.displayType(); // Output:Invertebrates
+
+// Create new animal type called Fishes
+var fish = Object.create(Animal);
+fish.type = 'Fishes';
+fish.displayType(); // Output:Fishes
+
+
+/*
+Indexing object properties
+You can refer to a property of an object either by its property name or by its ordinal index. If you initially define a property by its name, you must always refer to it by its name, and if you initially define a property by an index, you must always refer to it by its index.
+
+This restriction applies when you create an object and its properties with a constructor function (as we did previously with the Car object type) and when you define individual properties explicitly (for example, myCar.color = "red"). If you initially define an object property with an index, such as myCar[5] = "25 mpg", you subsequently refer to the property only as myCar[5].
+
+The exception to this rule is objects reflected from HTML, such as the forms array. You can always refer to objects in these arrays by either their ordinal number (based on where they appear in the document) or their name (if defined). For example, if the second <FORM> tag in a document has a NAME attribute of "myForm", you can refer to the form as document.forms[1] or document.forms["myForm"] or document.forms.myForm.
+*/
+
+var myform = document.getElementById('myform');
+console.log(myform[0]);
+console.log(myform['first']);
+//the above two are the same
+console.log(myform[1]);
+
+/*
+You can add a property to a previously defined object type by using the prototype property. This defines a property that is shared by all objects of the specified type, rather than by just one instance of the object. The following code adds a color property to all objects of type car, and then assigns a value to the color property of the object car1.
+*/
+
+function Car(name) {
+    this.name = name;
+}
+car1 = new Car('car1');
+car2 = new Car('car2');
+
+Car.prototype.color = null;
+car1.color = 'black';
+console.log(car1.color);
+console.log(car2.color); //null not undefine
+
+</script>
+</html>

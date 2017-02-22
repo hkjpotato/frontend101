@@ -1,0 +1,23 @@
+<html>
+<script type="text/javascript">
+/*
+Set object
+
+Set objects are collections of values. You can iterate its elements in insertion order. A value in a Set may only occur once; it is unique in the Set's collection.
+*/
+
+var mySet = new Set();
+mySet.add(1);
+mySet.add('some text');
+mySet.add('foo');
+mySet.add(NaN);
+
+
+mySet.has(1); // true
+mySet.delete('foo');
+mySet.size; // 2
+
+for (let item of mySet) console.log(item);
+
+</script>
+</html>

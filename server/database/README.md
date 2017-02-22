@@ -12,3 +12,9 @@ Things that I wish I know before I dive into the ORM model concept of django. I 
  - Notice that a foreign key can refer to its own relation. (like a dBus' parent could be another dBus)
  - Several options are available if a deletion operation causes a violation. The first option, called **restrict**, is to reject the deletion. The second option, called **cascade**, is to attempt to cascade (or propagate) the deletion by deleting tuples that reference the tuple that is being deleted.A third option, called **set null** or **set default**, is to modify the referencing attribute values that cause the violation; each such value is either set to NULL or changed to reference another default valid tuple. Notice that if a referencing attribute that causes a violation is part of the primary key, it cannot be set to NULL; otherwise, it would violate entity integrity.
 
+
+##Important Questions:
+- How does database indexing work? Basically, indexing is a data structure for better searching algorithm.[stackoverflows](http://stackoverflow.com/questions/1108/how-does-database-indexing-work)
+
+
+

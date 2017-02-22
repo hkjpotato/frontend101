@@ -1,0 +1,49 @@
+<script type="text/javascript">
+/*
+16. 3Sum Closest
+Given an array S of n integers, find three integers in S such that the sum is closest to a given number, target. Return the sum of the three integers. You may assume that each input would have exactly one solution.
+
+    For example, given array S = {-1 2 1 -4}, and target = 1.
+
+    The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+*/
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var threeSumClosest = function(nums, target) {
+    var closest = Number.MAX_VALUE;
+    nums.sort(function(a, b) {
+        return a - b;
+    });
+    for (var i = 0; i < nums.length; i++) {
+        if (i !== 0 && nums[i] == nums[i - 1]) {
+            continue;
+        }
+        var start = i + 1, end = nums.length - 1;
+        while (start < end) {
+            var sum = nums[i] + nums[start] + nums[end];
+            //compare and update
+            closest = Math.abs(closest - target) > Math.abs(sum - target) ? sum: closest;
+            if (sum < target) {
+                start++;
+                //try to skip, may not neccessary
+                while (start < end && nums[start] === nums[start - 1]) {
+                    start++;
+                }
+            } else if (sum > target) {
+                end--;
+                //try to skip, may not neccessary
+               while (start < end && nums[end] === nums[end + 1]) {
+                    end--;
+                }
+            } else {
+                //find the target
+                return target;
+            }
+        }
+    }
+    return closest;
+};
+</script>

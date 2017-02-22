@@ -1,0 +1,78 @@
+<html>
+<script type="text/javascript">
+/*
+1. object is a set of key value
+2. use dot-notation to access attribute
+3. [] can be used as well
+4. undefined property is undefined, not null
+5. the key can only be string type
+*/
+
+var a = {
+    val: 1
+}
+console.log(a.b) //undefined
+console.log(a['b']) //undefined
+
+function MyObject(name) {
+    this.name = name;
+}
+
+MyObject.prototype.toString = function() {
+    return this.name;
+}
+
+MyObject.prototype.name = "prototype name";
+
+mobj = new MyObject('hkj');
+// console.log(mobj);
+
+a[mobj] = "object";
+
+console.log(a); //{hkj: "object', val: 1} 
+//this is because when attaching mobj as a key, js will call toString method to make it a string
+var raw_keys = "", keys = "";
+for (var i in mobj) {
+    if (mobj.hasOwnProperty(i)) {
+        raw_keys += (i + ',');
+    }
+    keys += (i + ',');
+}
+console.log(keys);
+console.log(raw_keys); //raw_keys include the one defined in prototype
+
+
+/*
+Enumerate all keys/attributes
+start from es5, you got 3 methods to do that
+1. for...in (loop through keys, including the ones from prototype)
+2. Object.keys(o) (only return self defined)
+3.Object.getOwnPropertyNames(0)
+*/
+
+console.log(Object.keys(mobj)); //['name']
+console.log(Object.getOwnPropertyNames(mobj)); //['name']
+console.log(mobj)
+
+/*
+to get all the name including the 'hidden ones' from prototype
+*/
+console.log('---------')
+
+function listAllProperties(o) {
+    var obj2Inspect;
+    var result = [];
+    for (var obj2Inspect = o; obj2Inspect !== null; obj2Inspect = Object.getPrototypeOf(obj2Inspect)) {
+        result = result + (Object.getOwnPropertyNames(obj2Inspect));
+        console.log(obj2Inspect, result);
+    }
+    return result;
+}
+
+
+console.log(listAllProperties(mobj));
+console.log('---------')
+
+
+</script>
+</html>

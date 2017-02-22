@@ -1,0 +1,95 @@
+<html>
+<script type="text/javascript">
+function Employee() {
+    this.name = "";
+    this.dept = "general";
+}
+
+function Manager() {
+    Employee.call(this, 'hkj'); //call Employee constructor function
+    this.reports = [];
+}
+
+//my way of inheritance
+// Manager.prototype = new Employee();
+// Use Object.create
+// Objects can also be created using the Object.create() method. This method can be very useful, because it allows you to choose the prototype object for the object you want to create, without having to define a constructor function.
+Manager.prototype = Object.create(Employee.prototype);
+// Manager.prototype = new Employee('maoli');
+console.log(new Manager());
+
+
+function WorkerBee() {
+    console.log(this.type);
+    Employee.call(this);
+    this.projects = [];
+}
+
+WorkerBee.prototype = Object.create(Employee.prototype);
+
+function SalesPerson() {
+    WorkerBee.call(this);
+    this.dept = 'sales';
+    this.quota = 100;
+}
+
+SalesPerson.prototype = Object.create(Employee.prototype);
+
+console.log(new SalesPerson) // parentheses can be omitted if the constructor takes no arguments
+
+
+function Engineer() {
+    WorkerBee.call(this);
+    this.dept = 'engineering';
+    this.machine = '';
+}
+
+//add it to the prototype chain
+Engineer.prototype = Object.create(WorkerBee.prototype);
+
+
+
+var mark = new WorkerBee;
+/*
+When JavaScript sees the new operator, it creates a new generic object and passes this new object as the value of the this keyword to the WorkerBee constructor function. The constructor function explicitly sets the value of the projects property, 
+
+and IMPLICITLY!!! sets the value of the internal __proto__ property to the value of WorkerBee.prototype. (That property name has two underscore characters at the front and two at the end.) The __proto__ property determines the prototype chain used to return property values. Once these properties are set, JavaScript returns the new object and the assignment statement sets the variable mark to that object.
+
+This process does not explicitly put values in the mark object (local values) for the properties that mark inherits from the prototype chain. When you ask for the value of a property, JavaScript first checks to see if the value exists in that object. If it does, that value is returned. If the value is not there locally, JavaScript checks the prototype chain (using the __proto__ property). If an object in the prototype chain has a value for the property, that value is returned. If no such property is found, JavaScript says the object does not have the property. In this way, the mark object has the following properties and values:
+
+mark.name = '';
+mark.dept = 'general';
+mark.projects = [];
+*/
+
+
+
+//more flexible constructor
+function Person(name) {
+    console.log('Person called, ', this.type);
+    this.name = name || "";
+}
+
+function SuperMan(name, weapon) {
+    this.type = "superman";
+    this.base = Person;
+    this.base(name);
+    this.weapon = weapon || "";
+}
+
+console.log(new SuperMan('hkj', 'gun'));
+
+
+function DevilMan(name) {
+    this.type = "devilman";
+    Person.call(this, name);
+}
+
+console.log(new DevilMan('devil'));
+
+var p = new Person();
+SuperMan.prototype = p;
+Person.prototype.commonAttribute = 'hahahaa';
+console.log(new SuperMan('hkj', 'gun'));
+</script>
+</html>

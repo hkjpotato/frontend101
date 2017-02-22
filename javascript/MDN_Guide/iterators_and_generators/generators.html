@@ -1,0 +1,51 @@
+<html>
+<script type="text/javascript">
+/*
+While custom iterators are a useful tool, their creation requires careful programming due to the need to explicitly maintain their internal state. Generators provide a powerful alternative: they allow you to define an iterative algorithm by writing a single function which can maintain its own state.
+
+A generator is a special type of function that works as a factory for iterators. A function becomes a generator if it contains one or more yield expressions and if it uses the function* syntax.
+*/
+
+function* square(max) {
+    var i = 1;
+    while(i <= max) {
+        yield i * i;
+        i += 1;
+    }
+}
+
+var gen = square(10);
+
+while(true) {
+    var next = gen.next();
+    if (next.done) {
+        break;
+    }
+    console.log(next.value);
+}
+
+
+//if you want to write this by an interator
+
+function makeSquareInterator(max) {
+    var curr = 1;
+    return {
+        next: function() {
+            return curr <= max ? 
+            {value: curr * curr++, done: false} :
+            {done: true}
+        }
+    }
+}
+
+var iter = makeSquareInterator(10);
+while(true) {
+    var next = iter.next();
+    if (next.done) {
+        break;
+    }
+    console.log(next.value);
+}
+
+</script>
+</html>

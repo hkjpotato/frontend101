@@ -1,0 +1,77 @@
+<html>
+<script type="text/javascript">
+/*
+JavaScript is an object-based language based on prototypes, rather than being class-based. Because of this different basis, it can be less apparent how JavaScript allows you to create hierarchies of objects and to have inheritance of properties and their values. This chapter attempts to clarify the situation.
+*/
+
+/*
+object based can be either prototype based or class based
+*/
+
+/*
+
+class based has two distinct entities
+1. class: abstract
+2. instance: instantiation of class
+
+A prototype-based language, such as JavaScript, does not make this distinction: it simply has objects. A prototype-based language has the notion of a prototypical object, an object used as a template from which to get the initial properties for a new object. Any object can specify its own properties, either when you create it or at run time. In addition, any object can be associated as the prototype for another object, allowing the second object to share the first object's properties.
+*/
+
+/*
+class definition
+class based: a separate class definition, in which you can specify constructor
+javascript: does not have a class definition separate from the constructor. Instead, you define a constructor function to create objects with a particular initial set of properties and values.
+*/
+
+/*
+subclasses and inheritance
+JavaScript implements inheritance by allowing you to associate a prototypical object with any constructor function.
+*/
+
+/*
+Huge summary:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model
+*/
+
+
+//play around with Employee example
+
+function Employee() {
+    this.name = "";
+    this.dept = "general";
+}
+
+function Manager() {
+    Employee.call(this, 'hkj'); //call Employee constructor function
+    this.reports = [];
+}
+
+//my way of inheritance
+// Manager.prototype = new Employee();
+// Use Object.create
+// Objects can also be created using the Object.create() method. This method can be very useful, because it allows you to choose the prototype object for the object you want to create, without having to define a constructor function.
+Manager.prototype = Object.create(Employee.prototype);
+// Manager.prototype = new Employee('maoli');
+console.log(new Manager());
+
+
+function WorkerBee() {
+    Employee.call(this);
+    this.projects = [];
+}
+
+WorkerBee.prototype = Object.create(Employee.prototype);
+
+function SalesPerson() {
+    WorkerBee.call(this);
+    this.dept = 'sales';
+    this.quota = 100;
+}
+
+SalesPerson.prototype = Object.create(Employee.prototype);
+
+console.log(new SalesPerson) // parentheses can be omitted if the constructor takes no arguments
+
+
+</script>
+</html>

@@ -1,0 +1,45 @@
+<html>
+<script type="text/javascript">
+/*
+The latest ECMAScript standard defines seven data types:
+
+Six data types that are primitives:
+    Boolean. true and false.
+    null. A special keyword denoting a null value. Because JavaScript is case-sensitive, null is not the same as Null, NULL, or any other variant.
+    undefined. A top-level property whose value is undefined.
+    Number. 42 or 3.14159.
+    String. "Howdy"
+    Symbol (new in ECMAScript 2015). A data type whose instances are unique and immutable.
+
+and Object
+
+*/
+
+/*
+Data type conversion
+
+In expressions involving numeric and string values with the + operator, JavaScript converts numeric values to strings. For example, consider the following statements:
+*/
+
+console.log("37" + 7) //'377' string conversion
+console.log("37" - 7) // 30(num) '-' will not do string conversion
+console.log([1, 2] + [2]) //1,22 what happen is js convert array into string and concat those
+
+
+/*
+
+In the case that a value representing a number is in memory as a string, there are methods for conversion.
+
+parseInt()
+parseFloat()
+
+
+An alternative method of retrieving a number from a string is with the + (unary plus) operator:
+
+'1.1' + '1.1' = '1.11.1'
+(+'1.1') + (+'1.1') = 2.2   
+// Note: the parentheses are added for clarity, not required.
+
+*/
+</script>
+</html>

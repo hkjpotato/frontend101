@@ -1,0 +1,74 @@
+<html>
+<body>
+</body>
+
+<script type="text/javascript">
+/*
+When you declare a variable outside of any function, it is called a global variable, because it is available to any other code in the current document. When you declare a variable within a function, it is called a local variable, because it is available only within that function.
+
+JavaScript before ECMAScript 2015 does not have block statement scope; rather, a variable declared within a block is local to the function (or global scope) that the block resides within. 
+*/
+
+var x = 100;
+
+if (true) {
+    //this is not function
+    //block level, but no scope
+    var x = 5;
+}
+
+console.log(x) //5
+
+
+/* This behavior changes, when using the let declaration introduced in ECMAScript 2015. */
+
+let y;
+if (!false) {
+    //block, let makes lock scope local variable
+    let y = 100;
+}
+console.log(y); //undefined
+
+/*
+infamous loop issue
+http://stackoverflow.com/questions/1451009/javascript-infamous-loop-issue
+
+JavaScript's scopes are function-level, not block-level, and creating a closure just means that the enclosing scope gets added to the lexical environment of the enclosed function.
+
+After the loop terminates, the function-level variable i has the value 5, and that's what the inner function 'sees'.
+
+
+*/
+
+function addLinks_old() {
+    for (var i =0, link; i < 5; i++) {
+        link = document.createElement("a");
+        link.innerHTML = "LINK " + i;
+        link.onclick = function() {
+            console.log(i);
+        }
+        document.body.appendChild(link);
+    }
+}
+
+
+
+function addLinks() {
+    //use let to create block level variable
+    for (let i =0, link; i < 5; i++) {
+        link = document.createElement("a");
+        link.innerHTML = "LINK " + i;
+        link.onclick = function() {
+            console.log(i);
+        }
+        document.body.appendChild(link);
+    }
+}
+
+
+addLinks();
+
+
+</script>
+
+</html>

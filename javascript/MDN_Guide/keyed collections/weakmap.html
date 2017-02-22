@@ -1,0 +1,30 @@
+<html>
+<script type="text/javascript">
+/*
+The WeakMap object is a collection of key/value pairs in which the keys are objects only and the values can be arbitrary values. The object references in the keys are held weakly meaning that they are target of garbage collection (GC) if there is no other reference to the object anymore. The WeakMap API is the same as the Map API.
+*/
+
+//to be continued...
+
+function Person(name) {
+    this.name = name;
+}
+
+const myweak = new WeakMap();
+
+var a = new Person('p1');
+var c = a;
+var p2 = new Person('p1');
+
+
+myweak.set(a, '1');
+myweak.set(p2, '2');
+
+a = 120;
+
+console.log(myweak);
+
+console.log(myweak.get(a));
+
+</script>
+</html>

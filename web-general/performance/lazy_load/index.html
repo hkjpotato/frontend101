@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title> Graph </title>
+        <meta charset='utf-8'>
+        <style type="text/css">
+            #kj {
+                width: 200px;
+                height: 200px;
+                background: blue;
+                margin: -100px;
+
+            }
+            .kjbox {
+                width: 200px;
+                height: 200px;
+                background: red;
+
+            }
+
+            .kj-img {
+                display: block;
+                margin: 10px;
+            }
+        </style>
+
+
+        <script
+          src="https://code.jquery.com/jquery-3.1.1.js"
+          integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+          crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <a href="http://developer.telerik.com/featured/lazy-loading-images-on-the-web/">Tutorial</div>
+        
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=1" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=2" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=3" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=4" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=5" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=6" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=7" width="256" height="256" />
+        <img class="kj-img" src="http://biomed2002.com/media/biomed/families/resources/256x256_6.gif" data-src="http://www.exploringlincoln.com/wp-content/uploads/2012/11/2012-11-17-102860-Trails.jpg?q=8" width="256" height="256" />
+
+
+
+        <script type="text/javascript">
+        /*
+        lazyloading:
+        I first heard about lazy loading of image. The basic idea is to load image only when IT IS NEEDED.
+        In essense, we use JS to determine which images are in the viewport and only download the one user will see.
+        The common approaches:
+        1. user 'src' attribute, we can store that in the data- attribute
+        2. watch changes to viewport or scrolling
+        3. swap the data attribute and src so that image is loaded
+
+
+        e.g.
+        <img data-src="images/Robin.jpg" alt="" />
+        */
+
+        // window.addEventListener("DOMContentLoaded", lazyLoadImages); //not sure why
+        window.addEventListener("load", lazyLoadImages);
+        window.addEventListener("resize", lazyLoadImages);
+        window.addEventListener("scroll", lazyLoadImages);
+
+
+        function lazyLoadImages() {
+            //query all images might not be a good choice
+            var images = document.querySelectorAll("img[data-src]"); //[] is attribute selector
+
+            //load images that have entered the viewport
+            images.forEach(function(image) {
+                if (isElementInViewport(image)) {
+                    image.setAttribute("src", image.getAttribute("data-src"));
+                    image.removeAttribute("data-src"); //no longer store it
+                    console.log('lazy loading..');
+                }
+            });
+            // if all images loaded, stop calling handler
+            if (images.length == 0) {
+                window.removeEventListener("load", lazyLoadImages);
+                window.removeEventListener("resize", lazyLoadImages);
+                window.removeEventListener("scroll", lazyLoadImages);
+            }
+        }
+
+
+
+        function isElementInViewport (el) {
+            //The Element.getBoundingClientRect() method returns the size of an element and its position relative to the viewport.
+            var rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+            );
+        }
+
+
+
+        </script>
+    </body>
+</html>

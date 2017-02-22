@@ -1,0 +1,105 @@
+<html>
+<body>
+<div id='mydiv'></div>
+<script type="text/javascript">
+
+
+/*
+Another unusual thing about variables in JavaScript is that you can refer to a variable declared later, without getting an exception. This concept is known as hoisting; variables in JavaScript are in a sense "hoisted" or lifted to the top of the function or statement. However, variables that are hoisted will return a value of undefined. So even if you declare and initialize after you use or refer to this variable, it will still return undefined.
+*/
+
+// console.log(x); //ReferenceError
+
+console.log(y); //undefined
+var y = 100;
+
+
+/*
+Because of hoisting, all var statements in a function should be placed as near to the top of the function as possible. This best practice increases the clarity of the code.
+*/
+
+var myvar = 'xxx';
+
+/*
+(function() {
+    //function scope
+    console.log(myvar); //xxx
+}())
+//this is ok because it is refering to the global myval
+*/
+
+
+(function() {
+    console.log(myvar); //undefined, because it is refering to the local variable defined within function scope, which has not be initialized at this moment.
+    var myvar = 100;
+}())
+
+
+console.log('----ES2015----')
+
+/*
+In ECMAScript 2015, let (const) will not hoist the variable to the top of the block. However(wtf..it should be 'Thus'), referencing the variable in the block before the variable declaration results in a ReferenceError. The variable is in a "temporal dead zone" from the start of the block until the declaration is processed.
+
+console.log(x); // ReferenceError
+let x = 3;
+
+
+console.log(y); // undefined because of hoisting...
+var y = 3;
+*/
+
+
+/*
+Function hoisting
+For functions, only function declaration gets hoisted to the top and not the function expression.
+
+// Function declaration 
+
+foo(); // "bar"
+
+function foo() {
+  console.log('bar');
+}
+
+// Function expression 
+
+baz(); // TypeError: baz is not a function
+//because baz is declared as variable, which will return 'undefined' at this moment
+var baz = function() {
+  console.log('bar2');
+};
+
+
+
+A function definition (also called a function declaration, or function statement) consists of the function keyword, followed by:
+
+1. The name of the function.
+2. A list of arguments to the function, enclosed in parentheses and separated by commas.
+3. The JavaScript statements that define the function, enclosed in curly brackets, { }.
+*/
+
+
+/*
+Global variables are in fact properties of the global object. In web pages the global object is window, so you can set and access global variables using the window.variable syntax.
+*/
+
+/*
+Constants
+You can create a read-only, named constant with the const keyword. 
+
+A constant cannot change value through assignment or be re-declared while the script is running. It has to be initialized to a value.
+
+However, the properties of objects assigned to constants are not protected, so the following statement is executed without problems.
+*/
+
+
+const KJ = 'potato';
+// KJ = 'yoyo'; //error
+
+const KJHome = {
+    money: 10000
+}
+KJHome.money += 1000; //ok
+</script>
+</body>
+</html>

@@ -14,6 +14,12 @@
     ]
 */
 
+//two pointer + sort
+/*
+    basic idea: change it to two sum
+    loop through, for each one, find the target from the rest
+
+*/
 var threeSum = function(nums) {
     var result = [];
     if (nums === null || nums.length < 3) {
@@ -56,6 +62,54 @@ var threeSum = function(nums) {
         }
     }
     return result;
-}
+};
 
+//review.. time exceed...duplicate.......sad
+
+var threeSum = function(nums) {
+    nums.sort(function(a, b) {
+        return a - b;
+    });
+    var result = [];
+    for (var i = 0; i < nums.length - 2; i++) {
+        //attention, the meaning of this check is that..this number has been used as the FIRST element, not just about index!!!
+        if (i !== 0 && nums[i] === nums[i - 1]) {
+            continue;
+        }
+        var target = 0 - nums[i];
+        //try to find two sum to target from i to end
+        var start = i + 1, end = nums.length - 1;
+        //try to skip bad case
+        if (nums[start] > target) {
+            continue;
+        }
+        //general
+        while (start < end) {
+            var sum = nums[start] + nums[end];
+            if (sum > target) {
+                end--;
+            } else if (sum < target) {
+                start++;
+            } else {
+                result.push([nums[i], nums[start], nums[end]]);
+                start++;
+                end--;
+                //error, may exit the index
+                while (start < end && nums[start] === nums[start - 1]) {
+                    start++;
+                }
+                while (start < end && nums[end] === nums[end + 1]) {
+                    end--;
+                }
+            }
+        }
+    }
+    return result;
+};
+
+//extension 4 sum -> 2 sum
+
+
+
+console.log(threeSum([1,1,-2]));
 </script>

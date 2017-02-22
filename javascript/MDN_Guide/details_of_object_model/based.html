@@ -1,0 +1,137 @@
+<html>
+<script type="text/javascript">
+/*
+JavaScript is an object-based language based on prototypes, rather than being class-based. Because of this different basis, it can be less apparent how JavaScript allows you to create hierarchies of objects and to have inheritance of properties and their values. This chapter attempts to clarify the situation.
+*/
+//encapsulation
+
+//simple encapsulation
+cat1 = {
+    name: 'cat1',
+    hobby: 'play',
+    category: 'animal'
+}
+
+cat2 = {
+    name: 'cat2',
+    hobby: 'eat',
+    category: 'animal'
+}
+
+console.log(cat1, cat1.constructor)
+
+//make a function to create instance(object)
+function CatFunc(name, hobby, category) {
+    return {
+        name: name,
+        hobby: hobby,
+        category: category
+    }
+}
+cat3 = CatFunc('cat3', 'bite', 'animal');
+console.log(cat3);
+
+
+//we want to use constructor function so that we can know sth in common
+function Cat(name, hobby, category) {
+    //this is the created object when new
+    var self = this;
+    self.name = name;
+    self.hobby = hobby;
+    self.category = category;
+}
+
+cat4 = new Cat('cat4', 'play4', 'animal');
+cat5 = new Cat('cat5', 'play5', 'animal');
+
+console.log(cat4, cat5);
+console.log(cat4.constructor, cat5.constructor) //they share the same constructor
+
+//however, those name, hobby, category belong the separate instance
+cat4.category = 'Cat';
+if (cat5.category == 'Cat') {
+    console.log('they can be changed?')
+}
+
+//notice that a function can have attribute as well
+function myfunc() {
+    console.log('this is my function');
+}
+myfunc.something = 'something'; //myfunc has attribute something now
+
+Cat.sharedAttribute = 'sharedAttribute';
+
+console.log(cat4.sharedAttribute) //undefined
+
+//but we can use the common constructor 
+console.log(cat4.constructor.sharedAttribute);
+cat4.constructor.sharedAttribute = 'change shared';
+console.log(cat5.constructor.sharedAttribute);
+
+
+//however, always accessing constructor is way to stupid
+// we have prototype to save our life
+
+Cat.prototype.prototypeAttibute = 'prototype attribute';
+
+console.log(cat4.prototypeAttibute); //we can access the shared attribute from the instance directly
+
+//prototype is an attribute of a function(constructor), notice that function can also have attribute
+
+console.log(Cat);
+console.log(Cat.prototype);
+
+//prototype attribute is also a set of key value, 
+//the keys in the prototype attribute of constructor can be access instance constructed by such a constructor
+function Crazyfunction() {
+    // this.name = 'crazy';
+}
+var commonAttribute = {
+    share1 : 'share1',
+    share2: 'share2'
+}
+Crazyfunction.prototype = commonAttribute;
+crazy = new Crazyfunction();
+console.log(crazy, crazy.share1, crazy.share2)
+console.log(crazy.__proto__ === Crazyfunction.prototype); //true
+
+
+//inheritance
+var somecat = new Cat('some cat');
+Crazyfunction.prototype = somecat;
+crazy2 = new Crazyfunction();
+console.log(crazy2)
+console.log(crazy2.__proto__ == somecat); //true
+console.log(crazy2 instanceof Crazyfunction) //true
+console.log(crazy2 instanceof Cat) //true
+//this is because crazy2 is constructed by Crazyfunction
+//Crazyfunction's prototype is constructed by Cat
+
+//what if we set the prototype to the constructor
+
+Crazyfunction.prototype = Cat;
+crazy3 = new Crazyfunction();
+console.log(crazy3 instanceof Crazyfunction) //true
+console.log(crazy3 instanceof Cat) //false
+console.log(crazy3 instanceof Function) //true
+//this is because crazy3 is constructed by Crazyfunction whose prototype is an instance of Function
+console.log(crazy3.prototype)
+//what is crazy3's prototype?
+// well itself does not have a prototype attribute
+// but its constructor's prototype(Cat) has 'prototype' attribute
+// so its using the retrieved attribute('prototype') set in constructor'sprototype
+
+var sth = {}
+
+sth.addValue = function() {
+    this.value = 1;
+}
+
+sth.addValue();
+console.log(sth);
+
+
+
+
+</script>
+</html>
