@@ -61,19 +61,18 @@ JS is the key for front end development. Javascript basics: scope, closure, arra
 
 Before going into the JS algorithm part, understand the below concepts is essential. I use a lot of JS specific coding style in the leetcode JS algorithm answers.
   * Best Starting Point will be [MDN JS guide](./javascript/MDN_Guide)
-
-  ##### Other
-  * Object
-  * Scope
-  * Prototype chain
-  * Array mainipulation, such as map, forEach, reduce, filter.
-  * Apply, call and bind
-  * [Event delegation](./javascript/event delegation)
-  * IIFE
-  * [var vs function](http://stackoverflow.com/questions/336859/javascript-function-declaration-syntax-var-fn-function-vs-function-fn)
-  * [Hositing](http://adripofjavascript.com/blog/drips/variable-and-function-hoisting)
-  * Asynchronous (callback)
-  * ES6
+  * Other
+    * Object
+    * Scope
+    * Prototype chain
+    * Array mainipulation, such as map, forEach, reduce, filter.
+    * Apply, call and bind
+    * [Event delegation](./javascript/event delegation)
+    * IIFE
+    * [var vs function](http://stackoverflow.com/questions/336859/javascript-function-declaration-syntax-var-fn-function-vs-function-fn)
+    * [Hositing](http://adripofjavascript.com/blog/drips/variable-and-function-hoisting)
+    * Asynchronous (callback)
+    * ES6
 
 #### Design&#32;Pattern:
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
