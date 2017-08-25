@@ -1,0 +1,54 @@
+<html>
+<script type="text/javascript">
+//a review of https://developers.google.com/web/tools/setup/setup-preprocessors
+
+//CSS preprocessors such as Sass, as well as JS preprocessors and transpilers can greatly accelerate your development when used correctly. Learn how to set them up.
+
+/*
+1. Preprocessors let you use features in CSS and JavaScript that your browser doesn't support natively, for example, CSS variables.
+2. If you're using preprocessors, map your original source files to the rendered output using Source Maps.
+3. Make sure your web server can serve Source Maps.
+4. Use a supported preprocessor to automatically generate Source Maps.
+
+*/
+
+//what does it mean by 'make sure your web server can serve source maps';
+
+
+/*
+What is preprocessor?
+
+A preprocessor takes an arbitrary source file and converts it into something that the browser understands.
+
+With CSS as output, they are used to add features that otherwise wouldn't exist (yet): CSS Variables, Nesting and much more. Notable examples in this category are Sass, Less and Stylus.
+
+With JavaScript as output, they either convert (compile) from a completely different language, or convert (transpile) a superset or new language standard down to today's standard. Notable examples in this category are CoffeeScript and ES6 (via Babel).
+*/
+
+
+/*------------
+Source Maps
+It is a json-based mapping bewtween minified file and its sources. After build, a soucre map is generated to hold that information.
+
+------------*/
+
+/*------------
+How Source Maps Work
+In CSS, for each css file, there is a json based map file
+The minified css has an annotation like:
+------------*/
+
+/*# sourceMappingURL=<url> */
+
+//https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps
+
+/*
+Source Maps from preprocessors cause DevTools to load your original files in addition to your minified ones. You then use the originals to set breakpoints and step through code. Meanwhile, Chrome is actually running your minified code. This gives you the illusion of running a development site in production.
+
+When running Source Maps in DevTools, you'll notice that the JavaScript isn't compiled and you can see all the individual JavaScript files it references. This is using source mapping, but behind the scenes actually runs the compiled code. Any errors, logs and breakpoints will map to the dev code for awesome debugging! So in effect it gives you the illusion that you're running a dev site in production.
+
+In chrome, source map request is invisible in the network tabs!
+*/
+
+</script>
+</html>

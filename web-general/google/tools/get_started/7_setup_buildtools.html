@@ -1,0 +1,72 @@
+<html>
+<script type="text/javascript">
+//a review of https://developers.google.com/web/tools/setup/setup-buildtools
+
+/*
+every site should have a development version and a production version.
+
+The development version has everthing (JS, CSS, Image)
+
+The production version will take these files, minify them, concatenate/merge them and optimise files like images.
+
+1. Build process need to care about optimise for performance->automaticallly minify and concatenate into production version
+2. Use tools like LiveReload to make your development process smoother...I doubt. I still feel like the best starting point for a beginner is a simple MAMP or codepen to write static HTML, CSS< JS
+...by the way, if you are writing React or other state related frontend, you need Hot Reload instead of Live Reload (you need to maintain the state)
+
+*/
+
+/*-----------------
+Build Process
+A build process is a set of tasks from development to deployment.
+
+..."a set of tasks which run over your projects files, compiling and testing code during development and used to create the deployment version of your site. Your build process shouldn't be a set of tasks you run at the end of your development workflow."
+
+
+Popular tools are Gulp and Grunt, and Webpack of course.
+-----------------*/
+
+/*-----------------
+Tasks in build process
+
+It recommends the Web Starter Kit...man..it is not easy to start for me. I mean, I wish to know more about NodeJS before I touch them. But before NodeJS I wish to know more about Module Pattern in JS.
+
+--- concatenation & minification ---
+concatenation: file1 + file2 = file_out
+
+-tools: CSS(gulp-sasss) JS(gulp-useref) HTML(why you want to concatenate HTML?) 
+
+
+minification: file1(100kb) -> file1_min(10kb)
+
+-tools: CSS(gulp-csso) JS(gulp-ugliy) HTML(gulp-minify-html) 
+
+
+--- optimize images ---
+They have a tool on content optimization of images, a lot of stuff from png, svg to blablabla
+
+but basically, you can remove the meta data.
+
+-tools: gulp-imagemin
+
+
+--- autoprefix ---
+This is different from sublime autoprefix plugin. They do them same actually, but gulp-autoprefixed add the prefix to your production code.
+
+-tools gulp-autoprefixer
+
+--- live reloading ---
+I guess they use socket to do that. It is amazing. You change your code, and it automatically get updated... How can we do that by a stateless http call?
+
+-tools: browser-sync
+
+-----------------*/
+
+
+//I am going to learn the gulp based starter kit, use it for my personal website.
+
+//I am still going to use webpack for my react project.
+
+
+
+</script>
+</html>

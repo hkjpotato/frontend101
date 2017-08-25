@@ -1,0 +1,36 @@
+<html>
+<body>
+  <form>
+    <input type="text" name="msg" />
+    <input type="submit"/>
+  </form
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script type="text/javascript">
+  //a review of https://auth0.com/blog/intro-to-immutable-js/
+  //->7.5/10 too much new concepts, but good
+
+  //what is a mutation exactly? Mutations are in-place changes to data or the data structures that contain it. Immutability on the other hand, makes a copy of such data and data structures whenever a change is required.
+
+  /*
+
+  key concepts:
+  1. immutable
+  2. persistent
+  3. copy is just creating a reference to the existing instance
+    why? since everything is not changable, using the same instance is safe
+  4. comparision is by reference
+
+  Immutable data structures go hand-in-hand with side-effect free functions.
+
+  pure functions rely only on what is explicitly passed to them as arguments to produce a result. In other words, pure functions must not rely on global state or state accessible through other constructs.
+
+
+  */
+  var btn = document.querySelector('input[type="submit"]');
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+  });
+
+  </script>
+</body>
+</html>

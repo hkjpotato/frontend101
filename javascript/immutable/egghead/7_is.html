@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <script type="text/javascript">
+    //Let's clarify sth before the equal check
+
+    //The whole reason why I want to learn immutablejs is because React need it to achieve better performance
+    //How? By making the shouldComponentUpdate function easy to implement.
+    //Why? Because shouldComponenetUpdate need an easy way to compare next(Props|State) with current one
+    //With Immutable Data, we can do easy shallow compare. Because we know if they are referencing two different objects, they must be different!
+
+    //checking deeply nested objects is painful, immutable.js make this task easy with its 'is' and 'isSubset' methods.
+
+    mocha.setup('bdd');
+    const expect = chai.expect;
+
+    describe('Equality Checking with is() and More', ()=> {
+      it('should find different maps equal if keys and values are the same', ()=> {
+        const map1 = Immutable.Map({a: 1, b: 1, c:Immutable.List.of(1)});
+        const map2 = Immutable.Map({a: 1, b: 1, c:Immutable.List.of(1)});
+
+        expect(map1).to.not.equal(map2); //every time, new object '==='
+        expect(map1 === map2).to.be.false; //every time, new object '==='
+        expect(Immutable.is(map1, map2)).to.be.true;
+      });
+
+      it('should find different lists equal if indexes and values are the same', ()=> {
+        const list1 = Immutable.fromJS([1, 2, 3]);
+        const list2 = Immutable.fromJS([1, 2, 3]);
+        const list3 = list1.slice(0);
+
+        expect(list1).to.not.equal(list2); //every time, new object 
+        expect(Immutable.is(list1, list2)).to.be.true;
+        expect(list1 === list3).to.be.true; //slice make them ===?!
+        expect(Immutable.is(list1, list3)).to.be.true; //slice without param provide false
+      });
+
+      it('should be equal if subset is equal', () => {
+        const map1 = Immutable.Map({a: 1, b: 1});
+        const map2 = Immutable.Map({a: 1, b: 1, c:Immutable.List.of(1)});
+        expect(map1.isSubset(map2)).to.be.true;
+        expect(map2.isSubset(map1)).to.be.false;
+      });
+
+      it('should be equal if superset is equal', () => {
+        const map1 = Immutable.Map({a: 1, b: 1});
+        const map2 = Immutable.Map({a: 1, b: 1, c:Immutable.List.of(1)});
+        expect(map2.isSuperset(map1)).to.be.true;
+        expect(map1.isSuperset(map2)).to.be.false;
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

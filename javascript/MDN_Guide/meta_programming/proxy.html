@@ -1,0 +1,34 @@
+<script>
+/*
+introduced in ECMAScript 6(es2015==es6), Proxy objects allow you to intercept certain operations and to implement custom behaviors. For example getting a property on an object:
+*/
+
+var handler = {
+    get: function(target, name) {
+        if (target === my_target) {
+            console.log('same target');
+        }
+        console.log('handler get called', target, name);
+        return name in target ? target[name] : 42;
+    }
+};
+
+/*
+The Proxy object defines a target (an empty object here) and a handler object in which a get trap is implemented. Here, an object that is proxied will not return undefined when getting undefined properties, but will instead return the number 42.
+*/
+
+// var p = new Proxy({}, handler);
+// p.a = 1;
+// console.log(p.a, p.b); // 1, 42
+var my_target = {
+    a: 1,
+    b: 2
+}
+
+
+var p = new Proxy(my_target, handler);
+
+console.log(p.a, p.b, p.c);
+
+
+</script>

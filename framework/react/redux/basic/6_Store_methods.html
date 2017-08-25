@@ -1,0 +1,64 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+      //using ES6 destruction syntax here. It's equivalent to writing, var createStore = Redux.createStore
+
+      const { createStore } = Redux;
+      //we will see how store is similar to our blackbox
+
+      //the store bind 3 principles of redux:
+      //1. represent UI in a single state tree.
+      //2. state tree is read only, state mutation trigger action
+      //3. reducer function take previous state and action and return new state
+
+      //The store 1. hold the state 2. dispatch action 3. accept a reducer
+
+      //3 key methods of store
+      //1. getState: return the current state
+      //2. dispatch: let's you dispacth/listen to action
+      //3. subscribe: register a callback that Redux store will call any time an action has been dispacthed
+
+      //let be naive without React
+      //first let's copy the reducer
+      function counter(state=0, action){
+        //state=0 means 0 is the default value so that if state is undefined we can use 0 as default
+        switch (action.type) {
+          case 'INCREMENT':
+            return state + 1;
+          case 'DECREMENT':
+            return state - 1;
+          default:
+            return state;
+        }
+      }
+
+      //then create the store
+      const store = createStore(counter);
+
+      //let's have a simple render function
+      const render = () => {
+        document.getElementById('app').innerText = store.getState();
+      }
+
+      //let's subscribe the render to the store, so that it will get called each time there is an action
+      store.subscribe(render);
+
+      //let's listen to the action and dispatch it to store
+      window.addEventListener('load', function() {
+        render();
+      });
+
+      document.addEventListener('click', function() {
+        store.dispatch({type: 'INCREMENT'});
+      });
+    </script>
+</html>

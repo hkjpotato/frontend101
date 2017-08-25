@@ -1,0 +1,1 @@
+A review of https://www.leanpanda.com/blog/2015/06/28/amd-requirejs-commonjs-browserify/

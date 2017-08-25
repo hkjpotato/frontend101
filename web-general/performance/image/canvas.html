@@ -1,0 +1,267 @@
+<html>
+<head>
+  <style type="text/css">
+    div {
+      /*position: relative;*/
+    }
+
+
+
+    .wrapper {
+      width: 80%;
+      /*height: 100%;*/
+      /*background-color: #f6f6f6;*/
+      /*background-size: cover; */
+      /*background-repeat: no-repeat; */
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+      /*outline: 2px solid blue;*/
+    }
+
+
+    .wrapper img, canvas {
+      position: absolute;
+      width: 100%;
+      /*opacity: 0;*/
+      top: 0;
+      left: 0;
+      width: 100%;
+      /*transition: opacity 2s;*/
+    }
+
+    .wrapper img {
+      opacity: 0;
+      transition: opacity 1s;
+    }
+
+    .wrapper img.loaded {
+      opacity: 1;
+    }
+
+    .wrapper .img-small.loaded {
+      opacity: .5;
+    }
+
+    .wrapper #drawing-canvas.loaded {
+      opacity: 0;
+      transition: opacity .5s;
+    }
+
+    .img-small {
+      /*filter: blur(10px);*/
+      /* this is needed so Safari keeps sharp edges */
+      transform: scale(1);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrapper" data-large="./src/ny.jpg">
+    <div style="padding-bottom: 100%;"></div>
+    <canvas id="drawing-canvas"></canvas>
+    <img class="img-small" src="./dist/ny-small.jpg"></img>
+  </div>
+
+  <span class="btn btn-primary btn-file">
+      Load Image 1<input type='file' name="Img1" onchange="myReadURL(this);" />
+  </span>
+
+</body>
+<script type="text/javascript">
+
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+  console.log(" Great success! All the File APIs are supported.");
+} else {
+  alert('The File APIs are not fully supported in this browser.');
+}
+
+var myReadURL = function(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            console.log('onload', e);
+            myImg.src ='';
+            myImg.src = e.target.result;
+            console.log(myImg);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+
+
+
+
+var drawingSpeed = 1;
+var coloringDuration = 1;
+var initialThreshold = 0;
+var stroke = undefined;
+var endingThreshold = 150;
+var startColoring = 100/endingThreshold;
+var placeholder = document.querySelector('.wrapper');
+var smallImg = document.querySelector('.img-small');
+
+
+var myImg = new Image();
+myImg.src = smallImg.src;
+
+myImg.crossOrigin = "Anonymous"; //CORS issue, check https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+myImg.onload = function() {
+  console.log('loaded');
+  // placeholder.appendChild(myImg); //once append, its size changed
+  //reset the opacity
+  // myImg.style.opacity = 0;
+  // myImg.style.transition = 'opacity ' + coloringDuration + 's';
+  // smallImg.classList.add('loaded');
+  draw(myImg);
+  // console.log(myImg.width, myImg.height);
+}
+
+
+
+var imgLarge = new Image();
+// imgLarge.style.opacity = 0;
+// imgLarge.style.transition = 'opacity ' + coloringDuration + 's';
+imgLarge.src = placeholder.dataset.large; 
+imgLarge.onload = function () {
+  imgLarge.classList.add('loaded');
+  // imgLarge.style.opacity = 0;
+  var drawingCanvas = document.getElementById("drawing-canvas");
+
+  drawingCanvas.classList.add('loaded');
+  // imgLarge.style.transition = 'opacity ' + coloringDuration + 's';
+};
+placeholder.appendChild(imgLarge);
+
+
+
+
+
+
+
+function draw(img) {
+    var width = img.width, height = img.height;
+    var grayMatrix = getGrayMatrix(img);
+    drawing(grayMatrix, width, height)
+}
+
+
+var getGrayMatrix = function (img) {
+  //a temp canvas to hold the image data
+  var tempCanvas = document.createElement('canvas');
+  var width = img.width;
+  var height = img.height;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  tempCanvas.getContext('2d').drawImage(img, 0, 0, width, height);
+  var imgData = tempCanvas.getContext('2d').getImageData(0, 0, width, height).data;
+  var grayMatrix = new Uint8ClampedArray(width*height);
+  for (var i = 0; i < width * height * 4; i += 4) {
+      var r = imgData[i + 0];
+      var g = imgData[i + 1];
+      var b = imgData[i + 2];
+      var v = 0.2126*r + 0.7152*g + 0.0722*b;
+      grayMatrix[i>>2] = v;
+  }
+  return grayMatrix;
+}
+
+
+
+function drawing(grayMatrix, width, height) {
+  //get the image data of sobel filtering
+  var sobelData = mySobel(grayMatrix, width, height);
+
+  //reverse black and white to outstand the edge
+  var targetData = sobelData.map(function(d) {
+    return 255 - d;
+  })
+
+  //get the drawing canvas ready
+  var drawingCanvas = document.getElementById("drawing-canvas");
+  drawingCanvas.width = width;
+  drawingCanvas.height = height;
+  var drawCtx = drawingCanvas.getContext('2d');
+
+
+  //start drawing step by step
+  var threshold = initialThreshold;
+  function step() {
+    if (threshold < endingThreshold) {
+      temptarget = parseThreshold(targetData, threshold, stroke);
+      var imageData = GrayMatrix2ImageData(temptarget, width, height)
+      drawCtx.putImageData(imageData, 0, 0);
+      threshold += drawingSpeed;
+      requestAnimationFrame(step);
+    }
+
+    // if (threshold / endingThreshold > startColoring) {
+    //   // imgLarge.style.opacity = 1;
+    //   // placeholder.appendChild(imgLarge);
+    //   // smallImg.classList.add('loaded');
+    // }
+  }
+  // drawingCanvas.style.opacity = 1;
+  requestAnimationFrame(step);
+}
+
+function GrayMatrix2ImageData(grayMatrix, width, height) {
+    var imageData = new ImageData(width, height);
+    var data_u32View = new Uint32Array(imageData.data.buffer);
+    var alpha = (0xff << 24);
+    var i = width * height;
+    while (--i >= 0) {
+      var pix = grayMatrix[i];
+      data_u32View[i] = alpha | (pix << 16) | (pix << 8) | pix;
+    }
+    return imageData;
+}
+
+
+function parseThreshold(grayMatrix, threshold, paint) {
+  return grayMatrix.map(function(d) {
+    var paintcolor = (typeof paint !== 'undefined') ? paint : d;
+    // var paintcolor = paintcolor < 150 ? 150 : paintcolor;
+    return d < threshold ? paintcolor : 255;
+  });
+}
+
+
+function mySobel(grayMatrix, width, height) {
+  var w = width;
+  var h = height;          
+  var retMatrix = new Float32Array(w * h);
+  //just ignore the edge :)
+  for (var y = 1; y < h - 1 ; y++) {
+    for (var x = 1; x < w - 1; x++) {
+      var dstOff = y*w+x;
+      //horizontal
+      var rH = 
+        grayMatrix[dstOff - w + 1]
+      - grayMatrix[dstOff - w  - 1]
+      + (grayMatrix[dstOff + 1] << 1)
+      - (grayMatrix[dstOff - 1] << 1)
+      + grayMatrix[dstOff + w  + 1]
+      - grayMatrix[dstOff + w  - 1];
+      //vertical
+      var rV = 
+      - grayMatrix[dstOff - w - 1]
+      - (grayMatrix[dstOff - w ] << 1)
+      - grayMatrix[dstOff - w + 1]
+      + grayMatrix[dstOff + w - 1]
+      + (grayMatrix[dstOff + w ] << 1)
+      + grayMatrix[dstOff + w + 1];
+      retMatrix[(y-1)*w +(x-1)] = Math.sqrt(rV*rV + rH*rH);
+    }
+  }          
+  return new Uint8ClampedArray(retMatrix); //take care of the 255 limit
+};
+
+
+
+</script>
+
+
+</html>

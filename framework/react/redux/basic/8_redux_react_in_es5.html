@@ -1,0 +1,96 @@
+<html>
+<body>
+<div id="app"></div>
+<!-- react -->
+<script src="https://unpkg.com/react@15/dist/react.js"></script>
+<!-- react-dom -->
+<script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+<script type="text/javascript">
+
+/*--make a dump React component called counter in es5--*/
+//first, to simplify to code, assign React.createElement to e;
+var e = React.createElement;
+//a functional component
+var Counter = function(props) {
+  var value = props.value;
+  var onIncrement = props.onIncrement;
+  var onDecrement = props.onDecrement;
+  return e(
+    'div',
+    null,
+    e('h1', null, value),
+    e('button', {onClick: onIncrement}, '+'),
+    e('button', {onClick: onDecrement}, '-')
+  );
+};
+/*--a simple implementation of redux store--*/
+function getStore(reducer) {
+  var state;
+  var listener;
+  //getter for state
+  var getState = function() {
+    return state;
+  };
+  var dispatch = function(action) {
+    //update state
+    state = reducer(state, action);
+    //call listener
+    if (listener) {
+      listener();
+    }
+  };
+  var subscribe = function(_listener) {
+    listener = _listener;
+  };
+  //init the state by dispatch a dummy action
+  dispatch({});
+  return {
+    getState: getState,
+    dispatch: dispatch,
+    subscribe: subscribe
+  };
+}
+
+/*--the reducer for counter--*/
+function counter(state, action) {
+  //follow redux convertion to have a default state
+  state = (typeof state !== 'undefined') ? state: 0;
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    default:
+      return state;
+  }
+}
+
+/*--app setup--*/
+//set the store with the reducer above
+var store = getStore(counter);
+//set the render function to be called when there is a state change
+function render() {
+  ReactDOM.render(
+    e(
+      Counter,
+      {
+        value: store.getState(),
+        onIncrement: function() {
+          store.dispatch({type: 'INCREMENT'});
+        },
+        onDecrement: function() {
+          store.dispatch({type: 'DECREMENT'});
+        }
+      },
+      null
+    ),
+    document.getElementById('app')
+  )
+};
+//subscribe the render function to the store
+store.subscribe(render);
+//init the render
+render();
+</script>
+</body>
+</html>

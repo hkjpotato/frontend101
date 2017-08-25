@@ -1,0 +1,50 @@
+<html>
+<style type="text/css">
+  .bar {
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    background-color: lightgray;
+    transition: top .5s;
+  }
+</style>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@15/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+  <script type="text/javascript">
+    var Parent = React.createClass({
+      getInitialState: function() {
+        console.log('p init');
+        return null;
+      },
+      componentDidMount: function() {
+        console.log('p mount');
+      },
+      render: function() {
+        console.log('p render');
+        return React.createElement(Child, null, null);
+      }
+    })
+
+    var Child = React.createClass({
+      getInitialState: function() {
+        console.log('c init');
+        return null;
+      },
+      componentDidMount: function() {
+        console.log('c mount');
+      },
+      render: function() {
+        console.log('c render');
+        return React.createElement('h1', null, 'hello');
+      }
+    })
+
+
+    var app = React.createElement(Parent, null, null);
+
+    ReactDOM.render(app, document.getElementById('root'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<html>
+    <div id="app"></div>
+    <button onclick="clickIt();">native</button>
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script type="text/javascript">
+        function clickIt() {
+            console.log(event); //NativeEvent
+        }
+
+    </script>
+    <script type="text/babel">
+        /*
+        
+        with JSX we pass function as event handler, rather than string
+        
+        In html, we pass a function as string <button onclick="func()"></button>
+
+        must call e.preventDefault() to prevent default behavior
+        function listener(e) {
+            e.preventDefault() //this does not stop propagation!
+            // e.stopPropagation() 
+            console.log('..')
+        }
+
+        */
+ 
+        // e is a synthetic event, what does it means?
+        function listenr(e) {
+            console.log(event); //synthetic
+            console.log(e); //proxy
+            console.log(window.event); //proxy
+
+        }
+        const btn = <button onClick={listenr} >react</button>;
+        //this is the same as
+        const btn_js = React.createElement(
+            'button',
+            {
+                onClick: listenr
+            },
+            'react'
+        );
+
+
+        /*we need to bind this in the constructor, this is because of es6 */
+        class MyClass {
+            constructor(name) {
+                this.name = name;
+                this.play = this.play.bind(this);
+            }
+            play() {
+                console.log(this.name + ' being clicked');
+            }
+            render() {
+                //similar to what React Class is doing
+                return {
+                    click: this.play
+                }
+            }
+        }
+        var instance = new MyClass('ele1');
+        var element = instance.render();
+        element.click(); //without bind, when we call click, this will point to the element, which does not have 'name'
+
+        //Let's prove it
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                // this.play = this.play.bind(this);
+            }
+            play() {
+                console.log(this);
+            }
+            render() {
+                const ele = React.createElement('button', {onClick: this.play}, 'clickme')
+                return ele;
+            }
+        }
+
+        const ele = React.createElement(MyComponent, null, null);
+
+
+        console.log(ele);
+        //react jsx code in es6
+        ReactDOM.render(
+            ele,
+            document.getElementById('app')
+        );
+
+        // You have to be careful about the meaning of this in JSX callbacks. In JavaScript, class methods are not bound by default https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+
+        
+    </script>
+    </script>
+</html>

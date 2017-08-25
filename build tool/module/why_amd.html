@@ -1,0 +1,87 @@
+<html>
+<body>
+<script type="text/javascript">
+//review of http://requirejs.org/docs/whyamd.html
+
+// what are js module
+
+//1.how to encapsulate a piece of code into a useful unit, and how to register its capability/export a value for the module.
+//2.Dependency References: how to refer to other units of code.
+
+
+//Web today, how we encapsulate pieces of code
+(function () {
+    //this
+    var $ = this.jQuery;
+
+    this.myExample = function () {};
+}());
+
+//This is the web today. Remember, no matter if it is AMD or CommonJS, in browser you always results in using the similar syntax.
+
+
+// Defined via an immediately executed factory function.
+// References to dependencies are done via global variable names that were loaded via an HTML script tag.
+// The dependencies are very weakly stated: the developer needs to know the right dependency order. For instance, The file containing Backbone cannot come before the jQuery tag.
+// It requires extra tooling to substitute a set of script tags into one tag for optimized deployment.
+
+
+//CommonJS
+
+/*
+syntax
+var $ = require('jquery');
+exports.myExample = function () {};
+*/
+
+
+//To use CommonJS in broswer, we have two choices:
+//1. (translate on server) use a server to translate CJS modules to something usable in the browser. (browserify)
+//2. (translate on client) use XMLHttpRequest (XHR) to load the text of modules and do text transforms/parsing in browser.
+
+//for option two, we are loading them as text, not as js code, we need to do sth to transpile them, like <script type="babel" />
+
+
+//because CJS only allow one module per file, we need to bundle them into one big file for optimization.
+
+//we need to use eval-based debugging. What is eval based debugging?
+
+//https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Debug_eval_sources
+
+//first, what is eval? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
+
+//The eval() function evaluates javascript code represented as a string
+
+//simple example
+eval('console.log("hello word");');
+
+//debug using eval
+
+var script = `function foo() {
+    console.log('called foo');
+}
+//# sourceURL=my-foo.js`; //backtick is template literals
+
+eval(script);
+
+var button = document.createElement('button');
+
+document.body.appendChild(button);
+
+button.addEventListener('click', foo, false);
+
+
+//AMD
+
+/*
+synatx
+define(['jquery'] , function ($) {
+    return function () {};
+});
+
+*/
+//The AMD format comes from wanting a module format that was better than today's "write a bunch of script tags with implicit dependencies that you have to manually order" and something that was easy to use directly in the browser. Something with good debugging characteristics that did not require server-specific tooling to get started. It grew out of Dojo's real world experience with using XHR+eval and wanting to avoid its weaknesses for the future.
+</script>
+</body>
+
+</html>

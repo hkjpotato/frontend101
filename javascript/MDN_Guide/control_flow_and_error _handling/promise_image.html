@@ -1,0 +1,90 @@
+<html>
+<style type="text/css">
+img {
+    width: 200px;
+    height: 200px;
+}
+</style>
+
+<script type="text/javascript">
+var imgSrc = "http://images.meredith.com/content/dam/bhg/Images/2013/11/18/102171935.jpg.rendition.largest.jpg";
+
+
+
+
+/* callback version */
+function loadImage_callback (url, callback) {
+    //image in js
+    let image = new Image();
+    image.onload = function() {
+        callback(null, image);
+    }
+    image.onerror = function() {
+        let message = "Could not load image at " + url;
+        callback(new Error(message));
+    }
+
+    image.src = url;
+}
+
+let addImg = (src) => {
+    let imgElement = document.createElement('img');
+    imgElement.src = src;
+    document.body.appendChild(imgElement);
+}
+
+
+loadImage_callback(imgSrc + "?q=1", (error, img) => {
+    if (error) throw error;
+    addImg(img.src);
+    loadImage_callback(imgSrc + "?q=2", (error, img) => {
+        if (error) throw error;
+        addImg(img.src);
+        loadImage_callback(imgSrc + "?q=3", (error,img) => {
+            if (error) throw error;
+            addImg(img.src);
+        })
+    });
+});
+
+
+/* Promise 1 */
+function loadImage_promise(url) {
+    return new Promise((resolve, reject) => {
+        let image = new Image();
+        image.onload = function() {
+            resolve(image);
+        }
+        image.onerror = function() {
+            let message = "Could not load image at " + url;
+            reject(new Error(message))
+        }
+        image.src = url;
+
+    })
+}
+
+loadImage_promise(imgSrc).then((img) => {
+    addImg(img.src)
+    loadImage_promise(imgSrc).then((img) => {
+        addImg(img.src)
+        loadImage_promise(imgSrc).then((img) => {
+            addImg(img.src)
+        }).catch((e)=>{ console.log(e.message); }) 
+    }).catch((e)=>{ console.log(e.message); })
+}).catch((e)=>{ console.log(e.message); })
+
+
+/*composible promise*/
+Promise.all([
+    loadImage_promise(imgSrc),
+    loadImage_promise(imgSrc),
+    loadImage_promise(imgSrc),
+]).then((images) => {
+    images.forEach((img) => {addImg(img.src)})
+}).catch((error) => {
+    console.log(error.message)
+})
+
+</script>
+</html>

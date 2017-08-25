@@ -1,0 +1,20 @@
+<html>
+<script type="text/javascript">
+//a review of http://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line
+
+
+//first a regex to define the block
+var re = /<%([^%>]+)%>/g
+
+//we need both match and catch globally, we need exec
+
+//we need to support js usage in template block, like dot openrator
+var TemplateEngine = function(tpl, data) {
+    var re = /<%([^%>]+)?%>/g, match;
+    while(match = re.exec(tpl)) {
+        tpl = tpl.replace(match[0], data[match[1]])
+    }
+    return tpl;
+}
+</script>
+</html>

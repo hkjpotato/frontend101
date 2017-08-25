@@ -1,0 +1,147 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" >
+    <style>
+        body {
+            width: 100%;
+            background-color: gray;
+        }
+
+        div {
+            width: 50%;
+            background-color: green;
+        }
+
+        p {
+            width: 50%;
+            background-color: red;
+        }
+
+        span {
+            color: red;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function hkjWindowOnLoad() {
+            console.log('window loaded');
+        }
+
+        document.addEventListener('DOMContentLoaded', function hkjDOMContentLoaded(){
+            console.log('DOMContentLoaded');
+        });
+    </script>
+    <link href="./test.css" rel="stylesheet">
+</head>
+<body>
+    <div>
+        <p>hello
+            <script type="text/javascript">
+                function playground() {
+                    var x = 'playground';
+                }
+                function inlineJS() {
+                    playground();
+                    var e = document.getElementsByTagName('p')[0];
+                    e.style.color = "green";
+                }
+                inlineJS();
+            </script>
+            <script src="./test.js"></script>
+            world!
+            <span>web performance</span>
+        </p>
+        <img src="http://www.amazingwallpaperz.com/wp-content/uploads/Cat-High-Resolution-Wallpapers.jpg?=99" style="width:400px;height:300px;"/>
+    </div>
+<script type="text/javascript">
+    var span = document.getElementsByTagName('span')[0];
+    span.innerText = 'interative'; //change DOM text content
+    span.style.display = 'inline'; //change CSSOM property
+
+    //create a new element, style it, and append it to the DOM
+    var loadTime = document.createElement('div');
+    loadTime.innerText = 'You loaded this page on: ' + new Date();
+    loadTime.style.color = 'blue';
+
+    document.body.appendChild(loadTime);
+</script>
+<script type="text/javascript">
+//a review of https://developers.google.com/web/fundamentals/performance/critical-rendering-path/optimizing-critical-rendering-path
+
+/*-----------------
+Optimizing the DOM
+
+1. minify
+2. compress
+3. cache
+
+minify-
+https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer#minification-preprocessing--context-specific-optimizations
+
+compress-
+https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer#text-compression-with-gzip
+
+cache-
+https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching
+
+-----------------*/
+
+
+/*-----------------
+Unblocking CSS
+remember that browser block rendering until it receives and processes all of the CSS -> CSS is render blocking.
+
+quiz: when would the browser render the page?
+ans: as soon as the browser has the CSSs and builds the CSSOM.
+
+----Unblocking CSS With Media Queries----
+CSS allows us to scope the style to different conditions:
+
+@media screen and (orientation: landscape) {
+    .menu {float: right}
+}
+@media print {
+    body { font-size: 12px}
+}
+
+by default, browser assumes that each specified style sheet is render blocking
+
+but we can add media attribute to tell browser when it should be applied
+<link rel="stylesheet" href="style-print.css" media="print" >
+
+browser still downloads them but it will not block rendering.
+
+-----------------*/
+
+/*-----------------
+Optimizing JS
+
+still, minify, compress and cache
+
+what about parser blocking script
+(
+    CSS block rendering (browser can parse HTML but it can render, it need to wait CSS to build CSSOM)
+    JS block parser (browser cannot continue to parse HTML to build DOM)
+)
+
+//the current page shows that JS can manipulate both DOM and CSSOM
+
+when we encounter script tag, we have to pause DOM construction and let JS RUN before we can continue..wait, if it is an external js, parser need to wait for the request, run it and then parseIt
+
+However, even inline JS will be blocked until external CSS has came back to build CSSOM. Because JS relied on CSSOM.
+
+CSS Blocks rendering and it blocks JS execution AFTER IT.
+
+parser-blocking JavaScript and its dependency on the CSSOM.
+
+-----------------*/
+
+/*-----------------
+Preload Scanner
+peak ahead the document, find critial files (JS CSS), and fetch them.
+
+//https://andydavies.me/blog/2013/10/22/how-the-browser-pre-loader-makes-pages-load-faster/
+
+*/
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://d3js.org/d3.v3.js"></script>
+  <style type="text/css">
+    .bar {
+      background-color:red;
+      width: 100px;
+      height: 200px;
+      margin: 10px;
+    }
+
+    #mysvg {
+      margin-left: 100px;
+      margin-top: 100px;
+      background-color: lightgray;
+    }
+
+
+    #container {
+      width: 200px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<div id='test'>
+  <svg id="mysvg" width='960px' height='500px'>
+    <g transform="" id="vis">
+      <g id="nodesLayer">
+      </g>
+    </g>
+  </svg>
+</div>
+
+<script type="text/javascript">
+//a review of https://www.sitepoint.com/how-to-translate-from-dom-to-svg-coordinates-and-back-again/
+
+//the key is getScreenCTM
+
+var svg = document.getElementById('mysvg');
+
+
+
+
+
+const points = [
+{
+  x: 50,
+  y: 200,
+},
+{
+  x: 150,
+  y: 100,
+},
+{
+  x: 200,
+  y: 150
+}
+];
+
+
+var vis = d3.select('#vis')
+
+const container = document.getElementById('vis');
+
+vis.selectAll('circle').data(points)
+  .enter()
+  .append('g')
+  .attr('class', 'node')
+  .attr('transform', d=>{
+    return `translate(${d.x}, ${d.y})`;
+  })
+  .append('circle')
+  .attr('r', 3)
+  .attr('cx', 0)
+  .attr('cy', 0)
+  .each(function(d) {
+    this.addEventListener('mousedown', function(event) {
+      console.log('mousedown', d);
+      _dragStart(event);
+    });
+  });
+
+function _dragStart(event) {
+  event.stopPropagation();
+  document.addEventListener('mousemove', _drag, false); //native
+  document.addEventListener('mouseup', _dragEnd, false);
+  window.dragging = true;
+  window.position0 = getSvgPosition(container, event);
+}
+
+
+function _drag(event) {
+  event.stopPropagation();
+  if (!window.dragging) {
+    return;
+  }
+  //get current svgPoint
+  const position1 = getSvgPosition(container, event);
+  dx = position1.x - window.position0.x;
+  dy = position1.y - window.position0.y;
+  // window.dragged |= dx | dy; //from d3
+  window.position0 = position1;
+  // console.log(dx, dy);
+
+
+  d3.selectAll('.node')
+    .attr('transform', function(d) {
+      d.x = d.x + dx;
+      d.y = d.y + dy;
+      return `translate(${d.x}, ${d.y})`;
+    });
+}
+
+function _dragEnd(event) {
+  event.stopPropagation();
+  document.removeEventListener('mousemove', _drag, false); //native
+  document.removeEventListener('mouseup', _dragEnd, false);
+  window.dragging = false;
+  window.position0 = null;
+}
+
+
+
+
+function getSvgPosition(container, { clientX, clientY }) {
+  var svg = container.ownerSVGElement || container;
+  var pt = svg.createSVGPoint();
+  pt.x = clientX;
+  pt.y = clientY;
+  return pt.matrixTransform(container.getScreenCTM().inverse());
+}
+</script>
+</html>

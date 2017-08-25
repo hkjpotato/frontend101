@@ -1,0 +1,106 @@
+<html>
+<script type="text/javascript">
+/*
+Things to know:
+You can throw exceptions using the throw statement and handle them using the try...catch statements.
+
+Try cacth does not catch aysn error
+always put try catch in success function
+
+above: Try catch does not deal with callback!
+*/
+
+/*
+about any objects can be thrown, such as number and string
+
+but the following exception types are more effective
+1. ECMACScript exceptions
+2. DOMException and DOMError
+*/
+
+/*
+throw expression; //an throw statement
+as you can see, an expression is throwed
+this expression containing the value to be thrown
+
+throw 'Error2'; //String type
+throw 42; //Number type
+throw true; //Boolean type
+throw {toString: function() {
+    return "I am an object"
+}}
+*/
+//self defined thrown object
+function KJException(message) {
+    this.message = message;
+    this.name = "KJException";
+}
+
+//override toString
+KJException.prototype.toString = function() {
+    return this.name + " : " + this.message;
+}
+
+// console.log(new KJException('hello')) //pretty
+try {
+    throw new KJException('hi there');
+}
+catch (e) {
+    console.log(e);
+}
+
+/*
+The try...catch statement marks a block of statements to try, and specifies one or more responses should an exception be thrown. If an exception is thrown, the try...catch statement catches it.
+*/
+
+
+/*catch block
+catch (catchID) {
+  statements
+}
+
+The catch block specifies an identifier (catchID in the preceding syntax) that holds the value specified by the throw statement; you can use this identifier to get information about the exception that was thrown. JavaScript creates this identifier when the catch block is entered; the identifier lasts only for the duration of the catch block; after the catch block finishes executing, the identifier is no longer available.
+
+Notice here ID means identifier not the 'id'
+*/
+
+try {
+    throw 'randomString';
+}
+catch (e) {
+    console.log(e);
+}
+
+//e can not longer be accessed
+
+/*
+finally block
+execute always at the end try & catch 
+if finally return sth, it will override the return in try or catch
+*/
+
+function getReturn() {
+    try {
+        console.log(0);
+        // return 'try'; //suspended until finally is completed
+        throw 'hi there';
+        console.log(1); //not reachable
+    } catch(e) {
+        console.log(2);
+        return 'catch'; //suspened as well
+        console.log(3); //not reachable
+    } finally {
+        console.log(4);
+        return 'finally';
+        console.log(5); //not reachable
+    }
+    //return 'finally is executed now'
+    console.log(6); //not reachable
+}
+
+console.log(getReturn()) //return 'finally'
+
+
+//http://stackoverflow.com/questions/13294658/throw-errormsg-vs-throw-new-errormsg
+</script>
+</html>

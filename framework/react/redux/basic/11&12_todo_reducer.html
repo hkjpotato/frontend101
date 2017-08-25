@@ -1,0 +1,102 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- expect -->
+    <script src="https://unpkg.com/expect/umd/expect.min.js"></script>
+    <script type="text/babel">
+      //first we write the test
+      //test for AddTodo
+      const testAddTodo = () => {
+        const stateBefore = [];
+        const action = {
+          type: 'ADD_TODO',
+          id: 0,
+          text: 'Learn Redux'
+        };
+        const stateAfter = [
+          {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false
+          }
+        ];
+
+        Object.freeze(stateBefore);
+        Object.freeze(action);
+
+        expect(
+          todos(stateBefore, action)
+        ).toEqual(stateAfter)
+      }
+
+      //test for ToggleTodo
+      const testToggleTodo = () => {
+        const stateBefore = [
+          {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false
+          },
+          {
+            id: 1,
+            text: 'Go Home',
+            completed: false
+          }
+        ];
+        const action = {
+          type: 'TOGGLE_TODO',
+          id: 1
+        };
+        const stateAfter = [
+          {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false
+          },
+          {
+            id: 1,
+            text: 'Go Home',
+            completed: true
+          }
+        ];
+        Object.freeze(stateBefore);
+        Object.freeze(action);
+        expect(
+          todos(stateBefore, action)
+        ).toEqual(stateAfter)
+      }
+
+      //todos is the reducer we are going to write, it take a prev state and an action, return a new state. It is a pure function
+      var todos = (state=[], action) => {
+        //notice the difference between the default params and default return
+        //default param is the initial state when state is undefined
+        //default return is the current state to be return if no action type matched
+        switch (action.type) {
+          case 'ADD_TODO':
+            return [
+              ...state,
+              {
+                id: action.id,
+                text: action.text,
+                completed: false
+              }
+            ];
+          case 'TOGGLE_TODO':
+            return state.map(todo=>{
+              return todo.id !== action.id ? todo : {
+                ...todo,
+                completed: !todo.completed
+              };
+            })
+          default:
+            return state;
+        }
+      }
+
+      testAddTodo();
+      testToggleTodo();
+      console.log('All tests passed.');
+    </script>
+</html>

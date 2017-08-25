@@ -1,0 +1,139 @@
+<html>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <style type="text/css">
+    body {
+      padding: 20px;
+    }
+    img {
+      width: 100%;
+    }
+    canvas {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6" id="placeholder">
+
+    </div>
+    <div class="col-sm-6">
+      <canvas id="drawing-canvas"></canvas>
+    </div>
+  </div>
+</div>
+
+</body>
+<script type="text/javascript">
+var placeholder = document.getElementById('placeholder');
+var canvas = document.getElementById('drawing-canvas');
+
+
+var img = new Image();
+img.crossOrigin = "Anonymous"; //CORS issue, check https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+
+img.onload = function() {
+  placeholder.appendChild(img);
+  var width = img.width, height = img.height;
+  console.time('edge detection');
+  var grayScale = getGrayScaleData(img);
+  var edgeData = mySobel(grayScale, width, height);
+  var imgData = grayScale2ImageData(edgeData, width, height);
+  console.timeEnd('edge detection');
+
+  //get the context of drawing canvas
+  var ctx = canvas.getContext('2d');
+  //set the width and height corresponding to the image
+  canvas.width = width;
+  canvas.height = height;
+  //draw the grayscale image data
+  ctx.putImageData(imgData, 0, 0);
+}
+
+
+
+//convert the RGBA data to grayscale data
+function getGrayScaleData(img) {
+  //a temp canvas to hold the image data
+  var tempCanvas = document.createElement('canvas');
+  var width = img.width;
+  var height = img.height;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  //draw the image to the temp canvas
+  tempCanvas.getContext('2d').drawImage(img, 0, 0, width, height);
+  //get the ImageData object
+  var imgData = tempCanvas.getContext('2d').getImageData(0, 0, width, height).data;
+  //reduce the size of pixel data by 4, only care about grayscale
+  var grayScale = new Uint8ClampedArray(width*height);
+  for (var i = 0; i < width * height * 4; i += 4) {
+      var r = imgData[i + 0];
+      var g = imgData[i + 1];
+      var b = imgData[i + 2];
+      // CIE luminance for the RGB
+      var v = 0.2126*r + 0.7152*g + 0.0722*b;
+      grayScale[i>>2] = v;
+  }
+  return grayScale;
+}
+
+//convert the grayscale data back to ImageData object
+function grayScale2ImageData(grayScale, width, height) {
+    var imageData = new ImageData(width, height);
+    //we create a view of the typed array buffer and reset the RGBA value
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+    var data_u32View = new Uint32Array(imageData.data.buffer);
+    var alpha = (0xff << 24);
+    var i = width * height;
+    while (--i >= 0) {
+      var pixel = grayScale[i];
+      //a 32-bit location with RGBA data, each of 8-bit
+      data_u32View[i] = alpha | (pixel << 16) | (pixel << 8) | pixel;
+    }
+    return imageData;
+}
+
+//the crazy sobel filter
+function mySobel(grayScale, width, height) {
+  var w = width;
+  var h = height;          
+  var retMatrix = new Float32Array(w * h);
+  //just ignore the edge :)
+  for (var y = 1; y < h - 1 ; y++) {
+    for (var x = 1; x < w - 1; x++) {
+      var dstOff = y*w+x;
+      //horizontal
+      var rH = 
+        grayScale[dstOff - w + 1]
+      - grayScale[dstOff - w  - 1]
+      + (grayScale[dstOff + 1] << 1)
+      - (grayScale[dstOff - 1] << 1)
+      + grayScale[dstOff + w  + 1]
+      - grayScale[dstOff + w  - 1];
+      //vertical
+      var rV = 
+      - grayScale[dstOff - w - 1]
+      - (grayScale[dstOff - w ] << 1)
+      - grayScale[dstOff - w + 1]
+      + grayScale[dstOff + w - 1]
+      + (grayScale[dstOff + w ] << 1)
+      + grayScale[dstOff + w + 1];
+      retMatrix[(y-1)*w +(x-1)] = Math.sqrt(rV*rV + rH*rH);
+    }
+  }          
+  return new Uint8ClampedArray(retMatrix); //take care of the 255 limit
+};
+
+img.src = "http://www.newyorker.com/wp-content/uploads/2015/12/Veix-Goodbye-New-York-Color-690x460-1449607597.jpg";
+/*
+Now we have the pixel data for grayscale, we can perform the edge detection algorithm on it. Here we use an image filter called Sobel Filter.Wiki(https://en.wikipedia.org/wiki/Sobel_operator).
+
+We will not dive into the details of it. The basic idea is to calculate the change of the pixel value, the gradient, at each pixel point (think about derivates in calculus). If the gradient is large, then it is likely to be the edge. 
+
+To get the gradient values for both vertical and horizontal direction, sobel filter run two matrix convolutions(https://en.wikipedia.org/wiki/Kernel_(image_processing)#Convolution), one for horizontal direction and the other for vertical...blablabla... WAIT! why we care about it here...let's see the result.
+*/
+</script>
+</html>

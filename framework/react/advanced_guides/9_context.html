@@ -1,0 +1,213 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+    //Why I care about this topic? Because Redux tutorial needs it.
+
+    //In React, data flow from top to bottom.
+
+    //The data is passed level by level.
+
+    //'context' API let us get the data directly without passed level by level.
+
+    /*
+    Attention: DO NOT USE CONTEXT
+    It can break the stablity of your app.
+    It is experimental.
+    "It is far more likely that Redux is the right solution to your problem than that context is the right solution."...but, redux tutorial use 'context'...
+
+    Anyway, this is just a tutorial.
+    */
+
+    //How to use context?
+
+    //Suppose you have the following components
+
+    //A container button, which will render its children props.
+    class Child extends React.Component {
+      render() {
+        return (
+          <div style={{background: this.props.color, width: 100, height: 100}}>
+          </div>
+        )
+      }
+    }
+
+    class Parent extends React.Component {
+      render() {
+        return (
+          <div>
+            <Child color={this.props.color} />
+          </div>
+        )
+      }
+    }
+
+    class GrandParent extends React.Component {
+      render() {
+        return (
+          <div>
+            <Parent color={'purple'} />
+          </div>
+        )
+      }
+    }
+
+    //We can skipt the Parent by making GrandParent the 'context provider'.
+    class ChildInContext extends React.Component {
+      render() {
+        console.log(this.context);
+        return (
+          <div style={{background: this.context.color, width: 100, height: 100}}>
+          </div>
+        )
+      }
+    }
+
+    ChildInContext.contextTypes = {
+      color: React.PropTypes.string
+    }
+
+    class ParentInContext extends React.Component {
+      render() {
+        return (
+          <div>
+            <ChildInContext />
+          </div>
+        )
+      }
+    }
+    class GrandParentWithContext extends React.Component {
+      getChildContext() {
+        return {color: 'purple'};
+      }
+
+      render() {
+        return (
+          <div>
+            <ParentInContext />
+          </div>
+        )
+      }
+    }
+    //must define childContext
+    GrandParentWithContext.childContextTypes = {
+      color: React.PropTypes.string
+    }
+
+    // ReactDOM.render(<GrandParentWithContext />, document.getElementById('app'));
+
+    //To be continued
+
+    //it seems that context is available both for the child component and props.children
+
+    //mimic provider of redux
+    class Provider extends React.Component {
+      getChildContext () {
+        return {
+          store: this.store,
+          subscription: 1,
+        }
+      }
+      constructor(props, context) {
+        super(props, context);
+        this.store = props.store;
+      }
+      render() {
+        //Returns the only child in children. Throws otherwise.
+        return React.Children.only(this.props.children)
+      }
+    }
+
+    Provider.childContextTypes = {
+        ['store']: React.PropTypes.any.isRequired,
+        subscription: React.PropTypes.any,
+    }
+
+    class Container1 extends React.Component {
+      getChildContext() {
+        return {
+          subscription: 2,
+        }
+      }
+      componentDidMount() {
+        // setInterval(() => {
+        //   this.setState({}
+        //   )
+        // }, 1000)
+      }
+
+      componentWillReceiveProps() {
+        console.log('parent receive props');
+      }
+      render() {
+        console.log('parent render', this.context)
+        return (
+          <div>
+            {'container1'}
+            <Container2 />
+          </div>
+        );
+      }
+    }
+    //override the subscription context for the child
+    Container1.childContextTypes = {
+      subscription: React.PropTypes.any,
+    }
+
+    //define the context for itself
+    Container1.contextTypes = {
+      store: React.PropTypes.any.isRequired,
+      subscription: React.PropTypes.any,
+    }
+
+
+    class Container2 extends React.Component {
+      componentDidUpdate() {
+        console.log('Container2 componentDidUpdate', this);
+        // this.componentDidUpdate = function() {
+        //   console.log('wtf');
+        // }
+      }
+      componentWillReceiveProps() {
+        console.log('child receive props');
+      }
+      render() {
+        console.log('child render', this.context);
+        return <div>{'container2'}</div>
+      }
+    }
+
+    Container2.contextTypes = {
+      store: React.PropTypes.any.isRequired,
+      subscription: React.PropTypes.any,
+    }
+
+    var element = (
+      <Provider store={'hello'} >
+        <Container1 />
+      </Provider>
+    )
+
+
+    //updating context successively from top to bottom
+    //https://facebook.github.io/react/docs/context.html#updating-context
+    //https://medium.com/@mweststrate/how-to-safely-use-react-context-b7e343eff076
+
+    //an element's context depends on its parent's child context
+    //an element can override certain context by creating its own getChildContext
+
+    ReactDOM.render(element, document.getElementById('app'));
+
+
+
+
+    </script>
+</html>

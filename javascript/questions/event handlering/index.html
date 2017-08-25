@@ -1,0 +1,173 @@
+<html>
+<head>
+  <style type="text/css">
+body {
+  text-align: center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #4d4d4d;
+  font-weight: 300;
+  text-align: center;
+}
+
+#parent {
+  cursor: pointer;
+  margin: 10px auto;
+  width: 350px;
+  height: 350px;
+  border: 1px solid black;
+  background-color: #ff6d6d;
+}
+
+#first, #second, #bottom {
+  width: 60%;
+  height: 60%;
+  margin: 20% auto;
+  border: 1px dotted black;
+}
+
+#first {
+  background-color: #ffca6d;
+}
+
+#second {
+  background-color: #ffff6d;
+}
+
+#bottom {
+  background-color: #00c26d;
+}
+
+div {
+  transition: background-color, .5s;
+}
+
+
+#btnContainer {
+  width: 521px;
+  height: 140px;
+  text-align: left;
+  margin: 20px auto;
+}
+
+#btnContainer div{
+  float: left;
+  width: 240px;
+  height: 120px;
+}
+#btnContainer div:nth-child(1) {
+  padding-right: 15px;
+}
+#btnContainer div:nth-child(2) {
+  padding-left: 25px;
+  border-left: 1px dashed gray;
+}
+  </style>
+</head>
+<body>
+<h2 id="title">Demo of Event Handling</h2>
+<div id="parent">
+  <div id="first">
+    <div id="second">
+      <div id="bottom">
+      </div>
+    </div>
+  </div>
+</div>
+<span>parent(red)  &#8651; first(orange) &#8651; second(yellow)  &#8651; bottom (green) </span>
+<div id="btnContainer">
+  <div>
+    Stop propagation during capturing<br>
+    <input type="checkbox" onchange="toggleCaptureSP(this)" value="parent"/>parent<br>
+    <input type="checkbox" onchange="toggleCaptureSP(this)" value="first"/>first<br>
+    <input type="checkbox" onchange="toggleCaptureSP(this)" value="second"/>second<br>
+    <input type="checkbox" onchange="toggleCaptureSP(this)" value="bottom"/>bottom<br>
+  </div>
+  <div>
+    Stop propagation during bubbling<br>
+    <input type="checkbox" onchange="toggleBubbleSP(this)" value="parent"/>parent<br>
+    <input type="checkbox" onchange="toggleBubbleSP(this)" value="first"/>first<br>
+    <input type="checkbox" onchange="toggleBubbleSP(this)" value="second"/>second<br>
+    <input type="checkbox" onchange="toggleBubbleSP(this)" value="bottom"/>bottom
+  </div>
+</div>
+
+  <script type="text/javascript">
+  var parent = document.querySelector("#parent"),
+    first = document.querySelector("#first"),
+    second = document.querySelector("#second"),
+    bottom = document.querySelector("#bottom");
+  var elements = [parent, first, second, bottom];
+  var bubbleStop = {
+    parent : false,
+    first: false,
+    second: false,
+    bottom: false
+  };
+  var captureStop = {
+    parent : false,
+    first: false,
+    second: false,
+    bottom: false
+  };
+  var bubbleColor = '#8C3F5D', capturColor = "#2c3f48";
+
+  //handler for captur phase
+  function clickEventHandlerCapture(index, e) {
+    if (captureStop[this.getAttribute('id')]) {
+      e.stopPropagation();
+    }
+
+    setTimeout(function() {
+      this.style.backgroundColor = capturColor;
+      setTimeout(function() {
+        this.style.removeProperty('background-color');
+      }.bind(this), 500)
+    }.bind(this), 500 * index);
+  };
+
+  //handler for bubble phase
+  function clickEventHandlerBubble(index, e) {
+    if (bubbleStop[this.getAttribute('id')]) {
+      e.stopPropagation();
+    }
+    function getDepth(element) {
+      var depth = 0, current = element;
+      while (current !== parent) {
+        current = current.parentNode;
+        depth++;
+      }
+      return depth;
+    }
+    var targetDepth = getDepth(e.target);
+    var currentDepth = getDepth(this);
+    var delay = 500 * (targetDepth + 1) + 300; //time delay for the capture animation to finish
+    setTimeout(function() {
+      this.style.backgroundColor = bubbleColor;
+      setTimeout(function() {
+        this.style.removeProperty('background-color');
+      }.bind(this), 500)
+    }.bind(this), 500 * (targetDepth - currentDepth) + delay);
+  };
+
+  //attach handlers
+  elements.forEach(function(element, i) {
+    element.addEventListener('click', clickEventHandlerCapture.bind(element, i), true);
+
+    element.addEventListener('click', clickEventHandlerBubble.bind(element, i), false);
+
+  });
+
+
+  /*toggle stopPropagation */
+  function toggleBubbleSP(btn) {
+    bubbleStop[btn.value] = btn.checked;
+    console.log(bubbleStop);
+  }
+
+  function toggleCaptureSP(btn) {
+    captureStop[btn.value] = btn.checked;
+    console.log(captureStop);
+  }
+  </script>
+</body>
+</html>

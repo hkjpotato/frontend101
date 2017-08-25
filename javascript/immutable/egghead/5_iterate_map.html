@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <script type="text/javascript">
+  mocha.setup('bdd');
+  const expect = chai.expect;
+  class Todo {
+    constructor(title="", text="", completed=false) {
+      this.id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+      this.title = title;
+      this.text = text;
+      this.completed = completed;
+    }
+  }
+
+  function getTodoTexts(todos) {
+    //immutable map does support 'map' function
+    //map create a new immutable
+    return todos.map(todo => {
+      return todo.text;
+    });
+  }
+
+  function markAllTodosAsComplete(todos) {
+    //immutable map does support 'forEach' function
+    //this is not a pure function, it does mutate the child element
+    todos.forEach(todo => {
+      todo.completed = true;
+    });
+  }
+
+  function getCompletedTodos(todos) {
+    return todos.filter(todo => {
+      return todo.completed; //create a new key based on the return value
+    });
+  }
+
+  function groupTodosByCompleted(todos) {
+    return todos.groupBy(todo => {
+      return todo.completed;
+    });
+  }
+
+  function addTodo(todos, todo) {
+    return todos.set(todo.id, todo);
+  }
+
+  describe('Iterating over an Immutable Map, these methods(map, forEach, filter, groupBy) also apply to other iterable immutable data structure, such as set and list!', ()=> {
+    it('should convert all todos into a map() of titles, like the map function of Array', ()=> {
+      let todos = Immutable.Map();
+      _.each(_.range(10), (index) => {
+        todos = addTodo(todos, new Todo('Todo ' + index, "I'm a todo!", false));
+      });
+
+      const todoTexts = getTodoTexts(todos);
+      expect(todoTexts.first()).to.equal("I'm a todo!");
+    });
+
+    it('should filter todos', ()=> {
+      let todos = Immutable.Map();
+      _.each(_.range(10), (index) => {
+        todos = addTodo(todos, new Todo('Todo ' + index, "I'm a todo!", index % 2 === 0));//every other todo will be completed
+      });
+
+      filterTodos = getCompletedTodos(todos);
+      expect(filterTodos.size).to.equal(5);
+    });
+
+    it('should mark(mutate) all todos completed, like the forEach function of Array', ()=> {
+      let todos = Immutable.Map();
+      _.each(_.range(10), (index) => {
+        todos = addTodo(todos, new Todo('Todo ' + index, "I'm a todo!", false));
+      });
+
+      markAllTodosAsComplete(todos);
+
+      //convert back to array and iterate through it
+      _.each(todos.toArray(), (todo)=> {
+        expect(todo.completed).to.be.true;
+      });
+    });
+
+    it('should group todos by completed boolean, ?', ()=> {
+      let todos = Immutable.Map();
+      _.each(_.range(10), (index) => {
+        todos = addTodo(todos, new Todo('Todo ' + index, "I'm a todo!", index % 2 === 0));//every other todo will be completed
+      });
+      //a new immutable map with the group keys as keys
+      let groupedTodos = groupTodosByCompleted(todos);
+      expect(groupedTodos.get(true).size).to.equal(5);
+      expect(groupedTodos.get(false).size).to.equal(5);
+    });
+  });
+  mocha.run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+var size = 100;
+var height = 500;
+var width = 960;
+
+
+/*create a list of random data [{r: random}] */
+var data = d3.range(size).map(function(i){
+  return {
+    name: 'node' + i,
+    r: Math.floor(Math.random() * 8 + 2)
+  };
+});
+
+
+var force = d3.layout.force()
+  .size([width, height])
+  .nodes(data)
+  .charge(function(d){
+    return d.r * -2;
+  })
+  .start();
+
+//a pure render element which will just render the data props to circle
+var Nodes = React.createClass({
+  onSelect: function(name) {
+    this.props.onSelect(name);
+  },
+  render: function() {
+    //create the circle element(svg)
+    var circles = this.props.data.map(function(d) {
+      return (
+        <circle
+          onClick={this.props.onSelect.bind(this, d.name)}
+          key={d.name}
+          cx={d.x}
+          cy={d.y}
+          r={d.r}
+          fill={d.name === this.props.selected ? "red" : "steelblue"}
+          ></circle>
+      );
+    }.bind(this));
+    return <g>{circles}</g>;
+  }
+});
+
+//a pure render element
+function BubbleChart(props) {
+  return (
+    <svg 
+      width={props.width}
+      height={props.height}>
+      <Nodes 
+        data={props.data} 
+        selected={props.selected} 
+        onSelect={props.onSelect} />
+    </svg>
+  );
+};
+
+var ForceBubbleChart = React.createClass({
+  getInitialState:function() {
+    //set up the force layout
+    this.force = d3.layout.force()
+      .size([this.props.width, this.props.height])
+      .nodes(this.props.data)
+      .charge(function(d){
+        return d.r * -2;
+      })
+      .on('tick', this.tick);
+
+    return {
+      data: this.props.data,
+      selected: null
+    }
+  },
+  onSelect: function(nodename) {
+    this.setState({
+      selected: nodename
+    })
+  },
+  componentDidMount: function() {
+    //start the force layout
+    this.force.start();
+  },
+  tick: function() {
+    //replace the ReactDOM.render call
+    // this.setState({
+    //   data: this.force.nodes()
+    // })
+    // should we call setState as the state has already been changed by force, maybe we can just forceUpdate
+    this.forceUpdate();
+    // this is really anti-pattern
+  },
+  render: function() {
+    return (
+      <BubbleChart 
+        width={this.props.width}
+        height={this.props.height}
+        data={this.state.data}
+        selected={this.state.selected}
+        onSelect={this.onSelect} />
+    )
+  }
+})
+
+// ReactDOM.render(
+//   <ForceBubbleChart width={width} height={height} data={data} />, 
+//   document.getElementById('root'));
+
+
+
+var Child = React.createClass({
+  render: function() {
+    return <button onClick={this.props.onSelect.bind(this, 'haha')} >click</button>
+  }
+})
+var Dash = React.createClass({
+  onSelect: function(data) {
+    console.log(data);
+  },
+  render: function() {
+    return <Child onSelect={this.onSelect} />
+  }
+
+})
+ReactDOM.render(<Dash />,document.getElementById('root'));
+
+</script>
+
+
+</html>

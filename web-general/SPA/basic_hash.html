@@ -1,0 +1,102 @@
+<html>
+<head>
+</head>
+<body>
+<ul>  
+    <li><a href="#/">Root</a></li>  
+    <li><a href="#/page1">Page1</a></li>  
+    <li><a href="#/page2">Page2</a></li>  
+</ul> 
+<div id="result"></div>
+<script type="text/javascript">
+//before everything, it's better to have an idea of frontend router and why we need it
+
+//our target is to learn react-router.
+
+//my initial target is to show different UI based on different state of the UI. However, I was confused by why we need to router. React can do conditional rendering, it is not just about changing the css display attribute, but really remove the dom element.
+
+//if we dont have frontend router, everything in url will match to a different routes in backend web server. This routers are like controller in MVC framework.
+
+//Attention, controller is not just a map
+
+//controller is the binder between data and view
+
+//if we only have one page, we still need controller
+
+//controller will get data, or state
+
+//view will render it with those data
+
+//in django, url match to a function
+
+//that function will prepare data, provide the context, and render the template
+
+//if we have frontend router, basically the change in the url will be handled by frontend code(by detecting the change of url or history api), then front end will deal with the change in UI and data(through ajax).
+
+//let's see a very simple example
+function Router() {
+  this.routes = {};
+  this.curUrl = '';
+
+  //the view of django, match path to a callback function(view)
+  this.route = function(path, callback) {
+    this.routes[path] = callback || function() {};
+  }
+  //refresh the page based on the location hash
+  //works like the url + view in django
+  this.refresh = function() {
+    this.curUrl = location.hash.slice(1) || '/'; //url after #
+    this.routes[this.curUrl]();
+  }
+  //add listener to hashchange event (& load)
+  //call refresh method
+  this.init = function() {
+    window.addEventListener('load', this.refresh.bind(this), false); 
+    window.addEventListener('hashchange', this.refresh.bind(this), false); 
+  }
+}
+
+//differen between django
+/*
+in django, when there is a change in url, an http request launch to a certain url
+the server listen to the request
+match the url to a view function and return new html
+
+here, when there is a change in url hash, a hashchange event fire and catch by the listener
+listener listen to the change
+match the url hash to a route callback function, update the content
+*/
+
+var R = new Router();
+R.init();
+var res = document.getElementById('result');
+
+//make the url view function map
+R.route('/', function() {
+  res.style.background = 'lightblue';
+  res.innerHTML = 'Root Page';
+});
+
+R.route('/page1', function() {
+  res.style.background = 'orange';
+  res.innerHTML = 'Page 1';
+});
+
+R.route('/page2', function() {
+  res.style.background = 'pink';
+  res.innerHTML = 'Page 2';
+});
+
+//use hash, we let a to jump to different #, no http request at all
+//the url update automatically
+
+//listen to # change, update the view
+
+//history api is different
+
+//we need to catch the default http call
+
+//we need to update the url manully
+</script>
+</body>
+</html>

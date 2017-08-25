@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://underscorejs.org/underscore-min.js"></script>
+  <!-- // <script src="generate_data.js"></script> -->
+
+  <!-- <link rel="stylesheet" href="example.css" type="text/css" /> -->
+</head>
+
+<body>
+<div id="root" />
+<script type="text/javascript">
+
+</script>
+<script type="text/babel">
+
+var width = 960;
+var height = 500;
+
+
+
+
+// d3.select("#root")
+//   .append('svg')
+//   .append('g')
+//   .append('rect')
+//   .attr('width', 100)
+//   .attr('height', 100)
+//   .call(zoomer);
+
+class VisPresenter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      translate: [0, 0],
+      scale: 1
+    }
+  }
+  componentDidMount() {
+    var zoomer = d3.behavior.zoom()
+      .on('zoomstart', function() {
+        console.log(d3.event, this);
+      })
+      .on('zoom', ()=>{
+        console.log('zoom');
+        // console.log('zoom', d3.event.translate);
+        this.setState({
+          translate: d3.event.translate,
+          scale: d3.event.scale
+        })
+      })
+    d3.select(this.zoomable).call(zoomer);
+  }
+  render() {
+    let transform="translate(" + this.state.translate + ")scale(" + this.state.scale + ")";
+    console.log('render ', transform);
+    return (
+      <svg>
+        <rect 
+          style={{
+            fill: 'none',
+            pointerEvents: 'all'
+          }}
+          ref={(rect)=>this.zoomable=rect} 
+          width={100} 
+          height={100} >
+        </rect>
+        <g ref={vis=>this.vis=vis} transform={transform}>
+          <circle r={4} cx={10} cy={10}></circle>
+        </g>
+      </svg>
+    )
+  }
+}
+
+
+  var dragger = d3.behavior.drag()
+    .on('dragstart', function(d) {
+      //prevent trigger the panning of zoomer
+      d3.event.sourceEvent.stopPropagation();
+    })
+    .on('drag', function(d) {
+
+    })
+    .on('dragend', function(d) {
+
+    });
+
+
+
+// class Draggable extends React.Component {
+//   componentDidMount() {
+
+//   }
+// }
+
+
+ReactDOM.render(<VisPresenter />, document.getElementById('root'));
+
+
+
+</script>
+
+</body>

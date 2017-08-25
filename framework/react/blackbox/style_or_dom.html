@@ -1,0 +1,265 @@
+<html>
+<style type="text/css">
+  .bar {
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    background-color: lightgray;
+    transition: top .5s;
+  }
+</style>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@15/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+  <script type="text/javascript">
+    var data = [
+      {
+        name: 'zombie',
+        attack: 100,
+        defense: 0
+      }, 
+      {
+        name: 'plant',
+        attach: 0,
+        defense: 100
+      }
+    ];
+
+    var MyChart = React.createClass({
+      getInitialState: function() {
+        return {
+          data: data,
+          metric: 'attack'
+        };
+      },
+      onSwitch: function() {
+        this.setState({
+          metric: this.state.metric === 'attack' ? 'defense' : 'attack'
+        })
+      },
+      render: function() {
+        var self = this;
+        var metric = this.state.metric;
+        var data = this.state.data.slice(0).sort(function(a, b) {
+          return b[metric] - a[metric];
+        }).map(function(d, i) {
+          return Object.assign({rank: i}, d);
+        })
+        //   .sort(function(a, b) {
+        //   if (a.name > b.name) return 1;
+        //   if (a.name < b.name) return -1;
+        //   return 0;
+        // });
+
+        /*
+        Without sorting, the order of the return React Element array (barElements) will be changed. 
+
+        React will notice this change and update the dom nodes accordingly. 
+
+        However, because we have already assign the key and the key is the same, React notice that this change can be achieve by moving the exiting dom nodes. It does not need to insert a new node, or remove an old node.
+
+        By checking the source code[line 1491 of react-dom15]m you can see that React call the 'moveChild' function, with the the paren node (parentNode), the node to be insert(update.fromNode), and the reference node.
+
+        case 'MOVE_EXISTING':
+          moveChild(parentNode, update.fromNode, getNodeAfter(parentNode, update.afterNode));
+
+        In our case, what moveChild does is just to basically the insertBefore function.[line 1355]
+
+      
+        we can set a DOM breakpoint on the first bar dom node(the 'plant') to detect the attribute modification
+
+        we can see that the first breakpoint we encouter is the DOM breakpoint, and it is due to the style change[line 831, setValueForStyles]. Checking the function call stack, we can see this is due to the _updateDOMProperties function call[react-dom.js:6257), which is a result of updateComponent[react-dom.js:6196]
+
+
+        In the react source file, the comments for this function is 
+        * Reconciles the properties by detecting differences in property values and
+        * updating the DOM as necessary. This function is probably the single most
+        * critical path for performance optimization.
+
+
+        This function takes care of the change between next props and last props. In our case, only the 'top' attribute of 'style' has been changed. 
+
+        After this function is called[react-dom.js:6220], then React call the _updateDOMChildren function[react-dom.js:6221]
+
+        BTW, _updateDOMChildren and _updateDOMProperties are both mixin functions for ReactDOMComponent. In JS, these functions are stored in the prototype.
+
+
+        _updateDOMChilren just update the content of the children of the ReactElement
+        
+        all this two are called by recevieComponent function[6180], which is by updateChildren 
+
+        updateChildren is a helper function of ReactChildReconciler[4276]
+        which provides a set of helpers for initializing or updating a set of children...there you go
+
+        'Its ouput is suitable for passing it onto ReactMultiChild which does diffed reordering and insertion'
+
+        Next Step, ReactMultiChild
+
+        after updateChildren is called[10399], the nextchildren is returned, at this moment, the style has been changed. If javascript is stopped at this moment(e.g. when you are in the debug mode), you can see that cass transition is working and the plant bar is moving down smoothly.
+
+
+        but in the reality, javascript keep running, and JS code will block the HTML dom parsing process. Check the timeline
+        
+
+        the return next Children is an key value map for the children component(button, plant(div), zombie(div)). The keys store the index information of the elements array(plant before zombie).
+
+        the next Chilren will be compared with the previous Children. Previous Children is an Object with index information of the previous Element Array (zombie before plant).
+
+        If React detect there is a change in index of the children, it will be smart enough to figure out that it needs to move the chilren.
+
+
+
+
+
+
+        what the hell is this
+
+    /**
+     * Updates the rendered children with new children.
+     *
+     * @param {?object} nextNestedChildrenElements Nested child element maps.
+     * @param {ReactReconcileTransaction} transaction
+     * @internal
+     */
+    // updateChildren: function (nextNestedChildrenElements, transaction, context) {
+    //   // Hook used by React ART
+    //   this._updateChildren(nextNestedChildrenElements, transaction, context);
+    // },
+
+
+
+        */
+
+        //make the new barElements
+        var barElements = data.map(function(d) {
+          return React.createElement(
+            'div', 
+            {
+              key: d.name,
+              style: {top: d.rank * 30 + 50},
+              className: 'bar'
+            },
+            d.name
+          );
+        });
+        return React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'button', 
+            {
+              onClick: this.onSwitch
+            }, 
+            'switch'),
+          barElements
+        );
+      }
+    });
+
+    var myChart = React.createElement(MyChart, null, null);
+    ReactDOM.render(myChart, document.getElementById('root'));
+
+
+
+const birthdeathrates = [
+{country:"alg", birth:36.4,death:14.6},
+{country:"con", birth:37.3,death:8},
+{country:"egy", birth:42.1,death:15.3},
+{country:"gha", birth:55.8,death:25.6},
+{country:"ict", birth:56.1,death:33.1},
+{country:"mag", birth:41.8,death:15.8},
+{country:"mor", birth:46.1,death:18.7},
+{country:"tun", birth:41.7,death:10.1},
+{country:"cam", birth:41.4,death:19.7},
+{country:"cey", birth:35.8,death:8.5},
+{country:"chi", birth:34,death:11},
+{country:"tai", birth:36.3,death:6.1},
+{country:"hkg", birth:32.1,death:5.5},
+{country:"ind", birth:20.9,death:8.8},
+{country:"ids", birth:27.7,death:10.2},
+{country:"irq", birth:20.5,death:3.9},
+{country:"isr", birth:25,death:6.2},
+{country:"jap", birth:17.3,death:7},
+{country:"jor", birth:46.3,death:6.4},
+{country:"kor", birth:14.8,death:5.7},
+{country:"mal", birth:33.5,death:6.4},
+{country:"mog", birth:39.2,death:11.2},
+{country:"phl", birth:28.4,death:7.1},
+{country:"syr", birth:26.2,death:4.3},
+{country:"tha", birth:34.8,death:7.9},
+{country:"vit", birth:23.4,death:5.1},
+{country:"can", birth:24.8,death:7.8},
+{country:"cra", birth:49.9,death:8.5},
+{country:"dmr", birth:33,death:8.4},
+{country:"gut", birth:47.7,death:17.3},
+{country:"hon", birth:46.6,death:9.7},
+{country:"mex", birth:45.1,death:10.5},
+{country:"nic", birth:42.9,death:7.1},
+{country:"pan", birth:40.1,death:8},
+{country:"usa", birth:21.7,death:9.6},
+{country:"arg", birth:21.8,death:8.1},
+{country:"bol", birth:17.4,death:5.8},
+{country:"bra", birth:45,death:13.5},
+{country:"chl", birth:33.6,death:11.8},
+{country:"clo", birth:44,death:11.7},
+{country:"ecu", birth:44.2,death:13.5},
+{country:"per", birth:27.7,death:8.2},
+{country:"urg", birth:22.5,death:7.8},
+{country:"ven", birth:42.8,death:6.7},
+{country:"aus", birth:18.8,death:12.8},
+{country:"bel", birth:17.1,death:12.7},
+{country:"brt", birth:18.2,death:12.2},
+{country:"bul", birth:16.4,death:8.2},
+{country:"cze", birth:16.9,death:9.5},
+{country:"dem", birth:17.6,death:19.8},
+{country:"fin", birth:18.1,death:9.2},
+{country:"fra", birth:18.2,death:11.7},
+{country:"gmy", birth:18,death:12.5},
+{country:"gre", birth:17.4,death:7.8},
+{country:"hun", birth:13.1,death:9.9},
+{country:"irl", birth:22.3,death:11.9},
+{country:"ity", birth:19,death:10.2},
+{country:"net", birth:20.9,death:8},
+{country:"now", birth:17.5,death:10},
+{country:"pol", birth:19,death:7.5},
+{country:"pog", birth:23.5,death:10.8},
+{country:"rom", birth:15.7,death:8.3},
+{country:"spa", birth:21.5,death:9.1},
+{country:"swe", birth:14.8,death:10.1},
+{country:"swz", birth:18.9,death:9.6},
+{country:"rus", birth:21.2,death:7.2},
+{country:"yug", birth:21.4,death:8.9},
+{country:"ast", birth:21.6,death:8.7},
+{country:"nzl", birth:25.5,death:8.8}];
+
+
+// console.log(result2.map(function(d) { return d.country; }));
+var sort1 = birthdeathrates.sort(function(a, b) {
+  return b.country > a.country;
+  if (a.country < b.country) return -1;
+  if (a.country > b.country) return 1;
+  return 0;
+});
+
+var sort2 = sort1.slice(0).sort(function(a, b) {
+  // return b.country > a.country;
+  if (a.country < b.country) return -1;
+  if (a.country > b.country) return 1;
+  return 0;
+});
+
+console.log(sort1.map(function(d) { return d.country; }));
+// console.log(sort2.map(function(d) { return d.country; }));
+
+
+
+//this is because the comparison function expect a number to be returned. And if it return zero, a and b are considered equal.
+//If the return is not a number, the result will be cast to a number.
+//false will be cast to zero, for example, +false == 0
+console.log(+false);
+//The sort method is not necessarily stable https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+
+  </script>
+</body>
+</html>

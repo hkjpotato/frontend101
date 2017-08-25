@@ -1,0 +1,54 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        //https://medium.com/@wereHamster/beware-react-setstate-is-asynchronous-ce87ef1a9cf3#.9lvyxwdaq
+
+        //It is common to to setState multiple time during a single update cycle.
+
+        //think about the datachange props in d3 app...
+
+        class MyApp extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    datachange: false,
+                    val: 0
+                }
+            }
+            componentDidMount() {
+                setTimeout(function() {
+                    this.setState({
+
+                    })
+                }, Math.random());
+                setTimeout(function() {
+
+                }, Math.random());
+            }
+            componentDidUpdate() {
+                
+            }
+            render() {
+                return (
+                    <div>
+
+                    </div>
+                )
+            }
+        }
+        //react jsx code in es6
+        ReactDOM.render(
+            <MyApp />,
+            document.getElementById('app')
+        );
+    </script>
+    </script>
+</html>

@@ -1,0 +1,76 @@
+<html>
+<head>
+    <style type="text/css">
+    #map {
+        height: 100%;
+    }
+    </style>
+</head>
+
+<body>
+<div id="map">
+<script src="//maps.google.com/maps/api/js?key=AIzaSyBfv885t6_HFj4pt3_-751j6e6nxoXNWfk"></script>
+
+
+<script type="text/javascript">
+
+MyOverlay.prototype = new google.maps.OverlayView();
+
+function MyOverlay (map, solved) {
+    console.log('constructor get called')
+    // this._map = map;
+    // this.div = null;
+    this.solved = solved;
+
+    console.log('call setMap');
+    this.setMap(map);
+}
+
+
+MyOverlay.prototype.onAdd = function() {
+    console.log('overlay on Add');
+
+
+    console.log('create div container');
+    var div = document.createElement('div');
+    div.style.border = '2px solid red';
+    div.style.position = 'absolute';
+    div.style.width = "500px";
+    div.style.height = "500px";
+    this.div = div;
+    var panes = this.getPanes();
+    panes.overlayLayer.appendChild(div);
+    // console.log(div);
+    console.log('promise realized, attached the result to the solved function, but we just attach it to solved function, you will get div only when then is called!!')
+    this.solved(div);
+}
+
+MyOverlay.prototype.draw = function() {
+    console.log('overlay draw');
+}
+
+var overlay;
+function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 11,
+      center: {lat: 62.323907, lng: -150.109291},
+      mapTypeId: 'roadmap'
+    });
+    console.log('call overlay constructor');
+
+    var I_will_load_overlay = new Promise(function(solved, rejected) {
+        console.log('executor function run, realizing my promise');
+        overlay = new MyOverlay(map, solved);
+    });
+
+    I_will_load_overlay.then(get_div);
+}
+
+function get_div(div) {
+    console.log('this is a callback', div);
+}
+initMap();
+
+</script>
+</body>
+</html>

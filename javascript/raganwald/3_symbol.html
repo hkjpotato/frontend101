@@ -1,0 +1,30 @@
+<html>
+<script type="text/javascript">
+/*
+a review of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol
+*/
+
+//Symbol() return unique value
+//that value can be used as an identifier for object property
+
+var sym1 = Symbol();
+
+var sym2 = Symbol('foo');
+var sym3 = Symbol('foo');
+
+//cannot use new operator
+
+//https://developer.mozilla.org/en-US/docs/Glossary/Symbol
+
+// The data type "symbol" is a primitive data type having the quality that values of this type can be used to make object properties that are anonymous. 
+
+// This data type is used as the key for an object property when the property is intended to be private, for the internal use of a class or an object type. 
+
+// A value having the data type "symbol" can be referred to as a "symbol value."  In the JavaScript run-time environment, a symbol value is created by invoking the function Symbol(), which dynamically produces an anonymous, unique value.  The only sensible usage is to store the symbol and then use the stored value to create an object property.  The following example stores the symbol in a "var".
+
+var  myPrivateMethod  = Symbol();
+this[myPrivateMethod] = function() {...};
+
+//to be continued
+</script>
+</html>

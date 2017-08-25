@@ -1,0 +1,44 @@
+<html>
+<script type="text/javascript">
+
+//Management of arguments
+
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
+
+//The arguments object is an Array-like (just like an array, not a real array!!!) object corresponding to the arguments passed to a function
+
+//it is a local variable with in all functions
+
+//it is similar to array but does not have any array properties except length property
+
+//to convert it to a real array, the MDN guide suggests
+
+// var args = [].slice.call(arguments);
+//the same as var args = Array.prototype.slice.call(arguments)
+
+//about slice, refer to MDN:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+'use strict';
+
+function hello() {
+    console.log(this);
+}
+
+hello.call({name: 'hkj'});
+
+
+var arr1 = ['zero', 'one', 'two', 'three'];
+
+console.log(arr1.slice(1, 2));
+
+console.log([].slice.call(arr1, 1));
+
+
+var unboundSlice = Array.prototype.slice;
+console.log(unboundSlice); //unBoundFunction
+var unboundCall = Function.prototype.call;
+var newSliceFun = unboundCall.bind(unboundSlice)
+//this new call function return has a this to be unboundSlice. However, it is still a call function, the first argument of this function will be regarded as the 'this' in the this
+
+// newSliceFun(arguments) is the same as [].slice.call(Arguments)
+</script>
+</html>

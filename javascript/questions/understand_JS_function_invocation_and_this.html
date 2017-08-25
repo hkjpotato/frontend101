@@ -1,0 +1,208 @@
+<html>
+<script type="text/javascript">
+//review of Yehuda Katz's article on http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/
+
+//In my opinion, a lot of this confusion is cleared up by understanding the core function invocation primitive, and then looking at all other ways of invoking a function as sugar on top of that primitive. In fact, this is exactly how the ECMAScript spec thinks about it. In some areas, this post is a simplification of the spec, but the basic idea is the same...by article
+
+//The Core Primitive
+
+//The core primitive is the call method
+
+/*
+call does this
+1. make an argument list argList(,,,)
+2. the first param is thisValue
+3. inovoke the function with this set to thisValue and argList as argument list
+*/
+
+function hello(thing) {
+  console.log(this + " say hello " + thing);
+}
+
+hello.call("KJ", "world") //KJ say hello world
+
+//1. Simple Function Invocation
+//desugars: use parens syntax hello('world')
+
+hello('world'); //desugars to hello.call(window, 'world') in browser
+
+
+//In ES5, when use strict mode, it desugars to hello.call(undefined, 'world')
+
+// The short version is: a function invocation like fn(...args) is the same as fn.call(window [ES5-strict: undefined], ...args).
+
+// Note that this is also true about functions declared inline: (function() {})() is the same as (function() {}).call(window [ES5-strict: undefined).
+
+//2. Memeber Functions
+var person = {
+  name: 'kj',
+  hello: function (thing) {
+    console.log(this + " say hello " + thing);
+  }
+}
+
+person.hello("world") //desugars to person.hello.call(person, "world");
+
+//Notice that the function doesn't have a persistent notion of its 'this'. It is always set at call time based upon the way it was invoked by its caller.
+
+//3. Function.prototype.bind
+//historically use a closure to convert a function into one with an unchanging this
+
+var boundHelloWithPredefinedThis = function(thing) {
+  //closure this
+  _this = {name: 'closure'};
+  //above create a closure, so that when the return function is called, it always access this predefined _this
+  return person.hello.call(_this.name, thing);
+}
+
+boundHelloWithPredefinedThis("world");
+
+//make it general, with dynamic this bound
+var generalBind = function (func, thisValue) {
+  //return a new function, this is the boundFunction
+  return function() {
+    return func.apply(thisValue, arguments)
+  }
+}
+
+//If you understand the basic rules for converting a sugary function call into a desugared func.call(thisValue, ...args), you should be able to navigate the not so treacherous waters of the JavaScript this value...by article
+
+
+//A simple JS question
+var name = 'window'
+function f() {
+  console.log(this.name);
+}
+
+var obj = {
+  name: 'obj',
+  method: function(fn) {
+    fn();
+  }
+}
+
+obj.method(f);
+//what's the output?
+//obj.method() desugars to obj.method.call(obj, f);
+//however when you call fn() inside method, you are not calling it as a member function, thus this should bind to window
+
+
+console.log('---a little more---')
+
+var length = 10;
+function fn() {
+    console.log(this.length)
+};
+var obj = {
+    length: 5, 
+    method: function (fn) {
+        fn();
+        arguments[0]();
+        fn.call(obj, 12);
+    }
+};
+obj.method(fn, 1); //answer should be 10, 2, 5
+
+//10 is the global length (default)
+//2 is the arguments.length (memeber method)
+//5 is obj.length (explict)
+
+
+//4 types of this bind
+/*
+1. default: window [ES5-strict: undefined]
+2. implicit: as a member function of an object
+3. explicit: apply, call, bind
+4. new operator: constructor this
+*/
+
+//why arguments[0]() is like a member method
+/*
+because arguments is like an object 
+{
+  0: fn, //0 is a property of arguments
+  1: 1
+  length: 2
+}
+
+in array like object, the property can be number type
+*/
+
+
+console.log('---more difficult---')
+
+//fun1
+function Foo() {
+    console.log('Foo called')
+    getName = function () { 
+        console.log('1');
+    };
+    return this;
+}
+//fun2
+Foo.getName = function () {
+    console.log('2');
+};
+//fun3
+Foo.prototype.getName = function () { 
+    console.log('3');
+};
+//fun4
+var getName = function () { 
+    console.log('4');
+};
+
+//fun5
+function getName() { 
+    console.log('5');
+}
+
+Foo.getName(); //2, think Foo as an object, using it getName memeber function (fun2)
+getName(); //4, both function declaration and variable declaration get hoisted, however, function hoisted topper than variable.
+
+
+Foo().getName(); //1, run Foo first, inside it, it override the global variable getName
+getName();  //1, global getName has been override
+new Foo.getName();  //2, Foo.getName is a like a class method, fun2, the new operator does not affect the result
+
+// '.' has higher order than 'new', above is like new (Foo.getName())
+
+
+
+new Foo().getName();  //3, first run Foo as constructor, log nothing, then call getName memeber method
+
+new new Foo().getName();
+//above is like outer new with param
+// new (new Foo().getName)()
+//further to be
+// new ((new Foo()).getName)()
+//thus the function to be called is Foo() memember function fun3 //3
+
+
+//Operator precedence
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence     
+
+// new xxx() > . > new xxx 
+function Cat() {
+  if (this instanceof Cat) {
+    console.log('run as constructor');
+  }
+
+  console.log('Cat function called');
+}
+
+Cat.getConstructor = function() {
+  console.log('get constructor');
+  this.name = 'constructor';
+}
+
+Cat.prototype.memeberMethod = function() {
+  console.log('memeber method called');
+}
+var result = new Cat.getConstructor();
+//get constructor -> 
+console.log(result) //{name: 'constructor'}
+new Cat().memeberMethod();
+//run as constructor -> Cat function called -> memeber method called
+</script>
+</html>

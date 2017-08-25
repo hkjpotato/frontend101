@@ -1,0 +1,119 @@
+<html>
+<script type="text/javascript">
+//http://stackoverflow.com/questions/11121586/how-does-function-prototype-call-bind-work
+
+//How does Function.prototype.call.bind work?
+
+//Return value is a copy of the given function with the specified this value and initial arguments
+
+//It actually creates a new bound function(BF) that wraps the original function object
+
+//Calling a BF generally, results in the execution of its wrapped function
+
+
+//Examples
+//1.Creating a bound function
+this.x = 9; //this refers to 'window' in browser
+
+var module = {
+    x: 81,
+    getX: function() { return this.x; }
+}
+
+
+var retrieveX = module.getX;
+retrieveX(); //return 9
+
+var boundGetX = retrieveX.bind(module);
+boundGetX(); //81
+
+//2. Partially applied functions: make a function pre-specified initial arguments.
+function addX2Y(x, y) {
+    console.log(x + y);
+}
+
+var addOne2Y = addX2Y.bind(null, 1); //in not strict mode this will
+
+addOne2Y(10); //11
+
+
+//3. with setTimeout/setInterval will set this to window
+function Cat(name) {
+    this.name = name;
+}
+
+Cat.prototype.miaolate = function() {
+    // window.setTimeout(this.miao, 1000); 
+    // in strict mode, this is undefined
+    // not strict mode, this is window
+    setTimeout(this.miao.bind(this), 1000);
+};
+
+Cat.prototype.miao = function() {
+    console.log(this.name + ' miao~');
+};
+
+var cat = new Cat('tom');
+// cat.miaolate();
+
+//4. Bound function used as constructor
+//the provide this is ignore but arguments is prepended
+function Employee(type, id) {
+    this.type = type;
+    this.id = id;
+}
+
+Employee.prototype.toString = function() {
+    return this.type + " : " + this.id;
+}
+
+var e = new Employee('developer', 1);
+console.log(e.toString()); //developer : 1
+
+
+var killer = {
+    type: 'killer',
+    id: null
+}
+
+var Designer = Employee.bind(killer, 'designer');
+
+
+var designer = new Designer(1);
+
+console.log(designer.toString()); //designer : 1
+//as you can see, the passed in this(killer) has been ignored
+
+console.log(designer instanceof Designer)//true
+console.log(designer instanceof Employee)//true
+console.log(e instanceof Designer) //true
+//I guess behind the scene they all shared the same target function
+
+
+//5. Creating shortcuts
+//bind can help us to create a shortcut function which requires a specific this value
+
+//if I understand this right, I will explain this as follows:
+/*
+Some function always require a 'this' to be specified when called. In another word, it must always be called on a specific object.
+
+For example, say there is a function that can give us the 'name' attribute of the object who call it.
+*/
+
+function giveName() {
+    console.log('The name is: ' + this.name);
+}
+
+//normally we need to use the following syntax to bind the 'this' when call it.
+giveName.call({name: 'hkj'});
+
+//There is a trick where we can get rid of call/apply when call the function. We can just make a bound function which will directly use the args as the this...
+
+//we want a bound function giveNameOf(xxx) so that it will use xxx as 'this'
+
+//the solution is to make a bound function of call/apply, because this two function will let the caller to use the first argument as 'this'.
+var giveNameOf = Function.prototype.call.bind(giveName);
+
+giveNameOf({name: 'hkj'}); //it works!
+</script>
+</html>

@@ -1,0 +1,93 @@
+<html>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <style type="text/css">
+    body {
+      padding: 20px;
+    }
+    img {
+      width: 100%;
+    }
+    canvas {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6" id="placeholder">
+
+    </div>
+    <div class="col-sm-6">
+      <canvas id="drawing-canvas"></canvas>
+    </div>
+  </div>
+</div>
+
+</body>
+<script type="text/javascript">
+var placeholder = document.getElementById('placeholder');
+var canvas = document.getElementById('drawing-canvas');
+
+
+var img = new Image();
+img.crossOrigin = "Anonymous"; //CORS issue, check https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+
+img.onload = function() {
+  var imgData = getPixelData(img);
+  console.log(imgData.data);
+  placeholder.appendChild(img);
+}
+
+function getPixelData(img) {
+  //set the width and height corresponding to the image
+  var width = img.width, height = img.height;
+  canvas.width = width;
+  canvas.height = height;
+
+  //get the 2d context of the canvas
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, width, height);
+
+  //now the ctx has the img data
+  var imgData = ctx.getImageData(0, 0, width, height);
+  return imgData;
+}
+img.src = "http://www.newyorker.com/wp-content/uploads/2015/12/Veix-Goodbye-New-York-Color-690x460-1449607597.jpg";
+
+/*
+What if we can provide users some dynamic feedbacks, instead of a static blurry background, so that the users can sense that the image is gradually loading and the browser is working fine.
+
+Is that possible to gradually render the image, like a real painter (the browser is a painter) drawing the picture step by step.
+
+I have been daydreaming about this idea for some days. After some thought, I realize that the key of the gradually drawing effect is to gradully draw the outline of the objects in the picture. As for color, we can use css transition on opacity to produce the effect of coloring. 
+This is similar to how we as humans draw: first draw the lines, and finally fill the color.
+
+To do so I come up with a plan:
+  1. First we need to detect the outlines of the objects in the image.
+  2. Then we need to gradually render them on the page.
+  3. At a certain point we let the real image show with a transition effect on the opacity.
+  4. Done, a master piece.
+
+To detect the edge of the image object, we need to run some algorithm on the pixel data of the image. Manipulating on the pixel data of image is possible with canvas, and that is exactly the approach used by the Medium. I do not dive into the source code, but behind the sene it is about image processing. 
+
+As a front end I am not a professional in this area, but when I was working as a research assistant at Gatech Multi-media lab, I was working a web app for video motion detection using javascript. And I feel that some of the techniques I used in that project can be applied here to acheive similar functionality.
+
+Again I can't go into the details of it
+If you want to know some basic knowledge of image processing about image processing using javascript, you can check this article about image filters with canvas by llmari Heikkinen.
+https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
+
+
+To get the pixel data of an image, we first draw the image on a canvas using context.drawImage(img, 0, 0) https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+
+then we use ctx.getImageData(sx, sy, sw, sh) to get the ImageData object
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getImageData
+
+which represents the underlying pixel data
+
+we can see the actual pixel data in ImageData.data, which is an array of red, green, blue, and alpha values (RGBA) of the pixel point. Each pixel point has a set of RGBA values, so the total length of the array is width x height x 4. Notice this is a type array called Uinit8ClampedArray(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray). The value of this type array always range from 0 to 255.
+*/
+</script>
+</html>

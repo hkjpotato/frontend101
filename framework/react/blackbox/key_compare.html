@@ -1,0 +1,130 @@
+<html>
+<style type="text/css">
+  body {
+    text-align: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #4d4d4d;
+    font-weight: 300;
+    text-align: center;
+  }
+  div {
+    transition: color .5s;
+  }
+  .bar {
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    background-color: lightgray;
+    transition: top .5s;
+  }
+  .container {
+    border: 1px dashed lightgray;
+    width: 250px;
+    height: 500px;
+    float: left;
+  }
+
+</style>
+<body>
+  <div class="container">
+    <h3>No Keys(index as key)</h3>
+    data: <span class="log"></span><br><br>
+    <button onclick="render_nokey()">render</button>
+    <div id="root-nokey"></div>
+  </div>
+  <div class="container">
+    <h3>Provide Keys</h3>
+    data: <span class="log"></span><br><br>
+    <button onclick="render_samekey()">render</button>
+    <div id="root-samekey"></div>
+  </div>
+  <div class="container">
+    <h3>Change Keys</h3>
+    data: <span class="log"></span><br><br>
+    <button onclick="render_newkey()">render</button>
+    <div id="root-newkey"></div>
+  </div>
+
+  <script type="text/javascript">
+    var SetTextContentColor = '#6dcaff';
+    var RemoveChildColor = '#ff6d6d';
+    var InsertChildColor = '#00c26d';
+    var MoveChildColor = '#ffca6d';
+
+    var data = [3, 2, 1];
+    var data_nokey = data.slice();
+    var data_samekey = data.slice();
+    var data_newkey = data.slice();
+
+    var root_nokey = document.getElementById('root-nokey');
+    var root_samekey = document.getElementById('root-samekey');
+    var root_newkey = document.getElementById('root-newkey');
+
+    function logInfo(parentNode, updates) {
+      console.log('---------');
+      console.info(parentNode, updates);
+      console.log('---------');
+    }
+
+  </script>
+  <script src="https://rawgit.com/hkjpotato/react-source-for-debug/master/react.js"></script>
+  <script src="https://rawgit.com/hkjpotato/react-source-for-debug/master/react-dom.js"></script>
+  <script type="text/javascript">
+    function render_nokey() {
+      data_nokey.reverse();
+      document.querySelectorAll('.log')[0].textContent = JSON.stringify(data_nokey);
+      //children elements
+      var children = data_nokey.map(function(d, i) {
+        var str = "<div key={" + i + "}>" + d + "</div>";
+        return React.createElement('div', {key: i}, str);
+      });
+      var myElement = React.createElement(
+        'div',
+        null,
+        children
+      );
+      ReactDOM.render(myElement, root_nokey);
+    }
+
+    function render_samekey() {
+      data_samekey.reverse();
+      document.querySelectorAll('.log')[1].textContent = JSON.stringify(data_samekey);
+      //children elements
+      var children = data_samekey.map(function(d, i) {
+        var str = "<div key={" + d + "}>" + d + "</div>";
+        return React.createElement('div', {key: d}, str);
+      });
+      var myElement = React.createElement(
+        'div',
+        null,
+        children
+      );
+      ReactDOM.render(myElement, root_samekey);
+    }
+
+    var uid = 0; //for generating unique key
+    function render_newkey() {
+      data_newkey.reverse();
+      document.querySelectorAll('.log')[2].textContent = JSON.stringify(data_newkey);
+      //children elements
+      var children = data_newkey.map(function(d, i) {
+        var key = ++uid;
+        var str = "<div key={" + key + "}>" + d + "</div>";
+        return React.createElement('div', {key: key}, str);
+      });
+      var myElement = React.createElement(
+        'div',
+        null,
+        children
+      );
+      ReactDOM.render(myElement, root_newkey);
+    }
+    //init
+    (function() {
+      render_nokey();
+      render_samekey();
+      render_newkey();
+    })();
+  </script>
+</body>
+</html>

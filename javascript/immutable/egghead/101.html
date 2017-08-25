@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+
+  <div id="mocha"></div>
+  <script type="text/javascript">
+    mocha.setup('bdd');
+    const expect = chai.expect;
+
+    // An evil rogue function!
+    function mutateValue(iterable, pos, value) {
+      iterable[pos] = value;
+    }
+
+    function updateState(immutable, pos, value) {
+      return immutable.set(pos, value);
+    }
+
+    function createObjTodos(numTodos) {
+      var obj = {}
+      _.each(_.range(numTodos), (index) => {
+        const todoSequence = String(index + 1);
+        obj['todo' + todoSequence] = {
+          title: 'Todo ' + todoSequence,
+          value: `Make ${todoSequence} happen`
+        };
+      });
+      return obj;
+    }
+    //'describe' is test suite
+    describe("Manage State with Immutable.js", ()=> {
+      //two way, 1.mutable, 2.immutable
+      //'it' is test case
+      it('using mutable', ()=> {
+        const state = ["todo1", "todo2"]
+        const mutatedState = state // pass in by reference
+
+        mutateValue(mutatedState, 0, "newTodo")
+        //expect xxx to/to.be xx
+        expect(state[0]).to.equal("newTodo"); //has been changed, not what we want
+      });
+
+      it('using immutable', ()=> {
+        const immutableState = Immutable.List(["todo1", "todo2"]);
+        const immutableState2 = immutableState;
+
+        updateState(immutableState2, 0, "newTodo");
+        expect(immutableState.get(0)).to.equal("todo1"); //not it is not changed, that's what we want
+      });
+
+      it('should create Map() with matching keys', ()=> {
+        const data = {
+          "todo1": {
+            title: "Todo 1",
+            value: "Make it happen"
+          },
+          "todo2": {
+            title: "Todo 2",
+            value: "Make it happen"
+          }
+        };
+
+        let map = Immutable.Map(data); //instantiate map with object
+        expect(map.get("todo1").title).to.equal("Todo 1"); //get method is how you query data in a map
+      });
+
+      it('should create Map() with keys from array tuples', () => {
+        const arrayTuples = [["todo1", {title: "Todo 1"}], ["todo2", {title: "Todo 2"}]];
+        let map = Immutable.Map(arrayTuples);
+        expect(map.get("todo2").title).to.equal("Todo 2");
+      });
+
+      it('should create Map() with matching size to number of keys', () => {
+        let map = Immutable.Map(createObjTodos(10));
+        expect(map.size).to.equal(10);
+      });
+    });
+
+    mocha.run();
+
+
+
+  </script>
+</body>
+</html>

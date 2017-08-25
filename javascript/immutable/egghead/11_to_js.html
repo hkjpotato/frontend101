@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <script type="text/javascript">
+    mocha.setup('bdd');
+    const expect = chai.expect;
+
+    describe('Converting Immutable.js Structures to Javascript and other Immutable Types', () => {
+      it('should convert Immutable Map() to Immutable List()', () => {
+        const map = Immutable.Map({
+          key1: 'First Item', 
+          key2: 'Second Item'
+        });
+        const convertedList = map.toList();
+        //keys are going to be discarded
+        expect(Immutable.List.isList(convertedList)).to.be.true;
+        // Keys are discarded
+        expect(convertedList.first()).to.equal('First Item');
+        expect(convertedList.last()).to.equal('Second Item');
+        
+      });
+      
+      it('should convert List() to Map()', () => {
+        const list = Immutable.List.of('First Item', 'Second Item');
+        const convertedMap = list.toMap();
+        // Converted keys ascend numerically
+        keys = convertedMap.keys();
+        expect(keys.next().value).to.equal(0);
+        expect(keys.next().value).to.equal(1);
+        expect(Immutable.Map.isMap(convertedMap)).to.be.true;
+        expect(convertedMap.first()).to.equal('First Item');
+        expect(convertedMap.last()).to.equal('Second Item');
+        
+      });
+
+      it('should convert Map() to Javascript Array', () => {
+        const map = Immutable.Map({
+          key1: 'First Item', 
+          key2: 'Second Item',
+          key3: {key4: 'Nested Item'}
+        });
+        const arr = map.toArray();
+        // Keys are discarded
+        expect(arr[0]).to.equal('First Item');
+        expect(arr[1]).to.equal('Second Item');
+        expect(arr[2].key4).to.equal('Nested Item');
+        
+      });
+      
+      it('should convert Map() to JSON', () => {
+        const map = Immutable.Map({
+          key1: 'First Item', 
+          key2: 'Second Item',
+          key3: {key4: 'Nested Item'}
+        });
+    
+        const json = map.toJSON();
+        console.log(json);
+        console.log(typeof json);
+        expect(json.key1).to.equal('First Item');
+        expect(json.key2).to.equal('Second Item');
+        expect(json.key3.key4).to.equal('Nested Item');
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

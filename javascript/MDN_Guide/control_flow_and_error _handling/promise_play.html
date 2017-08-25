@@ -1,0 +1,78 @@
+<html>
+<body>
+  <div id="root"></div>
+  <div id="status">ready</div>
+  <script type="text/javascript">
+  //promise playground
+
+  var nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  //first make a function that will multiply a number by 1000 after random seconds, depends on the input num;
+  function thousandNum(num) {
+    return new Promise(function(resolve, reject) {
+      console.log('start calculate ', num);
+      setTimeout(function() {
+        console.log(num , ' is ready');
+        resolve(num * 1000);
+      }, Math.random() * 1000 + 200 * num);
+    })
+  }
+
+  //another function to add the result to html
+  function addNumToRoot(num) {
+    var newNode = document.createElement("div");
+    newNode.innerText = num;
+    document.querySelector("#root")
+      .insertBefore(newNode, null);
+  }
+
+  function toggleStatus() {
+    document.querySelector('#status').innerText = 'done';
+  }
+
+
+  function getAlladdAll() {
+    //this method will wait until all data is calculated and then start the adding process, but the calculation all start at the same time, this is more suitable for my vis app since we only want to do adding at one time and let force layout run
+    Promise.all(nums.map(thousandNum))
+      .then(function(results) {
+        results.map(addNumToRoot);
+      })
+      .then(function() {
+        toggleStatus();
+      })
+  }
+
+  // getAlladdAll();
+
+
+  function getOneaddOne() {
+    //start fetch one by one, kind of stupid
+    nums.reduce(function(sequence, num) {
+      return sequence
+              .then(function() {
+                return thousandNum(num)
+              })
+              .then(function(val) {
+                addNumToRoot(val)
+              });
+    }, Promise.resolve())
+    .then(function() {
+      toggleStatus();
+    });
+  }
+
+  // getOneaddOne();
+
+  Promise.resolve(100)
+    .then(function() {
+      return 1000;
+    })
+    .then(function(val) {
+      console.log(val);
+    })
+
+//http://stackoverflow.com/questions/27715275/whats-the-difference-between-returning-value-or-promise-resolve-from-then
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" >
+</head>
+<body>
+
+<script type="text/javascript">
+//a review of https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching
+
+
+/*
+
+The good news is that every browser ships with an implementation of an HTTP cache. All you need to do is ensure that each server response provides the correct HTTP header directives to instruct the browser on when and for how long the browser can cache the response.
+
+When the server returns a response, it also emits a collection of HTTP headers, describing its content-type, length, caching directives, validation token, and more.
+
+*/
+
+
+/*-----------------
+Validating cached responses with ETags
+
+1. The server uses the ETag HTTP header to communicate a validation token.
+2. The validation token enables efficient resource update checks: no data is transferred if the resource has not changed.
+
+
+An example
+Cache-Control:max-age=120 //in seconds
+Content-Type:image/jpeg
+ETag:"xxx"
+Last-Modified:Sat, 15 Aug 2015 04:32:47 GMT
+
+after 120s if browser ask for the same resource, because it is expired after 120s it need to ask the server with the ETag 'xxx'.
+
+The client send the ETag in a  "If-None-Match" HTTP request. The server check the ETag with the current ETag of the resource.
+
+If they are the same, server return a "304 Not Modified" response, which tells the browser that the resource in cache has not been changed and can be renewed for another 120s. 
+
+-----------------*/
+
+
+/*-----------------
+Cache-Control
+
+1. Each resource can define its caching policy via the Cache-Control HTTP header.
+2. Cache-Control directives control who can cache the response, under which conditions, and for how long.
+
+check the diagram they provide
+
+-----------------*/
+
+
+/*-----------------
+Invalidating and updating cached responses
+
+1. Locally cached responses are used until the resource "expires."
+2. Embedding a file content fingerprint in the URL enables you to force the client to update to a new version of the response.
+3. Each application needs to define its own cache hierarchy for optimal performance.
+
+what is a file content fingerprint?
+sth like this:
+/style.3da37df.css
+/script.8x19.js
+
+how does this works?
+1. the html is marked as no cache, thus everytime html need to be refreshed.
+2. the embedded css link will be updated as well if you can the html
+
+The combination of ETag, Cache-Control, and unique URLs allows you to deliver the best of all worlds: long-lived expiration times, control over where the response can be cached, and on-demand updates.
+-----------------*/
+</script>
+</body>
+</html>

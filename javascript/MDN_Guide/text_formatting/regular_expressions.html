@@ -1,0 +1,110 @@
+<html>
+<script type="text/javascript">
+/*
+A review of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+Let's go through this!!! This regex things keep bitting me, no matter in frontend or backend.
+*/
+
+//Regex is a pattern used to match character combinations in strings.
+
+//In JS, Regex are also objects.
+
+/*
+  The pattern can be used in two ways:
+  1. RegExp exec & test (RegExp is the constructor to create a regex object)
+  2. String match & replace & search & split
+*/
+
+/*
+  Construct a regex in two ways:
+  1. regex literal:  var re = /ab+c/;
+  2. RegExp constructor: var re = new RegExp('ab+c');
+
+  what's the difference?
+  Method 1 provide compilation(high level js-> machine lang) of the regex when the script is loaded. Method 2 provides runtime compilation. 
+
+  In a nutshell, method 1 has better performance while method 2 let you change the regex when you during the code is running.
+*/
+
+/*
+  what is the pattern?
+  It is composed of simple characters, e.g. /abc/, or simple and special characters, e.g. /ab*c/ or /Chapter (\d+)\.\d/
+
+
+  The () is used as a memory device! +_+ The match with this part of pattern is remembered for later use.
+*/
+
+ //simple pattern: a direct match of characters (together, in order)
+
+ //special characters: not a direct match but more complicate pattern.
+ /ab*c/ //means 'a' + (0 or more 'b') + 'c'
+
+
+ /* a list of special characters */
+
+ //--- '\': special <-> non-special
+   /b/ //match 'b'
+   /\b/ //match word boundary
+   /a*/ //match 0 or more 'a'
+   /a\*/ //match 'a*'
+
+   //when use RegExp, the passed in parameter is a string, since '\' is an escape character in strings, we need to escape '\' itself, see the following example
+
+   str = 'a\d'; //since '\' is the escape character it won't be interpreted as 'a\d', instead it will be interpreted as 'ad'
+
+   r = Regex(str); // becomes /ad/, lost our meaning of macthing digit
+
+   //the right way to do that is the let '\' means '\' when it is interpreted, we need to escape itself 
+   r = Regex('a\\d'); // becomes /a\d/
+
+  //--- '^': matches the beginning of input
+    /^A/ //matches A in "An E" but not A in "an A" 
+    //it has a different meaning when used in [^ABC] (complemented char set)
+
+  //--- '$': matches the end ofinput
+    /t$/ //matches t in 'eat' but not t in 'tea'
+
+  //--- '*': matches the preceding expression 0 or more times
+    /bo*/ //macthes boo....o
+
+  //--- '+': same as {1, }, matches preceding expression 1 or more time
+    /a+/ //macthes a in 'candy' not a in 'cndy'
+
+  //--- '?': same as {0, 1}, matches xxxx 0 or 1 time
+    /a?ba?/ //matches 'b', 'ab', 'aba', 'ba' 
+    /*
+      notice: for quantifiers *, +, ?, {}
+      +? makes + nongreedy instead of default
+      e.g: for 'aaaaa'
+      /a+/ matches 'aaaaa'
+      /a+?/ matches 'a'
+    */
+
+    //it is also used in lookahead assertions
+
+  //--- '.': macthes any SINGLE character except the newline character
+
+  //--- '(x)': match 'x' and remember the match, () is called capturing parenthese.
+    str = 'tomjerryjerrytom'
+    str.match(/(tom)(jerry)\2\1/) //first two ()() match, then not need to write 'tom' & 'jerry', just use \index to mean it
+    //above return ["tomjerryjerrytom", "tom", "jerry"]
+
+  //--- '(?:x)': match but does not remember, called non-capturing parentheses.
+    //go to http://stackoverflow.com/questions/3512471/what-is-a-non-capturing-group-what-does-a-question-mark-followed-by-a-colon
+  
+  //--- 'x(?=y)': lookahead, match 'x' only if x is followed by 'y', but 'y' is not part of the matched result
+
+  //--- 'x(?!y)': negative lookahead
+
+  //--- 'x|y': x or y
+
+  //--- '{n}': n occurrences of preceding
+
+  //--- '{n, m}':  n to m occurrences
+
+  //--- '[xyz]': character set. match any ONE of them, no need for escape
+    //[a-z] can use hypen "-"
+
+  //--- '[^xyz]': negated or complemented char set
+</script>
+</html>

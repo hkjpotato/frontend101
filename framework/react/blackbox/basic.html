@@ -1,0 +1,78 @@
+<html>
+<body>
+  <div id="root"></div>
+  <button onclick='hello()'>hello</button>
+  <script src="https://unpkg.com/react@15/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+  <script type="text/javascript">
+  //let's write React without JSX and use Chrome support ES6 so that we can understand what's going in the javascript code inside the browser.
+  const basic = React.createElement('h1', null, 'hello');
+
+  function hello() {
+    //check what happen when we do render
+    ReactDOM.render(basic, document.getElementById('root'));
+  }
+
+
+  /*
+  The source code says:
+  "Renders a React component into the DOM in the supplied `container`.
+
+  If the React component was previously rendered into `container`, this will
+  perform an update on it and only mutate the DOM as necessary to reflect the
+  latest React component."
+
+  Let's see how it makes it.
+
+  Below is the function definition
+  render: function (nextElement, container, callback) {
+    return ReactMount._renderSubtreeIntoContainer(null, nextElement, container, callback);
+  }
+
+  The nextElement is the element the 'basic' element we created.
+  container is the actual dom root node.
+  callback is undefined in this case.
+  
+  The rough sequence:
+  1. check if the element is an valid React element
+  2. create a wrapper element called nextWrappedElement, its props.child is the passed in element
+  3. try to get prevCompenent of the container (return null)
+  4. getReactRootElementInContainer based on container, which is null again
+  5. then go into _renderNewRootComponent
+    - instantiateReactComponent
+      -make instance._currentElement's child is the 'basic' element
+      -a lot of event hooks...I dont understand..
+      -a method under ReactCompositeComponenet called mountComponent is called
+        -Initialize the component, renders markup, and registers event listeners
+      -wow, I see the clean up process of previous child //while(container.lastChild) {container.removeChild(container.lastChild); }
+      -wow, I see how React do the real markup rendering..insertBefore
+        -insertTreeBefore, insertTreeChildren
+    - I see sth like this:
+      // The initial render is synchronous but any updates that happen during
+      // rendering, in componentWillMount or componentDidMount, will be batched
+      // according to the current batching strategy.
+    -return componentInstance
+
+
+  I see that if 'development' !== 'production', then React do a lot extra stuffs
+    - emitEvent
+    - define debugID
+  */
+
+
+  /*
+  What happen if I click the button to trigger the render again
+    1. still create the nextWrappedElement
+    2. this time getReactRootElementInContainer will return the h1 dom node, we call it rootEl
+    3. get prevHostInstance..what..in the closure it has an internalInstanceKey, using that it get the ReactDOMCoponent...React use a lot of closure to store those stuffs I guess
+    4. now we have the prevComponent, which is a wrapper of the above
+    5. check the prevElement, use shouldUpdateReactComponent to compare prevElement and nextElement
+    6.  return true
+      - getNodeFromInstance (get the dom node from ReactDOMComponent or ReactDOMTextComponent), by accessing _hostNode...ok, react, like d3, all store a reference to the actual dom node, assign it to publicInst
+      - call ReactMount._updateRootComponent
+      - push the update to ReactUpdateQueue
+      ...magic happen in dirty component checking..
+  */
+  </script>
+</body>
+</html>

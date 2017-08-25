@@ -1,0 +1,177 @@
+<script type="text/javascript">
+
+console.log('------------')
+//q:
+console.log(['1', '2', '3'].map(parseInt)); 
+
+
+//test
+function myParse(x, index, array, other) {
+    console.log(x, index, array, other);
+}
+
+['1', '2', '3'].map(myParse); 
+console.log(parseInt('12', 3));
+/*
+ 1 0 ["1", "2", "3"] undefined
+ 2 1 ["1", "2", "3"] undefined 
+ 3 2 ["1", "2", "3"] undefined
+*/
+//
+/*
+a:
+[1, NaN, NaN]
+
+*/
+
+console.log('------------')
+//q: what is window, what is document
+
+//a: window is the browser window
+// document is HTML document, a property of window
+
+
+console.log('------------')
+//q: null vs undefined
+
+console.log(typeof undefined);
+console.log(typeof null);
+
+console.log(JSON.stringify({a: null})); //{"a": null}
+var b;
+console.log(JSON.stringify({a: b})); //{}
+
+/*
+a: 
+1. null is no value, empty, undefined mean not yet inited
+2. undefined is not valid json, null is
+3. typeof undefined is undefined, typeof null is object
+*/
+
+
+console.log('------------');
+//q:
+// (function() {
+//     setTimeout(function(){console.log(3)}, 0);
+//     console.log(1); 
+//     setTimeout(function(){console.log(2)}, 1000);
+//     console.log(4);
+// })();
+//1, 4, 3, 2 browser is not zero delay
+
+console.log('------------');
+//q:
+//drawback of using typeof bar === "object"
+
+console.log({} instanceof Object) //true
+console.log([] instanceof Object) //true
+console.log(null instanceof Object) //false
+
+console.log(typeof null); //object
+console.log(typeof []); //object
+//a: use Object.prototype.toString.call(bar) == "[object Object]"
+
+console.log(Object.prototype.toString.call(null)); //[object Null]
+console.log(Object.prototype.toString.call([])); //[object Array]
+
+
+console.log('------------');
+(function(){
+  var a = b = 3;
+})();
+
+console.log("a defined? " + (typeof a !== 'undefined'));   //false
+console.log("b defined? " + (typeof b !== 'undefined')); //true
+console.log(b) //3
+
+
+console.log('------------');
+//q: are they the same
+function foo1()
+{
+  return {
+      bar: "hello"
+  };
+}
+
+function foo2()
+{
+  return //its' like return;
+  {
+      bar: "hello"
+  };
+}
+
+console.log(foo2())
+
+var a = 1 + 
+2
+console.log(a) //3
+//a: second return undefined
+
+console.log('-------');
+console.log(1/2 + 1/8 == 5/8); //true, binary
+console.log(1/10 + 2/10 == 3/10); //false
+console.log(1.0 +2.0 == 3.0) //true
+console.log(.1 +.2 == .3) //fasle
+console.log(.1 + .2) //0.30000000000000004
+
+/*
+0.1 => 0.0001 1001 1001 1001…
+0.2 => 0.0011 0011 0011 0011…
+
+*/
+
+console.log('---XXXX---');
+/*
+q: make a sum function so that
+console.log(sum(2,3));   // Outputs 5
+console.log(sum(2)(3));  // Outputs 5
+*/
+
+function sum() {
+    var fir = arguments[0];
+    if (arguments.length === 2) {
+        //return a value
+        return arguments[0] + arguments[1];
+    } else {
+        //return a function
+        return function(sec) {
+            return fir + sec
+        }
+    }
+}
+/*
+
+a*/
+
+/*
+q: how to make module in js
+*/
+
+var MyMath = (function() {
+    function addTwo(x, y) {
+        return x + y;
+    }
+    function timeX(a, x) {
+        return a * x;
+    }
+    return {
+        addTwo: addTwo,
+        timeX: timeX
+    }
+})();
+
+console.log(MyMath.addTwo(1, 2));
+
+
+//CMD, as lazy as possible
+define(function(require, exports, module) {
+
+})
+//AMD, async module definition. use callback
+/*
+a: IIFE
+*/
+
+</script>

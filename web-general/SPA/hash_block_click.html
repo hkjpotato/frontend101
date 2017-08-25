@@ -1,0 +1,109 @@
+<html>
+<head>
+</head>
+<body>
+<ul id="nav">  
+    <li><a href="#/">Root</a></li>  
+    <li><a href="#/page1">Page1</a></li>  
+    <li><a href="#/page2">Page2</a></li>  
+</ul> 
+<div id="result"></div>
+<script type="text/javascript">
+//let's see a very simple example
+function Router() {
+  this.routes = {};
+  this.curUrl = '';
+
+  //the view of django, match path to a callback function(view)
+  this.route = function(path, callback) {
+    this.routes[path] = callback || function() {};
+  }
+  //refresh the page based on the location hash
+  //works like the url + view in django
+  this.refresh = function() {
+    console.log('refresh', location.hash.slice(1));
+    this.curUrl = location.hash.slice(1) || '/'; //url after #
+    this.routes[this.curUrl]();
+  }
+  //add listener to hashchange event (& load)
+  //call refresh method
+  // this.init = function() {
+  //   window.addEventListener('load', this.refresh.bind(this), false); 
+  //   window.addEventListener('hashchange', this.refresh.bind(this), false); 
+  // }
+}
+
+
+var R = new Router();
+// R.init();
+var res = document.getElementById('result');
+
+//make the url view function map
+R.route('/', function() {
+  res.style.background = 'lightblue';
+  res.innerHTML = 'Root Page';
+});
+
+R.route('/page1', function() {
+  res.style.background = 'orange';
+  res.innerHTML = 'Page 1';
+});
+
+R.route('/page2', function() {
+  res.style.background = 'pink';
+  res.innerHTML = 'Page 2';
+});
+
+function init() {
+  window.addEventListener("hashchange", hashchange);
+  var nav = document.getElementById('nav');
+  //block click on link
+  nav.addEventListener("click", click);
+
+  function click(e) {
+    e.preventDefault();
+  }
+
+  function hashchange() {
+    console.log('hash change');
+    // if(!fnb) return;
+
+    //since link click is block
+    //the only way to change the hash is by
+    //1.typing url directly 
+    //2. backforward
+    //3. js location.hash
+
+    //we need to response to those 3
+    //get hash
+
+    //do sth with url
+    console.log(location.href.replace("#/", ""));
+
+
+    //refresh UI
+    R.refresh.apply(R);
+    jump(location.href.replace("#/", ""), null, null);
+
+  }
+}
+
+
+init();
+
+
+
+var fnb = false;
+
+function jump(url, data,callback) {
+  console.log('jump down');
+
+  if (!fnb) {
+    var path = url.replace(location.protocol + "//" + location.host, "");
+    location.hash = path;
+  }
+  fnb = true;
+}
+</script>
+</body>
+</html>

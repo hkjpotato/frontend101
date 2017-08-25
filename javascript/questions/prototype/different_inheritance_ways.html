@@ -1,0 +1,81 @@
+<html>
+<script type="text/javascript">
+//review of http://coderlt.coding.me/2016/09/13/JS-extends/
+
+//A collection of different inheritance approaches
+
+
+//Introduction
+//The instanceof operator tests presence of constructor.prototype in object's prototype chain.
+
+
+function Parent() {
+    this.type = 'human';
+}
+
+Parent.prototype.say = function() {
+    console.log('I am a human');
+}
+
+var p = new Parent();
+console.log(p.constructor); //Parent
+
+// 1. use instance of parent as the prototype of child constructor
+function Child1() {
+
+}
+Child1.prototype = new Parent();
+c1 = new Child1();
+c1.say(); //I am a human
+c1.type; //human
+// console.log(c1 instanceof Child1); //true, because Child1 prototype is in c1' prototype chain
+// console.log(c1.__proto__ === Child1.prototype);
+
+// console.log(c1 instanceof Parent); //true, because Parent prototype is in c1' prototype chain
+// console.log(c1.__proto__.__proto__ === Parent.prototype); //true
+console.log(c1.constructor) //Parent,this could be bad, can be fixed by Child1.prototype.constructor = Child1
+//console.log(Object.getPrototypeOf(c1) === c1.__proto__);//true
+// Following the ECMAScript standard, the notation someObject.[[Prototype]] is used to designate the prototype of someObject. This is equivalent to the JavaScript property __proto__ .
+
+
+//2. call parent's constructor
+//just run the constructor function without new
+function Child2(name) {
+    Parent.apply(this, arguments);
+    this.age = 100;
+}
+
+var c2 = new Child2('child2');
+// c2.say()//not a function
+//drawback: lost of prototype
+
+//3. prototype + call parent's constructor
+//To be continued
+
+
+//4. shared prototype
+function inherit(C, P) {
+    C.prototype = P.prototype;
+}
+
+function Parent3(name){
+  this.name = name;
+  console.log('Parent constructor excuted');
+}
+Parent3.prototype.say = function(){
+  console.log(this.name, this.friends)
+}
+function Child3(name, age){
+  this.age = age;
+  console.log('Child constructor excuted');
+}
+Child3.prototype.say=()=>console.log('child say');
+inherit(Child3, Parent3);
+var c1 = new Child3('pake', 44);
+console.log(c1.name)
+c1.say() //call the parent method as the prototype is override
+
+
+
+</script>
+</html>

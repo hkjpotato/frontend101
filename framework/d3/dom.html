@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://d3js.org/d3.v4.js"></script>
+  <style type="text/css">
+    .bar {
+      background-color:red;
+      width: 100px;
+      height: 20px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/javascript">
+  /*---basic test---
+  
+
+
+  setTimeout(function() {
+    root = document.getElementById('root'); //simply calling this will not result in any dom manipulation
+
+    root.__data__ = 'hkj'; //this will not neither
+
+    // root.insertAdjacentHTML('beforeend', 'hello'); //this will trigger parseHTML and rerendering
+
+    root.setAttribute('class', 'bar'); //trigger recalculate style and paint
+    console.log('hello'); //no effects on dom
+  }, 500);
+
+  */
+
+
+  /*---d3 test--- */
+
+  setTimeout(function() {
+    var root = d3.select('#root'); //no recalculation
+    var data = [1, 2, 3];
+
+    var selections = root.selectAll('.bar')
+      .data(data, function(d) {return d;}) //binding data will not trigger recalculation of layout
+
+    selections.enter().append('div').attr('class', 'bar').text(function(d) {return d;}) //trigger recalculation
+
+    // console.log('hello');
+
+    data.unshift(data.pop());
+    var update = root.selectAll('.bar').data(data, function(d) {return d;});
+    update.order();
+    /*
+    JS analysis:
+
+    What happen when selectAll('.bar') get called?
+      use selector '.bar' to select
+      -create an empty subgroups = []
+      -traverse the original group tree
+      -use querySelector to get the NodeList(subgroup)
+      -push subgroup to subgroups
+      -set the NodeList parent to current node
+      -also check prototype chain...
+
+    What happen when data(...) get called?
+      -the 'this' is the NodeList we select, with data binding to the dom element
+      -create empty enter, update, exit array(with prototype set)
+      -loop to call bind function (with group => current nodeList, groupData => passed in data array)
+        -
+
+
+
+
+
+
+    */
+
+
+    /*the bind function of d3 v4*/
+    //group is the original dom nodeList
+    //groupData is the passed in data
+    //modified by KJ for better understanding
+    // function bind(group, groupData) {
+    //   var i, n = group.length, m = groupData.length;
+    //   var n0 = Math.min(n, m); //the min of two array
+    //   var updateNodes = new Array(m); //update nodes will include all passed in data and thus its length is m
+    //   var enterNodes = new Array(m);
+    //   var exitNodes = new Array(n);
+    //   var node, nodeData; //undefined
+    //   if (key) {
+    //     //if key function is provided
+    //     var nodeByKeyValue = new d3_Map(); //empty object without prototype, like a hashmap for key-node
+    //     var keyValues = new Array(n);
+    //     var keyValue;
+    //     //loop through the original nodeList, set up the hashmap for key-node, and keyValus array
+    //     for (i = -1; ++i < n; ) {
+    //       //d3 always use i = - 1; ++i < n; style for for-loop, maybe better performance in some browsers?
+    //       if (node = group[i]) {
+    //         //node is the actual dom node, e.g. <div class="bar"></div> with __data__ and key attribute
+    //         if (nodeByKeyValue.has(keyValue = key.call(node, node.__data__, i))) {
+    //           //the above step is to call the key function with arguments [node.__data, index]
+    //           //check the hashmap if key exists
+    //           exitNodes[i] = node;
+    //           //link the key to the actuall node
+    //         } else {
+    //           //else if the key is not in hashmap, set the key value
+    //           nodeByKeyValue.set(keyValue, node);
+    //         }
+    //         //update the keyValues array..this is the keyValues of the original nodeList
+    //         keyValues[i] = keyValue;
+    //       }
+    //     }
+    //     for (i = -1; ++i < m; ) {
+    //       if (!(node = nodeByKeyValue.get(keyValue = key.call(groupData, nodeData = groupData[i], i)))) {
+    //         enterNodes[i] = d3_selection_dataNode(nodeData);
+    //       } else if (node !== true) {
+    //         updateNodes[i] = node;
+    //         node.__data__ = nodeData;
+    //       }
+    //       nodeByKeyValue.set(keyValue, true);
+    //     }
+    //     for (i = -1; ++i < n; ) {
+    //       if (i in keyValues && nodeByKeyValue.get(keyValues[i]) !== true) {
+    //         exitNodes[i] = group[i];
+    //       }
+    //     }
+    //   } else {
+    //     //we dont care the case when there is no key value provided, bad practice
+    //     // for (i = -1; ++i < n0; ) {
+    //     //   node = group[i];
+    //     //   nodeData = groupData[i];
+    //     //   if (node) {
+    //     //     node.__data__ = nodeData;
+    //     //     updateNodes[i] = node;
+    //     //   } else {
+    //     //     enterNodes[i] = d3_selection_dataNode(nodeData);
+    //     //   }
+    //     // }
+    //     // for (;i < m; ++i) {
+    //     //   enterNodes[i] = d3_selection_dataNode(groupData[i]);
+    //     // }
+    //     // for (;i < n; ++i) {
+    //     //   exitNodes[i] = group[i];
+    //     // }
+    //   }
+    //   enterNodes.update = updateNodes;
+    //   //...like the prototype chain in js object, this is the 'parent-child' chain of dom
+    //   enterNodes.parentNode = updateNodes.parentNode = exitNodes.parentNode = group.parentNode;
+    //   enter.push(enterNodes);
+    //   update.push(updateNodes);
+    //   exit.push(exitNodes);
+    // }
+  }, 500);
+
+  //appendix
+  /*
+  function d3_Map() {
+    this._ = Object.create(null); //make an empty object without prototype
+  }
+
+
+  //order function, a backwards checking of the order
+  d3_selectionPrototype.order = function() {
+    for (var j = -1, m = this.length; ++j < m; ) {
+      for (var group = this[j], i = group.length - 1, next = group[i], node; --i >= 0; ) {
+        //group is the
+        if (node = group[i]) {
+          if (next && next !== node.nextSibling) next.parentNode.insertBefore(node, next);
+          next = node;
+        }
+      }
+    }
+    return this;
+  };
+
+
+  */
+
+  // d3_selectionPrototype.order = function() {
+  //   //this is the selection
+  //   for (var j = -1, m = this.length; ++j < m; ) {
+  //     //loop through the subgroups
+  //     for (var group = this[j], i = group.length - 1, next = group[i], node; --i >= 0; ) {
+  //       //for each group, loop through the elements backwards
+  //       //the element in group match the order of the binding data array
+  //       if (node = group[i]) {
+  //         //node is the previous(based on the order of data array) node of the next
+  //         //check their relationship in the actual dom
+  //         if (next && next !== node.nextSibling) {
+  //           //if you have a next, and your next is not the next sibling node of you (while you should)
+  //           //then find the parentNode, insert you before the next to make sure the order is correct!
+  //           //look like an insertion sorting...maybe I am wrong
+  //           next.parentNode.insertBefore(node, next);
+  //         }
+  //         next = node;
+  //       }
+  //     }
+  //   }
+  //   return this;
+  // };
+
+
+
+  /*---critial path analysis---
+  
+  Event
+  Parse HTML
+  send Request to d3 src
+  receving data of d3 file
+  Evaluate Script(d3)
+  Parse HTML
+  Evaluate inline script
+  Recaulate Style
+  Layout
+  Update Layer Tree
+  Paint
+  ...
+  timer function called by JS
+  ...depends on what we d
+  */
+</script>
+</html>

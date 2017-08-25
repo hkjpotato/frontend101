@@ -1,0 +1,142 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- expect -->
+    <script src="https://unpkg.com/expect/umd/expect.min.js"></script>
+    <script type="text/babel">
+      //there is a potential problem of the previous code
+
+      //that is: all the update function is placed in one reducer, you can image that it is going to be super big in large app.
+
+      //besides, the todos reducer are dealing with two stuffs: One is on individual todo(toggle), the other is on the todos list as a whole(add).
+
+      //This is like in restful api where you put 'POST' to create and 'PUT' to update in the same route, crazy.
+
+      //Let's extract them from the todos function so that each single function only has a single concern
+
+      //for a single todo, let's have a separate function
+      
+      //wait! isn't that we only have a single state object? why now every todo item has its own state?????
+      
+      //well, it is ok. We are going to have a single state tree, and a tree can have multiple child nodes.
+      
+      //this todo below, is a reducer function, by CONVENTION, we still use 'state' & 'action' as its params. After all, it is just a FUNCTION.
+
+      //This pattern is called reducer composition.
+      const todo = (state, action) => {
+        //notice that we don't need the initial state here as a default param as this function is called by todos(he will take care of init the state)
+        switch (action.type) {
+          case 'ADD_TODO':
+            return {
+              id: action.id,
+              text: action.text,
+              completed: false
+            };
+          case 'TOGGLE_TODO':
+            if (state.id !== action.id) {
+              return state;
+            }
+            return {
+              ...state,
+              completed: !state.completed
+            };
+          default:
+            return state;
+        }
+      };
+
+      //what about the todos for the whole state?
+      const todos = (state = [], action) => {
+        switch (action.type) {
+          case 'ADD_TODO':
+            return [
+              ...state,
+              todo(undefined, action)
+            ];
+          case 'TOGGLE_TODO':
+            return state.map(t => todo(t, action));
+          default:
+            return state;
+        }
+      }
+
+
+      /*----TEST----*/
+      //first we write the test
+      //test for AddTodo
+      const testAddTodo = () => {
+        const stateBefore = [];
+        const action = {
+          type: 'ADD_TODO',
+          id: 0,
+          text: 'Learn Redux'
+        };
+        const stateAfter = [
+          {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false
+          }
+        ];
+
+        Object.freeze(stateBefore);
+        Object.freeze(action);
+
+        expect(
+          todos(stateBefore, action)
+        ).toEqual(stateAfter)
+      }
+
+      //test for ToggleTodo
+      const testToggleTodo = () => {
+        const stateBefore = [
+          {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false
+          },
+          {
+            id: 1,
+            text: 'Go Home',
+            completed: false
+          }
+        ];
+        const action = {
+          type: 'TOGGLE_TODO',
+          id: 1
+        };
+        const stateAfter = [
+          {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false
+          },
+          {
+            id: 1,
+            text: 'Go Home',
+            completed: true
+          }
+        ];
+        Object.freeze(stateBefore);
+        Object.freeze(action);
+        expect(
+          todos(stateBefore, action)
+        ).toEqual(stateAfter)
+      }
+
+
+      testAddTodo();
+      testToggleTodo();
+      console.log('All tests passed.');
+
+/*
+Different reducers specify how different parts of the state tree are updated in response to actions. Reducers are also normal JavaScript functions, so they can call other reducers to delegate and abstract a way of handling of updates of some parts of this tree they manage.
+
+This pattern can be applied many times, and while there is still a single top level reducer managing the state of your app, you will find it convenient to express it as many reducers call on each other, each contribution to a part of the applications state tree.
+
+
+*/
+    </script>
+</html>

@@ -1,0 +1,122 @@
+<html>
+  <body>
+    <div id="app"></div>
+
+    <!-- expect -->
+    <script src="https://unpkg.com/expect/umd/expect.min.js"></script>
+    <script>
+      //These two chapters are about immutable
+
+
+      //freeze basic
+      var arr = [1, 2, 3];
+      Object.freeze(arr);
+      //arr.push(4); will have error
+
+      //*---Immutable Array---*//
+      //1. use concat or spread operator instead of push/pop/shift/unshift
+      //2. use slice instead of splice
+
+
+
+      const addCounter = (list) => {
+        // return list.concat([0]);
+        //instead of using concat, use es6 spread operator
+        return [...list, 0];
+      };
+
+      const removeCounter = (list, index) => {
+        return [
+          ...list.slice(0, index), 
+          ...list.slice(index + 1)
+        ];
+      }
+
+      const incrementCounter = (list, index) => {
+        return [
+          ...list.slice(0, index), 
+          list[index] + 1, 
+          ...list.slice(index + 1)
+        ];
+      }
+
+      const testAddCounter = () => {
+        const listBefore = [];
+        const listAfter = [0];
+        Object.freeze(listBefore);
+        expect(
+          addCounter(listBefore)
+        ).toEqual(listAfter);
+      };
+
+      const testRemoveCounter = () => {
+        const listBefore = [0, 10, 20];
+        const listAfter = [0, 20];
+        Object.freeze(listBefore);
+        expect(
+          removeCounter(listBefore, 1)
+        ).toEqual(listAfter);
+      };
+
+      const testIncrementCounter = () => {
+        const listBefore = [0, 10, 20];
+        const listAfter = [0, 11, 20];
+        
+        Object.freeze(listBefore);
+        
+        expect(
+          incrementCounter(listBefore, 1)
+        ).toEqual(listAfter);
+      };
+
+      testAddCounter();
+      testRemoveCounter();
+      // testIncrementCounter();
+      console.log('All tests passed');
+
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <script type="text/babel">
+      //*---Immutable Object---*//
+      //1. use concat or spread operator instead of push/pop/shift/unshift
+      //2. use slice instead of splice
+      const toggleTodo = (todo) => {
+        //the es6 way
+        //pay attention to the order
+        // return Object.assign({}, todo, {
+        //   completed: !todo.completed
+        // });
+
+        //or the es7 way, but we need babel
+        return {
+          ...todo,
+          completed: !todo.completed
+        }
+      }
+
+      const testToggleTodo = () => {
+        const todoBefore = {
+          id: 0,
+          text: 'Learn Redux',
+          completed: false
+        };
+        const todoAfter = {
+          id: 0,
+          text: 'Learn Redux',
+          completed: true
+        };
+        
+        Object.freeze(todoBefore);
+        
+        expect(
+          toggleTodo(todoBefore)
+        ).toEqual(todoAfter);
+      };
+
+      testToggleTodo();
+      console.log('All tests passed.');
+
+    </script>
+  </body>
+</html>

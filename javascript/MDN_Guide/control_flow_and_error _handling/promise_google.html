@@ -1,0 +1,142 @@
+<html>
+<body>
+
+  <script type="text/javascript">
+  //https://developers.google.com/web/fundamentals/getting-started/primers/promises
+
+
+
+  function get(url) {
+
+    return new Promise(function(resolve, reject) {
+      var req = new XMLHttpRequest();
+      req.open('GET', url);
+
+      req.onload = function() {
+        //this is called even on 404 etc
+        //so check the status
+        if (req.status == 200) {
+          resolve(req.response);
+        } else {
+          console.log('wtf', req.status);
+          reject(Error(req.statusText));
+        }
+      }
+
+      //handle netork errors(not the server error)
+      req.onerror = function() {
+        reject(Error("Network Error"));
+      }
+
+      //make the request
+      req.send();
+    })
+  }
+
+  get('http://localhost:8000/feeder/api/feeders/20/').then(function(response) {
+    console.log('success', typeof response);
+    return 'hkj'
+  }, function(error) {
+    console.error('Failed', error);
+  })
+
+  // then() isn't the end of the story, you can chain thens together to transform values or run additional async actions one after another.
+
+
+
+  //This is very important, two ways to chain
+
+  //1. chain by transform values
+
+  get('http://localhost:8000/feeder/api/feeders/20/').then(function(response) {
+    return 'hkj'
+  }, function(error) {
+    console.error('Failed', error);
+  }).then(function(val) {
+    console.log('what is ', val)
+  });
+
+  get('http://localhost:8000/feeder/api/feeders/20/').then(function(response) {
+      return JSON.parse(response);
+  }).then(function(json) {
+    console.log('what is ', json)
+  });
+
+  /*
+  a shortcut
+  get('http://localhost:8000/feeder/api/feeders/20/').then(JSON.parse).then(function(json) {
+    console.log('what is ', json)
+  });
+
+  //composition
+  function getJSON(url) {
+    return get(url).then(JSON.parse);
+  }
+
+  //wait, getJSON does not return JSON, it return a promise
+  */
+
+  function getJSON(url) {
+    return get(url).then(JSON.parse);
+  }
+
+  getJSON('http://localhost:8000/feeder/api/feeders/20/').then(function(json) {
+    console.log('still callback here', json)
+  })
+
+
+
+  //2. chain by additional async actions
+
+  //chain then to run async actions in sequence
+
+  /*
+  When you return something from a then() callback, it's a bit magic. If you return a value, the next then() is called with that value. However, if you return something promise-like, the next then() waits on it, and is only called when that promise settles (succeeds/fails). For example:
+  */
+
+
+  get('http://localhost:8000/feeder/api/feeders/20/').then(function(response) {
+      // return JSON.parse(response);
+      return getJSON('http://localhost:8000/feeder/api/feeders/20/buss/1052')
+  }).then(function(input) {
+    console.log('what is the input of next then', input)
+    // console.log('what is ', json)
+  });
+
+
+//so tricky, pay attention to the 'return', this is not the return of 'then' method!, this is the return of the callback. The 'then' method always return a promise
+
+//this promise return by then, will return another promise if you call then on it. The value passed to the cb of that then function is what the previous then return(could be a promise)...so wierd
+
+
+//but still it is understandable, because you immediately get the return value(resolved to a certain value), in the other case, it could be an async action
+
+
+//that being said, always remember one truth: then return a promise, this promise could be resolve or reject. and the value resolve will be pass to the next then cb. If it return a val, it means an immediately resolved promise I guess.
+
+
+
+  /*
+  auto add requirment
+  for ...
+    get parent info
+    then update db with child info
+    then update vis data with generated child info
+  then
+    update the vis with updated vis data
+  */
+
+
+
+  //Error Handling
+  //catch is a sugar of then(undefined, func)
+  get('http://localhost:8000/feeder/api/feeders/200/').then(function(response) {
+      // return JSON.parse(response);
+      // return getJSON('http://localhost:8000/feeder/api/feeders/20/buss/1052')
+  }).catch(function(error) {
+    console.log('I will catch it', error)
+  });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<html>
+<script type="text/javascript">
+//https://leetcode.com/problems/convert-bst-to-greater-tree/description/
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+
+
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+
+var convertBST = function(root) {
+    var inorderList = [];
+
+    function getInorderList(root) {
+      if (root === null) return;
+      getInorderList(root.left);
+      inorderList.push(root.val);
+      getInorderList(root.right);
+    }
+
+    function updateTreeInorder(root) {
+      if (root == null) return;
+      updateTreeInorder(root.left);
+      root.val = inorderList.shift();
+      updateTreeInorder(root.right);
+    }
+
+    getInorderList(root);
+    var len = inorderList.length;
+
+
+    for (var i = 1; i > -1; i--) {
+      inorderList[i] += inorderList[i + 1];
+    }
+    
+    updateTreeInorder(root);
+    return root
+};
+
+
+
+var convertLevelOrderToBST = function(levelOrder) {
+  var root = new TreeNode(levelOrder.shift())
+  var parentLevelNodes = [root];
+  var childLevelSize = 2;
+
+  while (childLevelSize <= levelOrder.length) {
+    //setup childLevelNodes
+    var childLevelNodes = [];
+    var count = childLevelSize;
+    while (count-- > 0) {
+      var childVal = levelOrder.shift();
+      childLevelNodes.push(childVal === null ? null: new TreeNode(childVal));
+    }
+    //connect
+    for (var i = 0; i < childLevelSize / 2; i++) {
+      var parentNode = parentLevelNodes[i];
+      if (parentNode) {
+        parentNode.left = childLevelNodes[i * 2];
+        parentNode.right = childLevelNodes[i * 2 + 1];
+      }
+    }
+    //update
+    parentLevelNodes = childLevelNodes;
+    childLevelSize = childLevelSize * 2;
+  }
+  return root;
+}
+
+// var array = [0,-1,2,-3,null,null,4];
+
+var array = [5,2,13];
+var root = convertLevelOrderToBST(array);
+
+
+convertBST(root);
+
+// function haha() {
+//   var x = 100;
+//   function addToX() {
+//     x += 100;
+//     console.log(x);
+//   }
+//   addToX(x);
+//   console.log(x);
+// }
+// haha();
+
+
+</script>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.mother {
+	/*width: 380px;*/
+	height: 380px;
+	background-color: pink;
+	border: 1px solid black;
+	margin: 10px;
+	float: left;
+}
+
+.mother>.child {
+	width: 100px;
+	height: 100px;
+	background-color: red;
+	border: 1px solid black;
+	margin: 10px;
+}
+
+</style>
+<body>
+<div id="mother1" class="mother">
+	mother1
+	<div class="child"> child1</div>
+	<div class="child"> child2</div>
+	<div class="child"> child3</div>
+</div>
+<div id="mother2" class="mother">
+	mother2
+	<input type="text"/>
+	<div class="child"> child1</div>
+	<div class="not child"> child2</div>
+	<div class="not child"> child3</div>
+</div>
+<script type="text/javascript">
+//The todoMVC way
+(function() {
+	'use strict';
+
+	// Get element(s) by CSS selector:
+	window.qs = function (selector, scope) {
+		return (scope || document).querySelector(selector);
+	};
+	window.qsa = function (selector, scope) {
+		return (scope || document).querySelectorAll(selector);
+	};
+
+	// addEventListener wrapper:
+	window.$on = function (target, type, callback, useCapture) {
+		target.addEventListener(type, callback, !!useCapture);
+	};
+
+	// Attach a handler to event for all elements that match the selector,
+	// now or in the future, based on a root element
+	window.$delegate = function (target, selector, type, handler) {
+		function dispatchEvent(event) {
+			var targetElement = event.target;
+			var potentialElements = window.qsa(selector, target);
+			var hasMatch = Array.prototype.indexOf.call(potentialElements, targetElement) >= 0;
+
+			if (hasMatch) {
+				handler.call(targetElement, event);
+			}
+		}
+
+		// https://developer.mozilla.org/en-US/docs/Web/Events/blur
+		var useCapture = type === 'blur' || type === 'focus';
+
+		window.$on(target, type, dispatchEvent, useCapture);
+	};
+})();
+</script>
+<script type="text/javascript">
+	// //shared function
+	// //highlight the div for 1 second 
+	// function highlight (div) {
+	// 	var currentColor = div.style.backgroundColor;
+	// 	div.style.backgroundColor = "yellow";
+	// 	setTimeout(function() {
+	// 		div.style.backgroundColor = currentColor;
+	// 	}.bind(div), 1000);
+	// }
+
+	// //For Mother1
+	// //get all child elements.
+	// var childrenOfMother1 = document.querySelectorAll("#mother1 .child");
+	// //for each element, register for the event with a callback.
+	// Array.prototype.forEach.call(childrenOfMother1, function(child) {
+	// 	child.addEventListener("click", function(e) {
+	// 		e = e || event;
+	// 		// e = e || event; is a standard way of saying "if the parameter was not passed, default it to whatever's after the ||". In this case, if the event parameter is not passed, then it looks for the global variable.
+	// 		highlight(this);
+	// 	});
+	// });
+
+
+	// //For Mother2
+	// //private function to get the target element of an event
+	// function getEventTarget(e) {
+	// 	e = e || window.event;
+	// 	return e.target || e.srcElement;
+	// 	// srcElement property in Internet Explorer and the target property in other browsers.
+	// }
+
+	// //only need to register one callback for the mother elemengt
+	// var mother2 = document.querySelector("#mother2");
+	// mother2.addEventListener("click", function(e) {
+	// 	var target = getEventTarget(e);
+	// 	//check whether the target element is the desired one
+	// 	console.log(target.getAttribute("class"));
+	// 	if (target.getAttribute("class") === "child") {
+	// 		highlight(target);
+	// 	}
+	// });
+</script>
+

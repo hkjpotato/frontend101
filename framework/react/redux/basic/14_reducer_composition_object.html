@@ -1,0 +1,72 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- expect -->
+    <script src="https://unpkg.com/expect/umd/expect.min.js"></script>
+    <script type="text/babel">
+      //previously we talked about reducer composition for array like state. However, most of the case, our state should be represented by an object.
+
+      //For array state, we can devide our state simplify by individual state.
+
+      //For object state, we should be able to do the same thing
+
+      //For the todo apps, its state is an object
+      /*
+        {
+          todos: [array],
+          visibilityFilter: 'string'
+        }
+
+        and thus our todoApp super reducer need to separate the work for different 'part' of the state, like in array composition we separate different 'item' of the state.
+      */
+
+      //Let's first create a reducer function for the visibilityFilter
+      const visibilityFilter = (
+        state = 'SHOW_ALL', //default initial value
+        action
+      ) => {
+        //our work is to return a new state based on the passed in
+        switch (action.type) {
+          case 'SET_VISIBILITY_FILTER': //this is the action we are going to deal with
+            return action.filter;
+          default:
+            return state;
+        }
+      };
+      //The state is actually the state of the visibiltyFilter UI, which is a string. The action to change the state is 'SET_VISIBILITY_FILTER'
+
+      //To make the super reducer for the whole app, we don't need to change the reducers for each component, we are going to use them to make up a composite one.
+
+      //This composite one will then call corresponding child reducer to update corresponding child state, he is the boss.
+
+      //notice the trick here, the initial composite state is an empty object. Thus, state for the child, like state.todos, will be undefined. This will trigger the inital state in each child reducer. The super one don't care about init them by itself.
+      const todoApp = (state = {}, action) => {
+        //we don't do switch action here to call, we trust our children, we pass the action to them and they will deal with it by themselves.
+
+        //1. we only care about return the right new state
+        //2. this state is a composite of sub state
+        /* 
+          In the array composition example, we still care about differentiate the action in the parent level, because the composite state return can not be represent in a generic format. 
+
+          AddOne will becomes [..., newStuff]=> change the structure of the parent
+
+          toggle Existing will becomes [update, update, update...] => just individual update
+
+          Thus, the parent need to know about the action type because one will change its structure fundamental, the other is just updating the individual 
+        */
+        //3. it will return a state as a composite of different child state.
+        return {
+          todos: todos(
+            state.todos,
+            action
+          ),
+          visibilityFilter: visibilityFilter(
+            state,visibilityFilter,
+            action
+          )
+        }
+      }
+    </script>
+</html>

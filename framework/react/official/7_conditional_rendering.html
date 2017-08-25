@@ -1,0 +1,55 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        //react jsx code in es6
+
+
+        //let's see what's behind the scene for conditional rendering
+
+        //let's first create two function based component
+        function UserGreeting(props) {
+            return <h1>Welcome back!</h1>
+        }
+
+        class Admin extends React.Component {
+            constructor(props) {
+                //call super before this is ES6
+                super(props);
+                //good place to init state
+                this.state = {
+                    isLoggedIn: false
+                }
+                this.toggleLogIn = this.toggleLogIn.bind(this);
+            }
+            toggleLogIn() {
+                this.setState({
+                    isLoggedIn: !this.state.isLoggedIn
+                })
+            }
+            render() {
+                return (
+                    <div>
+                        <button onClick={this.toggleLogIn}>{this.state.isLoggedIn ? 'log out' : 'log in'}</button>
+                        {this.state.isLoggedIn ? <UserGreeting /> : null}
+                    </div>
+                )
+            }
+
+        }
+
+
+        ReactDOM.render(
+            <Admin />,
+            document.getElementById('app')
+        );
+    </script>
+    </script>
+</html>

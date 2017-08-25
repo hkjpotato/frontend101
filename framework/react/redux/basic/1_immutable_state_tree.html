@@ -1,0 +1,62 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+      //The first principle of redux: represent the whole state of the app as a SINGLE JS object(think carefully about this SINGLE tree, later you will encounter some case when you have local state out of this global tree stored in a single place, store).
+
+      //It is ok to have child component state so long as
+      //1. other parts of the component hierarchy have no need to know about these state
+      //2. it is not duplicating Redux state
+      var Counter = React.createClass({
+        getInitialState: function() {
+          return {
+            val: 0
+          }
+        },
+        add: function() {
+          this.setState({
+            val: this.state.val + 1
+          });
+        },
+        minus: function() {
+          this.setState({
+            val: this.state.val - 1
+          });
+        },
+        log: function() {
+          var log = document.getElementById('log');
+          log.insertAdjacentHTML('beforeend', 
+            "-----<br>current state:<br>" + JSON.stringify(this.state) + "<br>");
+        },
+        componentDidMount: function() {
+          this.log();
+        },
+        componentDidUpdate: function() {
+          this.log();
+        },
+        render: function() {
+          return (
+            <div>
+              <h1>{this.state.val}</h1>
+              <button onClick={this.add}>+</button>
+              <button onClick={this.minus}>-</button>
+            </div>
+          )
+        }
+      });
+
+      //react jsx code in es6
+      ReactDOM.render(
+          <Counter />,
+          document.getElementById('app')
+      );
+    </script>
+</html>

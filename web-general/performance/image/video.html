@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <style type="text/css">
+    body {
+      padding: 20px;
+      text-align: center;
+    }
+    img {
+      width: 100%;
+    }
+    video {
+      /*width: 100%;*/
+    }
+    canvas {
+      /*width: 100%;*/
+    }
+
+    .my-container {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-container">
+  <div class="row">
+    <div class="col-sm-6" id="placeholder">
+      <!-- loop autoplay muted -->
+      <video id="myVideo" width="345" height="200" loop autoplay muted>
+        <source src="./VerifiableTerrificHind.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="col-sm-6">
+      <canvas id="drawing-canvas"></canvas>
+    </div>
+  </div>
+</div>
+time used by edge detection: <span id="log"></span>
+
+</body>
+<script type="text/javascript">
+var placeholder = document.getElementById('placeholder');
+var canvas = document.getElementById('drawing-canvas');
+// var ctx = canvas.getContext('2d');
+var video  = document.getElementById('myVideo');
+var log = document.getElementById('log');
+
+function drawVideo() {
+  var width = video.width, height = video.height;
+
+
+  var grayScale = getGrayScaleData(video);
+  var t0 = performance.now();
+  var edgeData = mySobel(grayScale, width, height);
+  var t1 = performance.now();
+  log.textContent = (t1 - t0).toFixed(2) + "ms";
+  var imgData = grayScale2ImageData(edgeData, width, height);
+
+
+  //get the context of drawing canvas
+  var ctx = canvas.getContext('2d');
+  //set the width and height corresponding to the image
+  canvas.width = width;
+  canvas.height = height;
+  //draw the grayscale image data
+  ctx.putImageData(imgData, 0, 0);
+
+  requestAnimationFrame(drawVideo);
+
+}
+
+requestAnimationFrame(drawVideo);
+
+//convert the RGBA data to grayscale data
+function getGrayScaleData(img) {
+  //a temp canvas to hold the image data
+  var tempCanvas = document.createElement('canvas');
+  var width = img.width;
+  var height = img.height;
+  tempCanvas.width = width;
+  tempCanvas.height = height;
+  //draw the image to the temp canvas
+  tempCanvas.getContext('2d').drawImage(img, 0, 0, width, height);
+  //get the ImageData object
+  var imgData = tempCanvas.getContext('2d').getImageData(0, 0, width, height).data;
+  //reduce the size of pixel data by 4, only care about grayscale
+  var grayScale = new Uint8ClampedArray(width*height);
+  for (var i = 0; i < width * height * 4; i += 4) {
+      var r = imgData[i + 0];
+      var g = imgData[i + 1];
+      var b = imgData[i + 2];
+      // CIE luminance for the RGB
+      var v = 0.2126*r + 0.7152*g + 0.0722*b;
+      grayScale[i>>2] = v;
+  }
+  return grayScale;
+}
+
+//convert the grayscale data back to ImageData object
+function grayScale2ImageData(grayScale, width, height) {
+    var imageData = new ImageData(width, height);
+    //we create a view of the typed array buffer and reset the RGBA value
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+    var data_u32View = new Uint32Array(imageData.data.buffer);
+    var alpha = (0xff << 24);
+    var i = width * height;
+    while (--i >= 0) {
+      var pixel = grayScale[i];
+      //a 32-bit location with RGBA data, each of 8-bit
+      data_u32View[i] = alpha | (pixel << 16) | (pixel << 8) | pixel;
+    }
+    return imageData;
+}
+
+//the crazy sobel filter
+function mySobel(grayScale, width, height) {
+  var w = width;
+  var h = height;          
+  var retMatrix = new Float32Array(w * h);
+  //just ignore the edge :)
+  for (var y = 1; y < h - 1 ; y++) {
+    for (var x = 1; x < w - 1; x++) {
+      var dstOff = y*w+x;
+      //horizontal
+      var rH = 
+        grayScale[dstOff - w + 1]
+      - grayScale[dstOff - w  - 1]
+      + (grayScale[dstOff + 1] << 1)
+      - (grayScale[dstOff - 1] << 1)
+      + grayScale[dstOff + w  + 1]
+      - grayScale[dstOff + w  - 1];
+      //vertical
+      var rV = 
+      - grayScale[dstOff - w - 1]
+      - (grayScale[dstOff - w ] << 1)
+      - grayScale[dstOff - w + 1]
+      + grayScale[dstOff + w - 1]
+      + (grayScale[dstOff + w ] << 1)
+      + grayScale[dstOff + w + 1];
+      retMatrix[(y-1)*w +(x-1)] = Math.sqrt(rV*rV + rH*rH);
+    }
+  }          
+  return new Uint8ClampedArray(retMatrix); //take care of the 255 limit
+};
+
+
+/*
+
+If you check the JS code, you will notice that for each pixel value it does two 3 x 3 matrix calculation. This code has been simplified for sobel filter. A general convolution filter algorithm will run 3 x 3 x width x height (x 4 if conducting on RGBA) loops...It seems scary at first, but the performance is better than we thought. In fact, we can even do this detection in real time. Below is a screen recording of the edge detection alogrithm running on a video.
+
+https://youtu.be/UMsJNC3dCIA
+
+The video size is around 345 x 200. As you can see it only takes around 1 - 2 milliseconds to execute the sobel algorithm, cool! ( I wish to share you the source code but codepen does not allow me to host assests like video since I am not a PRO user. )
+
+*/
+</script>
+</html>

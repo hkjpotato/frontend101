@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <button onclick="show()">show</button>
+  <script type="text/javascript">
+  mocha.setup('bdd');
+  const expect = chai.expect;
+  describe('Using fromJS() to Convert Plain JavaScript Objects into Immutable Data', () => {
+    it('should create deeply nested Map() from a plain javascript object', () => {
+      const plainJSObject = {
+        title: "Go to grocery",
+        text: "I need milk and eggs",
+        completed: false,
+        category: {title: "House Duties", priority: 10}
+      };
+      const immutableTodo = Immutable.fromJS(plainJSObject);
+      expect(Immutable.Map.isMap(immutableTodo)).to.be.true
+      expect(immutableTodo.getIn(["category", "title"])).to.equal("House Duties")
+      
+    });
+
+    it('should create deeply nested List() from a plain javascript array', () => {
+
+      const plainJSArray = [
+        "Go to grocery",
+        "Buy milk and eggs",
+        "Help kids with homework",
+        ["Buy Lemons", "Make Lemonade"]
+      ];
+      
+      const immutableTodoList = Immutable.fromJS(plainJSArray);
+      
+      expect(Immutable.List.isList(immutableTodoList)).to.be.true
+      expect(immutableTodoList.getIn([3, 1])).to.equal("Make Lemonade")
+      
+    });
+    
+    it('should use reviver, a custom conversion function, to generate Map() instead of List() from a plain javascript array', () => {
+
+      const plainJSArray = [
+        "Go to grocery",
+        "Buy milk and eggs",
+        "Help kids with homework",
+        ["Buy Lemons", "Make Lemonade"]
+      ];
+      
+      const immutableTodoMap = Immutable.fromJS(plainJSArray, (key, value) => {
+        return value.toMap();
+      }); 
+      //without reviver function, it will be converted to a list
+      //a reviver function takes key, value
+      //when convert list to map, it becomes a index based map
+      
+      expect(Immutable.Map.isMap(immutableTodoMap)).to.be.true
+      expect(immutableTodoMap.getIn([3, 1])).to.equal("Make Lemonade")
+
+      const plainJSObject = {
+        a: {b: [10, 20, 30]}, 
+        c: 40
+      };
+
+      const immutableMap = Immutable.fromJS(plainJSObject, function(key, value, path) {
+        console.log(key, value, path);
+        return Immutable.Iterable.isIndexed(value) ? value.toList(): value.toMap()
+      });
+    });
+  });
+  mocha.run();
+
+  </script>
+</body>
+</html>

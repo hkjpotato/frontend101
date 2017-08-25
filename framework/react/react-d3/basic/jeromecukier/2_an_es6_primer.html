@@ -1,0 +1,125 @@
+<!-- a review of http://www.jeromecukier.net/blog/2016/08/09/an-es6-primer/ -->
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div id="root"></div>
+<script>
+//wow, this is a nice, short tutorial about the most important features of es6
+
+
+//traditional function 'declaration'
+function add1(a) {return a + 1;}
+
+//-----arrow function-----
+//one param
+var add1 = a => a + 1; //this is different, here this is lexical
+
+//more than one param
+var sum = (a, b) => a + b;
+
+//more than one statements, curly bracces {}
+d => {
+  console.log(d);
+  return d + 1;
+};
+
+//return an object, wrap that object in () to avoid confusing it with the multiple statements form
+d => ({key: d});
+
+//-----const and let-----
+//before es6, var is functional scope
+
+//in es6, you can use const for constant variable(cannot be reassigned)
+
+//you can use let to declare and reassigned a variable, but you CANNOT redeclare the identifier in the same scope again!
+
+/*
+  //redeclaring the same variable in the same function/scope
+  
+  if (x) {
+    let foo;
+    let foo; //SyntaxError
+  }
+
+  switch (x) {
+    case 0:
+     let foo;
+     break;
+    case 1:
+      let foo; //SyntaxError, has been declared
+      break;
+  }
+
+  function (n) {
+    let n = n; //syntax error, cant redeclare them
+  }
+*/
+
+
+/* 
+  //let will hoist the variable to top of the block but referencing it before declaration will raise ReferenceError since it is in a 'temporal dead zone'
+
+  function sth() {
+    console.log(foo) //ReferenceError
+    let foo = 2;
+  }
+  sth()
+*/
+
+//"So, there’s no reason to ever use the var keyword in ES6."
+
+//----Spread Operator----
+
+//to concatenating two arrays(think of the case of BFS where we need to concat the children array to the queue)
+let queue = [1, 2];
+let children = [3, 4];
+
+//traditional console.log(queue.concat(children)); //it return a new one!!! does not change the old
+//es6
+queue = [...queue, ...children];
+
+// push an item to the end
+queue = [...queue, 100]; //this return a new array!
+
+//spread operator + conditional
+const c = [...queue, ...(false ? children : [])];
+
+//in es7, we might have spread for object...like python
+
+
+//----Destructuring assignment----
+//full doc: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
+//ah-ha, this is the very first ES6 syntax most of us would encounter
+
+const obj = {key: 'a', value: 123, myObj : {val: 999}};
+//stole them..
+let {key, myObj} = obj;
+console.log(key, myObj); // can be used now
+myObj.val = 10000; //reference to original object
+
+//for function, this is similar to python
+//before es6, we have position argumenst
+//now in es6, we have keyword arguments
+
+//example
+//old
+function firstDevideSecond(first, second) {
+  return first / second;
+}
+
+//now, we can even have default val
+function firstDevideSecond({first, second=1}) {
+  return first / second;
+}
+// console.log(firstDevideSecond({first: 100, second: 20}));
+
+//use arrow function to declare it
+//we cant name it the smae as above as const and let are both scoped and cannot be re-declared
+const firstDevideSecond_arrow = ({first, second=1}) => first /second;
+</script>
+
+
+</html>

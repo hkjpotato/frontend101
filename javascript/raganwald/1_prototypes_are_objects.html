@@ -1,0 +1,64 @@
+<html>
+<script type="text/javascript">
+/*
+a review of http://raganwald.com/2015/06/10/mixins.html
+*/
+
+//before es6
+function Person(first, last) {
+  this.rename(first, last);
+}
+Person.prototype.fullName = function () {
+  return this.firstName + " " + this.lastName;
+}
+
+Person.prototype.rename = function (first, last) {
+  this.firstName = first;
+  this.lastName = last;
+  return this;
+}
+
+//Person is a constructor function and a 'class' in javascript sense
+
+//In ES6(es2015), class keyword is provided as a syntax sugar for compact method notation (a little more involved in reality)
+
+class Person6 {
+  constructor(first, last) {
+    this.rename(first, last);
+  }
+  fullName() {
+    return this.firstName + " " + this.lastName;
+  }
+  rename(first, last) {
+    this.firstName = first;
+    this.lastName = last;
+    return this;
+  }
+}
+
+//compact method syntax is just es6 shorthand method definition https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions
+
+//mixins
+const Author = {
+  writeBook(name) {
+    this.books().push
+  },
+  books() {
+    return this._books_written || (this._books_written = []);
+  }
+}
+
+const BookCollector = {
+  addToCollection (name) {
+    this.collection().push(name);
+    return this;
+  },
+  collection() {
+    return this._collected_books || (this._collected_books = []);
+  }
+}
+
+
+Object.assign(Person6.prototype, BookCollector, Author);
+</script>
+</html>

@@ -1,0 +1,19 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JS Block rendering</title>
+    <script type="text/javascript">
+        var s = 0;
+        for (var i = 0; i < 10000; i++) {
+            var arr = new Array(i).fill(5);
+            arr.forEach(function(d) {
+                s = d * s / 10;
+            });
+        }
+    </script>
+</head>
+<body>
+    <p>Hello</p>
+    <div><img src="http://www.amazingwallpaperz.com/wp-content/uploads/Cat-High-Resolution-Wallpapers.jpg?=100" /></div>
+</body>
+</html>

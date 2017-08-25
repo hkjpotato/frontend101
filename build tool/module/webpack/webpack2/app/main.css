@@ -1,0 +1,15 @@
+body {
+	background: yellow;
+	background-image: url('./images/ProsumerGrid.png');
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+:global(.globalclass) {
+	background: black;
+}
+
+.localclass {
+	background: red;
+	display: flex;
+}

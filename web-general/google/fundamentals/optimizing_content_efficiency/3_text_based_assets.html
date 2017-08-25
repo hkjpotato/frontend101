@@ -1,0 +1,69 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" >
+</head>
+<body>
+
+<script type="text/javascript">
+//a review of https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer
+
+//Minimize the overall download size by optimizing and compressing the remaining resources.
+
+
+/*-----------------
+Data compression 101
+
+
+1. generic tool in server
+2. preprocess of specific content types(JS CSS)
+3. resource specific
+
+
+Compression is the process of encoding information using fewer bits.
+
+very good example to show the basic idea of compression algorithms
+
+---original---
+# Below is a secret message, which consists of a set of headers in
+# key-value format followed by a newline and the encrypted message.
+format: secret-cipher
+date: 08/25/16
+AAAZZBBBBEEEMMM EEETTTAAA
+
+---result---
+format: secret-cipher
+date: 08/25/16
+3A2Z4B3E3M 3E3T3A
+
+-----------------*/
+
+
+
+/*-----------------
+Minification: preprocessing & context-specific optimizations
+
+
+blablabla
+
+ preprocessing/minification/context-aware can be useful beyond simple compressor
+
+again, 
+1. eliminate comment
+2. content specific optimization, like collapse css rule
+3. whitespace
+
+
+In short, as a first step in optimizing the efficiency of your assets, build an inventory of the different content types and consider what kinds of content-specific optimizations you can apply to reduce their size. Then, after you’ve figured out what they are, automate these optimizations by adding them to your build and release processes to ensure that the optimizations are applied...by article
+-----------------*/
+
+/*-----------------
+Text compression with GZIP
+
+1. Apply content-specific optimizations first: CSS, JS, and HTML minifiers.
+2. Apply GZIP to compress the minified output.
+
+-----------------*/
+
+</script>
+</body>
+</html>

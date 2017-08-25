@@ -1,0 +1,171 @@
+<html>
+    <button id="updateBtn">update</button>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+    document.getElementById('updateBtn').addEventListener('click', ()=>{
+        UserStore.update();
+        CommentStore.update();
+      });
+    //let's make a store first, to get rid of blackbox
+    /*
+    what a store does:
+    0. hold state(data)
+    1. allow add&remove listener
+    2. allow get state
+    3. call the listener when state change
+    */
+    function initUsers(num) {
+      let users = []
+      for (var i = 0; i < num; i++) {
+        users[i] = {
+          id: i,
+          name: 'User ' + (i + 1),
+          update: 'updated at ' + new Date().getMilliseconds()
+        }
+      }
+      return users;
+    }
+
+    function updateUsers(users) {
+      return users.map(u=>({
+        ...u,
+        update: u.update.replace(/\d+/, new Date().getMilliseconds())
+      }));
+    }
+
+    function initComments(num) {
+      let comments = [];
+      for (var i = 0; i < num; i++) {
+        comments[i] = {
+          id: i,
+          text: 'comment ' + (i + 1)
+        }
+      }
+      return comments;
+    }
+
+    function updateComments(comments) {
+      return [
+                ...comments, 
+                {
+                  id: comments.length,
+                  text: 'comment ' + comments.length
+                }
+              ];
+    }
+
+    function getStore(initData, updateData) {
+      //init 10 comments
+      let data = initData(10);
+      //listeners list
+      let listeners = [];
+      //udpate function
+      function update() {
+        data = updateData(data);
+        //notify the listeners
+        listeners.forEach(l=>l());
+      }
+
+      function addChangeListener(listener) {
+        listeners.push(listener);
+      }
+
+      function removeChangeListener(listener) {
+        listeners = listeners.filter(l => l !== listener);
+      }
+
+      function get(id) {
+        return data[id];
+      }
+
+      function getAll() {
+        return data;
+      }
+
+      return {
+        addChangeListener,
+        removeChangeListener,
+        update,
+        get,
+        getAll
+      }
+    }
+
+    const UserStore = getStore(initUsers, updateUsers);
+
+    const CommentStore = getStore(initComments, updateComments);
+
+    //receive is a list of store
+    //return a mixn used by ReactComponent
+    function StoreMixin(...stores) {
+      //the actual mixin return
+      var Mixin = {
+        getInitialState() {
+          console.log('init');
+          //the mix rely on certain method (getStateFromStore) being defined on the component, for example, here, mixin just don't know how the component state is related to the store.
+          return this.getStateFromStores(this.props);
+        },
+        componentDidMount() {
+          console.log('didmount');
+          stores.forEach(store =>
+            store.addChangeListener(this.handleStoresChanged)
+          );
+          this.setState(this.getStateFromStores(this.props));
+        },
+        componentWillUnmount() {
+          stores.forEach(store =>
+            store.removeChangeListener(this.handleStoresChanged)
+          );
+        },
+        handleStoresChanged() {
+          if (this.isMounted()) {
+            this.setState(this.getStateFromStores(this.props));
+          }
+        }
+      };
+      return Mixin;
+    }
+
+    var UserProfilePage = React.createClass({
+      mixins: [StoreMixin(UserStore, CommentStore)],
+      propTypes: {
+        userId: React.PropTypes.number.isRequired
+      },
+      getStateFromStores(props) {
+        return {
+          user: UserStore.get(props.userId),
+          comments: CommentStore.getAll()
+        };
+      },
+      render() {
+        console.log('render');
+        var { user, comments } = this.state;
+        return (
+        <div>
+          {user ? user.name : 'Loading'}
+          {' '}
+          {user ? user.update : 'Loading'}
+          <ul>
+          {
+            comments.map((c)=>(
+              <li key={c.id}>{c.text}</li>
+            ))
+          }
+          </ul>
+        </div>);
+      }
+    })
+
+    ReactDOM.render(<UserProfilePage userId={5} />, document.getElementById('app'));
+
+    
+    </script>
+</html>

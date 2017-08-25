@@ -1,0 +1,175 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        //react jsx code in es6
+
+        /*
+            we know that element is like frame and should be immutable
+
+            so far we only know one way to update the element, that is to call ReactDOM.render() to change rendered output
+        */
+
+        function tick() {
+            const clock = (
+                <div>
+                    {new Date().toLocaleTimeString()}
+                </div>
+            );
+
+            ReactDOM.render(
+                clock,
+                document.getElementById('app')
+            )
+        }
+
+        //state is maintained here globally
+        // setInterval(tick, 1000);
+
+
+
+        //we want to make clock element reusable and encapsulated(has its own state)
+
+        //step 1, encapsulate the functional clock component
+        function Clock_func(props) {
+            return (
+                <div>
+                    {props.date.toLocaleTimeString()}
+                </div>
+            );
+        }
+
+        //the difference is that instead of writing this React element by DOM tags, we use user-defined components, and use the passed attribute as props
+
+
+        //still maintain timer which controll its state globally
+        // setInterval(tick, 1000);
+
+        //However, it misses a crucial requirement: the fact that the Clock sets up a timer and updates the UI every second should be an implementation detail of the Clock.
+
+        //how can we hide the state of clock in itself
+
+        //we cannot use functional component because they can only provide element by given props
+
+        //we need to have 'state' inside the component
+
+        //state is private and fully controlled by component
+
+        //to have a state, we use class based component
+
+        //a class without state, no need for constructor
+        class Clock_pureRender extends React.Component {
+            render() {
+                // console.log('render...', this.props)
+                return (
+                    <div>
+                        {this.props.date.toLocaleTimeString()}
+                    </div>
+                )
+            }
+        }
+
+        class Clock extends React.Component {
+            constructor(props) {
+                console.log('constructor get called with props', props);
+                //only get called once when passed to ReactDOM.render
+                //call super before this is ES6
+                super(props);
+                //good place to init state
+                this.state = {
+                    date: new Date()
+                }
+            }
+            componentDidMount() {
+                console.log('clock did mount')
+                this.timer = setInterval(
+                    () => {
+                        //doesn't create functional scope so this is still refering to component
+                        //The ES6 arrow function syntax uses “lexical scoping” to figure out what the value of “this” should be. Lexical scoping is fancy way of saying it uses “this” from the surrounding code… the code that contains the code in question.
+                        this.setState({
+                            date: new Date()
+                        })
+                    }, 1000)
+            }
+            componentWillMount() {
+                console.log('clock will mount')
+            }
+            componentWillUnmount() {
+                console.log('clock willUnMount');
+                clearInterval(this.timer)
+            }
+            render() {
+                console.log('render')
+                return <div>{this.state.date.toLocaleTimeString()}</div>
+            }
+        }
+
+        // https://toddmotto.com/react-create-class-versus-component/
+        class Control extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    display: true
+                }
+                this.onClick = this.onClick.bind(this);
+            }
+            onClick() {
+                this.setState({
+                    display: !this.state.display
+                });
+            }
+            render() {
+                return (
+                    <div>
+                        <button onClick={this.onClick} >click</button>
+                        {this.state.display ? <Clock /> : null}
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Control />, document.getElementById('app'));
+
+        //Use State Correctly
+        //1 Do Not Modify State Directly
+
+        //2 State Updates May Be Asynchronous
+
+        //3 State Updates are Merged
+
+
+
+
+        //learn ES6 class first from frontend101/javascript/MDN_guide
+        // class Animal {
+        //     constructor (name) {
+        //         console.log('this is an amimal');
+        //         this.name = name;
+        //     }
+        // }
+
+        // class Cat extends Animal {
+        //     constructor (name, food) {
+        //         super(name); //call parent's constructor, super must be at first
+        //         console.log('this is a cat');
+        //         this.food = food;
+        //     }
+        // }
+
+        // var c1 = new Cat("tom", 'jerry');
+        // var a1 = new Animal('miao');
+        // console.log(c1);
+        // console.log(c1.constructor);
+        // //c1 __proto__, which means Cat.prototype is Animal
+        // console.log(a1);
+
+    </script>
+    </script>
+</html>

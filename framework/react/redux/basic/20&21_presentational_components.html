@@ -1,0 +1,369 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script type="text/babel">
+      //These 3 chapters will use React as our UI component, but first, let's recap what we know about redux.
+
+      //Reducer: a pure function that accept the prevState and action and return the nextState
+      // we are going to make 3 reducers: 1.todo; 2.todos; 3:filter
+
+      //Store: the hub of redux framework
+      /*
+      1. it holds the current app state
+      2. it holds the reducer(init with that reducer) who know how to modify the state
+      3. whats missing? well, we have the state, we have the state modifier(reducer), we also need to let other guys to interact with it: it let the other guy to send signal(action) about the state change.
+
+      Think of store as StateManager, and reducer as StateModifier.
+
+      Let's implement it.
+      */
+
+      //*-------------------------Make Reducers-------------------*//
+
+      //First, let's make our reducers
+      //for a single todo, think carefully, is there an initial state for a todo UI? no, in our case, the initial state is undefined when the todo has not be created
+      function todo(state, action) {
+        switch(action.type) {
+          case 'ADD_TODO':
+            return {
+              id: action.id,
+              text: action.text,
+              completed: false
+            };
+          case 'TOGGLE_TODO':
+            if (action.id !== state.id) {
+              return state;
+            } else {
+              return {
+                ...state,
+                completed : !state.completed
+              };
+            }
+          default:
+            return state; //return previous state
+        }
+      }
+      //hey todos reducer, you should have a default init state, that's an empty array
+      function todos(state=[], action) {
+        switch(action.type) {
+          case 'ADD_TODO':
+            return [
+              ...state, 
+              todo(undefined, action)
+            ];
+          case 'TOGGLE_TODO':
+            return state.map((t) => todo(t, action));
+          default:
+            return state; //return previous state
+        }
+      }
+      //visibilityFilter element has state and it also need a reducer to handle it
+      function visibilityFilter(state='SHOW_ALL', action) {
+        switch(action.type) {
+          case 'SET_VISIBILITY_FILTER':
+            return action.filter;
+          default:
+            //it does not need to care about other action type
+            return state;
+        }
+      }
+
+      //We now combine the 3 separate weapons into one. We need a combineReducer methods. Of course, we need some conventions:
+      //the composite state of the 
+      function todoApp_test(state={}, action) {
+        //notice the initial state is an empty object, thus initial state for todos will be undefined and thus trigger the default init state of todos
+        return {
+          todos: todos(state.todos, action),
+          visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+        };
+      }
+
+      //of course, we can create a method to do above for us, which use a map between states and corresponding reucers as input.
+      function combineReducer(state2reducer) {
+        function reducer(state={}, action) {
+          var nextState = {};
+          Object.keys(state2reducer).reduce(function(nextState, s) {
+            var currState = state[s];
+            var correspondingReducer = state2reducer[s];
+            nextState[s] = correspondingReducer(currState, action);
+            return nextState;
+          }, nextState);
+          return nextState;
+        }
+        return reducer;
+      }
+
+      var todoApp = combineReducer({
+        todos: todos,
+        visibilityFilter: visibilityFilter
+      });
+
+      //*-------------------------END OF Reducers-------------------*//
+
+      //*-------------------------Make Store-------------------*//
+      //as said, store is the state manager. It is a js object that hold the state, hold the reducers, and has some api for other 1. to register to state change. 2. to notify some action.
+      /*
+        I'am a store
+        {
+          api_for_state,
+          api_for_action_dispatch,
+          api_for_register,
+          _state,
+          _state_modifier_aka_reducer
+        }
+      */
+      function createStore(reducer) {
+        //reducer is in this closure
+        //state is in this closure
+        var state;
+        //oh..don't forget, we need to hold the listeners, in this closure.
+        var listeners = [];
+
+        function getState() {
+          return state;
+        }
+
+        function subscribe(listener) {
+          listeners.push(listener);
+          //a callback helper to let the guy who call it to unsubscribe
+          return function() {
+            //again, we can access the closure of listener
+            listeners = listeners.filter(function(l) {return l !== listener;});
+          }
+        }
+
+        //a busy function
+        function dispatch(action) {
+          //hey reducer in the closure, I need your help to calculate the new state
+          state = reducer(state, action);
+          console.log(state);
+          //wait, one more thing. notify the state change to your listeners, go
+          listeners.forEach(function(l) {
+            l();
+          })
+        }
+        //before return, let's init the state hold by dispatch a dummy action
+        dispatch({});
+        return {
+          getState: getState,
+          dispatch: dispatch,
+          subscribe: subscribe
+        }
+      }
+
+      //make our store
+      var store = createStore(todoApp);
+      //*-------------------------End Of Store-------------------*//
+
+      //*-------------------------Make the UI(Presentational Extract)-------------------*//
+      //Why separate? because we want to separate the look(Presentational Component) from behavior(Store).
+      //Todo, presentational & functional => just to present what given to it, remember to remove hard code behavior, make it flexible
+      const Todo = ({
+        onClick,
+        completed,
+        text
+      }) => (
+        <li
+            onClick={onClick}
+            style={{
+              textDecoration: completed ? 'line-through': 'none',
+              cursor: 'pointer'
+            }}>
+          {text}
+        </li>
+      )
+      //again, a presentational component does not specify any behavior, it just knows how to render based on the input.
+
+      //TodoList, presentational again
+      const TodoList = ({
+        todos,
+        onTodoClick
+      }) => (
+        <ul>
+          {todos.map(todo=>
+            <Todo
+              key={todo.id}
+              {...todo}
+              onClick={()=> onTodoClick(todo.id)}
+            />
+          )}
+        </ul>
+      );
+      //Here we use a common pattern to pass paramter to onClik
+      //We use an arrow function to pass the todo.id, instead of just placing a callback as onClick, which will only have the react event as input
+
+
+      //One more, the input, the input part can also be functional component, it is like an uncontrolled form. Remember, the UI does not hold the state by itself. State is in the store.
+      const AddTodo = ({
+        onAddClick, //let the component who use AddTodo to specify what happen after add button is clicked
+      }) => {
+        let input; //why we want to have this local variable in the closure? because functional component DOES NOT HAVE INSTANCE and you can't use 'this' to refer to it
+        return (
+          <div>
+           <input ref={node=>input = node} />
+            <button onClick={()=> {
+              onAddClick(input.value);
+              input.value = '';
+            }
+            }>
+              Add Todo
+            </button>
+          </div>
+        )
+      }
+
+      //We can also make a footer component as presentation component
+      //of course, the FilterLink as well and thus let's remove the behavior from it
+
+      //For A presentational component
+
+      //we need to think about what's props required to render it
+      //oh attention, presentational can hold children
+
+      const FilterLink = ({
+        filter,
+        currentFilter,
+        children,
+        onClick
+      }) => {
+        if (currentFilter === filter) {
+          return <span>{children}</span>;
+        } else {
+          return (
+            <a href="#"
+               onClick={e=>{
+                e.preventDefault();
+                onClick(filter);
+               }}>
+               {children}
+            </a>
+          )
+        }
+      }
+      //footer again is a presentational
+      const Footer = ({
+        visibilityFilter,
+        onFilterClick
+      }) => (
+        <p>
+          Show:
+          {' '}
+          <FilterLink
+            filter='SHOW_ALL'
+            currentFilter={visibilityFilter}
+            onClick={onFilterClick}
+          >
+           All
+          </FilterLink>
+          {' '}
+          <FilterLink
+            filter='SHOW_ACTIVE'
+            currentFilter={visibilityFilter}
+            onClick={onFilterClick}
+          >
+           Active
+          </FilterLink>
+          {' '}
+          <FilterLink
+            filter='SHOW_COMPLETED'
+            currentFilter={visibilityFilter}
+            onClick={onFilterClick}
+          >
+           Completed
+          </FilterLink>                
+        </p>
+      )
+
+
+
+      //helper function
+      var getVisibleTodos = (todos, filter) => {
+        switch (filter) {
+          case 'SHOW_ALL':
+            return todos;
+          case 'SHOW_ACTIVE':
+            return todos.filter(t=>!t.completed);
+          case 'SHOW_COMPLETED':
+            return todos.filter(t=>t.completed);
+        }
+      }
+
+      //still need a global for id, normally this is generated by database
+      var nextTodoId = 0;
+      //actually now it becomes the 'container' component
+      //it will pass data from store and to specify the behavior
+      //it is the link between store and the presentational component
+      //Store is the State Manager.
+      //Here is the UI
+      //Store let you dispatch action and get back the current state it maintain
+      //UI, or container need to be the 'you', 'you' need to connect to the store, interact with it.
+      //it can become a functional component as well as you dont need to reserve state
+      //instead of distructure the props in render, do it in argument(now it is a FUNCTION)
+      const TodoApp = ({
+        todos,
+        visibilityFilter
+      }) => 
+      (
+        <div>
+          <AddTodo 
+            onAddClick={text=>
+              store.dispatch({
+                type: 'ADD_TODO',
+                id: nextTodoId++,
+                text
+              })
+            }/>
+          <TodoList
+            todos={
+              getVisibleTodos(todos, visibilityFilter)
+            }//how it connect to store by getting the state(data)}
+            onTodoClick={id =>
+              store.dispatch({
+                type: 'TOGGLE_TODO',
+                id
+              })//how it connect to store by dispatch the action(behavior)
+            }/>
+            <Footer
+              visibilityFilter={visibilityFilter}
+              onFilterClick={(filter)=>
+                store.dispatch({
+                  type: 'SET_VISIBILITY_FILTER',
+                  filter
+                })
+              }/>
+        </div>
+      );
+
+      function render() {
+        ReactDOM.render(<TodoApp todos={store.getState().todos} visibilityFilter={store.getState().visibilityFilter} />, document.getElementById('app'));
+      }
+
+      store.subscribe(render);
+      //init render
+      render();
+
+      /*
+      Attention:
+      as you can see, a lot of props need to be thread through the components from root to the leaf, including the callbacks.
+
+      To solve this problem, we are going to introduce intermediate container components(instead of a single root)
+
+      //since now we are more familiar with the idea of presentational and container
+
+      //I think container is not just use the thread through
+
+      //container&presentational pattern is an abstract of behavior
+
+      //container wrap the presentational
+
+      //contaier hold the behavior
+      */
+
+    </script>
+</html>

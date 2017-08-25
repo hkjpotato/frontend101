@@ -1,0 +1,127 @@
+<!-- http://bl.ocks.org/sxywu/61a4bd0cfc373cf08884 -->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://underscorejs.org/underscore-min.js"></script>
+  <!-- // <script src="generate_data.js"></script> -->
+
+  <!-- <link rel="stylesheet" href="example.css" type="text/css" /> -->
+</head>
+
+<body>
+<div id="root" />
+<script type="text/javascript">
+var students = [
+  { name: "John", grades: [7.0, 6.9, 8.0], class: "A" },
+  { name: "Paul", grades: [5.0, 8.7, 3.7], class: "A" },
+  { name: "Luke", grades: [9.0, 8.2, 6.2], class: "B" },
+  { name: "Mark", grades: [6.0, 9.0, 8.4], class: "B" }
+];
+  
+
+  nodes = _.chain(_.range(_.random(10, 30)))
+    .map(function() {
+      var node = {};
+      node.key = _.random(0, 30);
+      node.size = _.random(4, 10);
+
+      return node;
+    }).uniq(function(node) {
+      return node.key;
+    }).value();
+
+
+</script>
+<script type="text/babel">
+
+var width = 960;
+var height = 500;
+
+
+var MyForce = React.createClass({
+  componentWillMount: function() {
+    setInterval(()=>{
+      this.forceUpdate();
+    }, 1000)
+  },
+  componentWillReceiveProps: function(nextProps) {
+    console.log('will receive props');
+  },
+  componentDidUpdate: function() {
+    console.log('did update');
+  },
+  render: function() {
+    console.log('render');
+    return (<h3>{this.props.val}</h3>)
+  }
+})
+
+
+ReactDOM.render(ele3, document.getElementById('root'));
+
+
+
+// var force = d3.layout.force()
+//   .charge(-300)
+//   .linkDistance(50)
+//   .size([width, height]);
+
+// var Graph = React.createClass({
+//   componentWillMount() {
+//     force.on('tick', () => {
+//       // after force calculation starts, call
+//       // forceUpdate on the React component on each tick
+//       this.forceUpdate()
+//     });
+//   },
+
+//   componentWillReceiveProps(nextProps) {
+//     // we should actually clone the nodes and links
+//     // since we're not supposed to directly mutate
+//     // props passed in from parent, and d3's force function
+//     // mutates the nodes and links array directly
+//     // we're bypassing that here for sake of brevity in example
+//     force.nodes(nextProps.nodes).links(nextProps.links);
+
+//     force.start();
+//   },
+
+//   render() {
+//     // use React to draw all the nodes, d3 calculates the x and y
+//     var nodes = _.map(this.props.nodes, (node) => {
+//       var transform = 'translate(' + node.x + ',' + node.y + ')';
+//       return (
+//         <g className='node' key={node.key} transform={transform}>
+//           <circle r={node.size} />
+//           <text x={node.size + 5} dy='.35em'>{node.key}</text>
+//         </g>
+//       );
+//     });
+//     var links = _.map(this.props.links, (link) => {
+//       return (
+//         <line className='link' key={link.key} strokeWidth={link.size}
+//           x1={link.source.x} x2={link.target.x} y1={link.source.y} y2={link.target.y} />
+//       );
+//     });
+
+//     return (
+//       <svg width={width} height={height}>
+//         <g>
+//           {links}
+//           {nodes}
+//         </g>
+//       </svg>
+//     );
+//   }
+// });
+  console.log(React.DOM.circle() === <circle />);
+
+  console.log(<circle />)
+</script>
+
+</body>

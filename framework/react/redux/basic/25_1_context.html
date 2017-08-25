@@ -1,0 +1,150 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+    //http://stackoverflow.com/questions/32370994/how-to-pass-props-to-this-props-children
+    class Root1 extends React.Component {
+      render() {
+        console.log('Root1 context', this.context)
+        return (
+          <div>
+            <input ref={dom=>this.input=dom}></input>
+            <button
+              onClick={
+                ()=> {
+                  let val = this.input.value;
+                  this.input.value = "";
+                  this.context.context3(val);
+                }
+              }
+            >Update
+            </button>
+          </div>
+        )
+      }
+    }
+
+    Root1.contextTypes = {
+      context3: React.PropTypes.func
+    }
+
+    const Root2 = (props, context) => {
+      console.log('Root2 context', context);
+      return (
+        <div>{context.context1}</div>
+      )
+    }
+
+    Root2.contextTypes = {
+      context1: React.PropTypes.string,
+      context999: React.PropTypes.object
+    }
+
+    const GrandChild = (props, {context3}) => {
+      return <button onClick={()=>context3('gray')} >gray</button>
+    }
+
+    GrandChild.contextTypes = {
+      context3: React.PropTypes.func
+    }
+
+    const Child = () => {
+      return <GrandChild />
+    }
+    const Wrapper = ({children}) => {
+      return children
+    }
+
+
+    const Route = (props, context) => {
+      return props.children
+    }
+
+    // Route.contextTypes = {
+    //   magic: React.PropTypes.element
+    // }
+
+    const Link = (props) => {
+      return (
+        <div>
+        <a href="#/1" onClick={
+          e=> {
+            // e.preventDefault()
+            props.linkChange(props.linkTo)
+          }
+        }>
+        {props.children}
+        </a>
+        </div>
+      )
+    }
+
+
+    class MyRouter extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          current: '/'
+        }
+      }
+      getChildContext() {
+        return {
+        }
+      }
+      render() {
+        let theContent = null;
+        let theLinks = [];
+        React.Children.map(this.props.children, (c, i)=>{
+            // console.log(c.type === Route);
+            if (c.type === Route && c.props.path === this.state.current) {
+              theContent = c.props.children;
+            }
+            if (c.type === Link) {
+              const newLink = React.cloneElement(c, {
+                key: i,
+                linkChange: (linkTo)=>{
+                this.setState({
+                  current: linkTo
+                })
+              }});
+              theLinks.push(newLink);
+            }
+        })
+
+        return (
+        <div>
+          {'current: ' + this.state.current}
+          {theLinks}
+          <div id="content">
+            {theContent}
+          </div>
+        </div>
+        )
+      }
+    }
+
+    MyRouter.childContextTypes = {
+    }
+
+    ReactDOM.render(
+      <MyRouter magic={'this is the magic'}>
+        <Link linkTo="/">linkTo/</Link>
+        <Link linkTo="page1">linkTopage1</Link>
+        <Route path='/'>Hello</Route>
+        <Route path='page1'>World</Route>
+      </MyRouter>
+
+
+      ,
+      document.getElementById('app')
+    )
+    </script>
+</html>

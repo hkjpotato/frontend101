@@ -1,0 +1,18 @@
+<html>
+<script src="./my_commonjs.js"></script>
+<body>
+<script type="text/javascript">
+// bundle..we are not async loading! unlike the amd case
+require.register("./foo.js", function(module, exports, require){
+  module.exports = function(x) {
+    console.log(x);
+  };
+});
+
+var foo = require("./foo.js");
+foo("Hi");
+
+console.log('hello');
+</script>
+</body>
+</html>

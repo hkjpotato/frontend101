@@ -1,0 +1,62 @@
+<html>
+<body>
+<ul>
+  <li><a href="#">Home</a></li>
+  <li><a href="#/page1">Page 1</a></li>
+  <li><a href="#/page2">Page 2</a></li>
+</ul>
+<div id="view"></div>
+<script type="text/javascript">
+var TemplateEngine = function(tpl, data) {
+  var re = /<%([^%>]+)?%>/g, match;
+  while(match = re.exec(tpl)) {
+    tpl = tpl.replace(match[0], data[match[1]])
+  }
+  return tpl;
+}
+</script>
+<script type="text/javascript">
+var template1 = "<div>Page1   <%value%></div>";
+var template2 = "<div>Page2   <%value%></div>";
+
+</script>
+
+<script type="text/javascript">
+
+// //map url to view function
+// var routes = {}
+
+// //reghister
+// function route (path, templateId, controller) {
+//   routes[path] = {
+//     templateId,
+//     controller
+//   }
+// }
+
+// route('/', 'home', function () {});
+// route('/page1', 'template1', function () {
+//     this.greeting = 'Hello world!';
+//     this.moreText = 'Bacon ipsum...';
+// });
+// route('/page2', 'template2', function () {
+//     this.heading = 'I\'m page two!';
+// });
+
+var el = document.getElementById('view');
+
+
+var controller = function(val) {
+  return {
+    value: 
+  }
+}
+
+
+el.innerHTML = TemplateEngine(template1, controller())
+
+
+
+</script>
+</body>
+</html>

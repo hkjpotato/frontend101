@@ -1,0 +1,24 @@
+<html>
+<!-- a review of http://stackoverflow.com/questions/22172589/document-write-vs-appendchild -->
+<body>
+    <script type="text/javascript">
+        console.log(1);
+        var script = document.createElement('script');
+        script.src = "block.js";
+        document.write(script.outerHTML);
+    </script>
+    <script type="text/javascript">
+        console.log(3);
+    </script>
+
+    <script type="text/javascript">
+        console.log(1);
+        var script = document.createElement('script');
+        script.src = "unblock.js";
+        document.body.appendChild(script);
+    </script>
+    <script type="text/javascript">
+        console.log(3);
+    </script>
+</body>
+</html>

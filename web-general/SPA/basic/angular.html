@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Angular Forms</title>
+  <!-- LOAD ANGULAR -->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+</head>
+<body>
+  <div ng-app="app1" ng-controller="ctr1">
+    <p>{{val1}}</p>
+    <p>{{input1}}</p>
+    <input ng-model="input1" ng-change="change1()"></input>
+    <button ng-click="click1()">hi</button>
+  </div>
+  <script type="text/javascript">
+  var app1 = angular.module('app1', []);
+  function ctr1($scope) {
+    $scope.val1 = 'hello world';
+    $scope.input1 = 100;
+
+    $scope.change1 = function() {
+      console.log(event);
+    }
+    $scope.click1 = function(e) {
+      console.log(e);
+      console.log($scope.input1);
+    }
+    console.log($scope)
+  }
+  </script>
+</body>  

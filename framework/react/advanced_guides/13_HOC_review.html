@@ -1,0 +1,31 @@
+<html>
+    <button id="updateBtn">Update DataSource</button>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+    class Test2 extends React.Component {
+      // componentDidMount() {
+      //   console.log(this.refs);
+      //   console.log(this.momo);
+      // }
+      proc(instance) {
+        console.log(instance);
+        console.log(this);
+      }
+      render() {
+        return <div ref={this.proc.bind(this)}>hello</div>
+      }
+    }
+
+    ReactDOM.render(<Test2 hehe={'this is extra'} />, document.getElementById('app'));
+ 
+
+    </script>
+</html>

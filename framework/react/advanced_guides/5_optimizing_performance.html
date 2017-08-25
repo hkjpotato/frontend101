@@ -1,0 +1,451 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+    //This is the most important topic for advanced guide.
+
+    //People say React is fast, because its virtual dom so that the update is not really on the real dom (dom manipulation is slow). That's not very correct. React can be very slow compare to other framework like Vue or Angular if it does not have virtual dom, which is another topic related to the dirty checking algorithim and the one way data flow and rendering. Here, we just want to make React even faster, by optimizing its performance.
+
+    //In this chapter, the offical guide talks about 5 topics:
+    /*
+    1. Use the Production Buid (we will dive into the source code to see how development version affect the performance)
+    2. Profiling components with Chrome Timeline
+    3. Avoid Reconciliation(Reconciliation is also used by D3, what's the difference?)
+    4. shouldComponentUpdate in Action
+    5. Using Immutable Data Structures
+    */
+
+    //We are going to start from the last 3 topics here.
+
+    //Avoid Reconciliation
+    //If you are familiar with the key attribute, which I talk about in a Medium story, you will see how react use its internal UI representation to decide whether it needs to update the real DOM element. React, ReactDOM particulary, knows to use key attribute to decide whether it need to insert a new dom, remove an existing one, or just update the text content or css style of it.
+
+    //More specifically, When a component's props or state change, ReactDOM will compare the newly returned virtual element with the previous rendered one. When they are not equal, ReactDOM will update the DOM.
+
+    //shouldComponentUpdate(nextProps, nextState) can help to skip the whole rendering process of the current component and below.
+
+    //Lets make a nested example to illustrate this idea.
+    class GrandParent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          mum_val: 10,
+          dad_val: 10
+        }
+        this.btnClick = this.btnClick.bind(this);
+      }
+      btnClick(e) {
+        this.setState({
+          dad_val: this.state.dad_val + 1
+        })
+      }
+      render() {
+        console.log('GrandParent render');
+        return (
+          <div>
+            <button onClick={this.btnClick}>update father</button>
+            <Father val={this.state.dad_val} />
+            <Mother val={this.state.mum_val} />
+          </div>
+        )
+      }
+    }
+
+    class Father extends React.Component {
+      render() {
+        console.log('--Father render');
+        return <div>{this.props.val}</div>;
+      }
+    }
+
+    class Mother extends React.Component {
+      shouldComponentUpdate(nextProps, nextState) {
+        console.log(nextProps, nextState);
+        if (this.props.val !== nextProps.val) {
+          return true;
+        }
+        //we don't have state actually
+        return false;
+      }
+      render() {
+        console.log('--Mother render');
+        const children = [];
+        let numOfChild = this.props.val;
+        while (numOfChild > 0) {
+          children.push(<Child val={numOfChild} key={numOfChild} />);
+          numOfChild--;
+        }
+        return (
+          <div>
+            {this.props.val}
+            <ul>
+              {children}
+            </ul>
+          </div>
+          );
+      }
+    }
+
+    class Child extends React.Component {
+      render() {
+        console.log('--Child ' + this.props.val + ' render');
+        return <li>{this.props.val}</li>
+      }
+    }
+
+    // ReactDOM.render(<GrandParent />, document.getElementById('app'));
+
+    //you can see without opitimization, every time the grandparent update its state, it will trigger the render of all components below it, even if the pass in props are the same. The update of Grandparent will only affect the props of Father, However, the render methods for Mother and all the children are called, which is a big waste for nested component. ReactDOM has done his job to help us avoid unecessary operations on the dom(the list element stays the same with no modification). We, as JS developer, need to do our job to ensure the no useless js code is called, like the while loop.
+
+    //We use shouldComponentUpdate to deal with it.
+
+    //Is this safe? Well, it depends on how you compare the next(Props|State) to the current one. You should be very careful about that.
+
+    //Is this easy? Well, here we just have one pass in prop (val), and it is a number, which we can use === to compare. We don't have state for this component. What if we have multiple props and a nested state? That can be really painful to check.
+
+    //Let's go back to the official example.
+
+    //The graph(green and red circle tree) provided by the official document shows one truth: even shouldComponentUpdate return true, and React render function is called. ReactDOM will only operate on the dom is the return element by render method is not equal to the previous rendered one.
+
+    class CounterButton extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {count: 1};
+      }
+
+      shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.color !== nextProps.color) {
+          return true;
+        }
+        if (this.state.count !== nextState.count) {
+          return true;
+        }
+        return false;
+      }
+
+      render() {
+        console.log('btn render');
+        return (
+          <button
+            color={this.props.color}
+            onClick={() => this.setState(state => ({count: state.count + 1}))}>
+            Count: {this.state.count}
+          </button>
+        );
+      }
+    }
+    //React provide the PureComponent (in replace of the old shallowCompare addon)
+    //do 'shallow comparision' between all the fields of props and state to determine if the component should update
+    //let's modify the state field to be an object to see how shallow compare doesn't work
+    class PureCounterButton extends React.PureComponent {
+      constructor(props) {
+        super(props);
+        this.state = {
+          theObj : {
+            count: 1
+          }
+        };
+        this.btnClick = this.btnClick.bind(this);
+      }
+      btnClick() {
+        console.log(event);
+        console.log(window.event);
+        this.setState(function(prevState) {
+          let prevObj = prevState.theObj;
+          //if we just modify the attribute of the object, not returning a new reference, the shallow compare will regard them as equal and shouldComponentUpdate will return false
+          prevObj.count++; 
+          return {
+            theObj: prevObj
+          }
+        })
+      }
+      render() {
+        console.log('pure render');
+        return (
+          <button
+            onClick={this.btnClick}>
+            Count: {this.state.theObj.count}
+          </button>
+        );
+      }
+    }
+
+    // ReactDOM.render(<PureCounterButton />, document.getElementById('app'));
+
+    //This problem happens a lot when you have a state field as an array. And you try to update it by simply push pop the original array. In this case, the shallow compare on the array reference still return equal and shouldComponentUpdate will return false.
+
+    //How to solve this? Avoid mutating the data directly. Each time, you return a new data(or reference).
+
+    //For array, use slice, ...spread operator, concat
+
+    //For object, use Object.assign(), ...operator (in es7)
+
+    /*---Attention: Immutable Data Structure is another way to solve this problem---*/
+    //ImmutableJS provide a set of immutable data structure, which is born immutable.
+
+    //Don't miss immutableJS with the immutable helper provided by React. ImmutableJS is by itself immutable. Immutable helper let you achieve immutable style with PLAIN JS OBJECT. They are not the same!
+
+    //Although they can both help you achieve the same goal: use Immutable Data Structure.
+
+    //Why we need Immutability? because "Immutability makes tracking changes cheap. A change will always result in a new object so we only need to check if the reference to the object has changed."
+
+    //And thus, "Immutable data structures provide you with a cheap way to track changes on objects, which is all we need to implement shouldComponentUpdate. This can often provide you with a nice performance boost."
+
+    //https://medium.com/pro-react/a-brief-talk-about-immutability-and-react-s-helpers-70919ab8ae7c
+
+    //After reading the above Medium, I realize a potential problem for nested state: even though Object assign will return a new reference of the object, the nested properties, if is an array or object, won't get copied.
+
+
+    var obj1 = {
+      a: {
+        name: 'hkj'
+      }
+    }
+
+    var obj2 = {};
+    Object.assign(obj2, obj1, {b: 'hi'});
+
+    console.log(obj2 === obj1); //false
+    console.log(obj2.a === obj1.a); //true
+
+    //If we really want to achieve real immutable, which always create a new object. We need to do deep copy. However, it is not good for the performance.
+
+    //I copy the source code from immutable helper here so that we can test it on the browser.
+    var update = immutablehelper; //babel will be run after js script
+
+
+    let composite = {
+      source: ["A", "B"],
+      target: ["T1", "T2"]
+    }
+
+    let newComposite = update(composite, {target: {$push: ["T4"]}});
+
+    console.log(newComposite === composite);//false
+    console.log(newComposite.target === composite.target);//false
+    console.log(newComposite.source === composite.source);//true
+
+    //as we can see, the source are still pointing to the same reference, which is fine. At lease, we create a a reference for newComposite and target property.
+
+
+
+    </script>
+    <script type="text/javascript">
+    // var invariant = require('invariant');
+    var invariant = function(condition, format, a, b, c, d, e, f) {
+      // if (NODE_ENV !== 'production') {
+      //   if (format === undefined) {
+      //     throw new Error('invariant requires an error message argument');
+      //   }
+      // }
+
+      if (!condition) {
+        var error;
+        if (format === undefined) {
+          error = new Error(
+            'Minified exception occurred; use the non-minified dev environment ' +
+            'for the full error message and additional helpful warnings.'
+          );
+        } else {
+          var args = [a, b, c, d, e, f];
+          var argIndex = 0;
+          error = new Error(
+            format.replace(/%s/g, function() { return args[argIndex++]; })
+          );
+          error.name = 'Invariant Violation';
+        }
+
+        error.framesToPop = 1; // we don't care about invariant's own frame
+        throw error;
+      }
+    };
+
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    var splice = Array.prototype.splice;
+
+    var assign = Object.assign || function assign(target, source) {
+      var keys = getAllKeys(source);
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        if (hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+      return target;
+    };
+
+    var getAllKeys = typeof Object.getOwnPropertySymbols === 'function' ?
+      function(obj) { return Object.keys(obj).concat(Object.getOwnPropertySymbols(obj)) } :
+      function(obj) { return Object.keys(obj) };
+
+    function copy(object) {
+      if (object instanceof Array) {
+        return object.slice();
+      } else if (object && typeof object === 'object') {
+        return assign(new object.constructor(), object);
+      } else {
+        return object;
+      }
+    }
+
+    function newContext() {
+      var commands = assign({}, defaultCommands);
+      update.extend = function(directive, fn) {
+        commands[directive] = fn;
+      };
+
+      return update;
+
+      function update(object, spec) {
+        if (!(Array.isArray(object) && Array.isArray(spec))) {
+          invariant(
+            !Array.isArray(spec),
+            'update(): You provided an invalid spec to update(). The spec may ' +
+            'not contain an array except as the value of $set, $push, $unshift, ' +
+            '$splice or any custom command allowing an array value.'
+          );
+        }
+
+        invariant(
+          typeof spec === 'object' && spec !== null,
+          'update(): You provided an invalid spec to update(). The spec and ' +
+          'every included key path must be plain objects containing one of the ' +
+          'following commands: %s.',
+          Object.keys(commands).join(', ')
+        );
+
+        var nextObject = object;
+        var specKeys = getAllKeys(spec);
+        var index, key;
+        for (index = 0; index < specKeys.length; index++) {
+          key = specKeys[index];
+          if (hasOwnProperty.call(commands, key)) {
+            nextObject = commands[key](spec[key], nextObject, spec, object);
+          } else {
+            var nextValueForKey = update(object[key], spec[key]);
+            if (nextValueForKey !== nextObject[key]) {
+              if (nextObject === object) {
+                nextObject = copy(object);
+              }
+              nextObject[key] = nextValueForKey;
+            }
+          }
+        }
+        return nextObject;
+      }
+
+    }
+
+    var defaultCommands = {
+      $push: function(value, original, spec) {
+        invariantPushAndUnshift(original, spec, '$push');
+        return original.concat(value);
+      },
+      $unshift: function(value, original, spec) {
+        invariantPushAndUnshift(original, spec, '$unshift');
+        return value.concat(original);
+      },
+      $splice: function(value, nextObject, spec, object) {
+        var originalValue = nextObject === object ? copy(object) : nextObject;
+        invariantSplices(originalValue, spec);
+        value.forEach(function(args) {
+          invariantSplice(args);
+          splice.apply(originalValue, args);
+        });
+        return originalValue;
+      },
+      $set: function(value, original, spec) {
+        invariantSet(spec);
+        return value;
+      },
+      $merge: function(value, nextObject, spec, object) {
+        var originalValue = nextObject === object ? copy(object) : nextObject;
+        invariantMerge(originalValue, value);
+        getAllKeys(value).forEach(function(key) {
+          originalValue[key] = value[key];
+        });
+        return originalValue;
+      },
+      $apply: function(value, original) {
+        invariantApply(value);
+        return value(original);
+      }
+    };
+
+    // module.exports = newContext();
+    immutablehelper = newContext();
+    // module.exports.newContext = newContext;
+
+    // invariants
+
+    function invariantPushAndUnshift(value, spec, command) {
+      invariant(
+        Array.isArray(value),
+        'update(): expected target of %s to be an array; got %s.',
+        command,
+        value
+      );
+      var specValue = spec[command];
+      invariant(
+        Array.isArray(specValue),
+        'update(): expected spec of %s to be an array; got %s. ' +
+        'Did you forget to wrap your parameter in an array?',
+        command,
+        specValue
+      );
+    }
+
+    function invariantSplices(value, spec) {
+      invariant(
+        Array.isArray(value),
+        'Expected $splice target to be an array; got %s',
+        value
+      );
+      invariantSplice(spec['$splice']);
+    }
+
+    function invariantSplice(value) {
+      invariant(
+        Array.isArray(value),
+        'update(): expected spec of $splice to be an array of arrays; got %s. ' +
+        'Did you forget to wrap your parameters in an array?',
+        value
+      );
+    }
+
+    function invariantApply(fn) {
+      invariant(
+        typeof fn === 'function',
+        'update(): expected spec of $apply to be a function; got %s.',
+        fn
+      );
+    }
+
+    function invariantSet(spec) {
+      invariant(
+        Object.keys(spec).length === 1,
+        'Cannot have more than one key in an object with $set'
+      );
+    }
+
+    function invariantMerge(target, specValue) {
+      invariant(
+        specValue && typeof specValue === 'object',
+        'update(): $merge expects a spec of type \'object\'; got %s',
+        specValue
+      );
+      invariant(
+        target && typeof target === 'object',
+        'update(): $merge expects a target of type \'object\'; got %s',
+        target
+      );
+    }
+    </script>
+</html>

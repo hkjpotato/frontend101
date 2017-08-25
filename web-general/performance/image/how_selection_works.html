@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)http://localhost:8888/d3/basic/how_selection_works.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script src="./how_selection_works_files/jquery.min.js"></script>
+<style>
+.bar {
+  width: 100px;
+  height: 20px;
+  outline: 1px solid gray;
+  margin: 5px;
+}
+</style>
+</head>
+<body>
+
+<div id="vis"></div>
+
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+
+
+
+<div class="node">
+  <div class="child">
+    <div class="grandchild"></div>
+    <div class="grandchild"></div>
+  </div>
+  <div class="child">
+    <div class="grandchild"></div>
+    <div class="grandchild"></div>
+  </div>
+</div>
+<div class="node">
+  <div class="child">
+    <div class="grandchild"></div>
+  </div>
+  <div class="child"></div>
+</div>
+<div class="node">
+  <div class="child"></div>
+</div>
+<div class="node">
+</div>
+
+
+<div class="parent">
+  <div class="child"></div>
+  <div class="child"></div>
+</div>
+<div class="parent">
+  <div class="child"></div>
+  <div class="child"></div>
+</div>
+
+
+<div class="section"><p></p></div>
+<div class="section"><p></p></div>
+<div class="section"><p></p></div>
+<div class="section"><p></p></div>
+
+<script src="./how_selection_works_files/d3.v3.min.js"></script>
+<script>
+//a review of https://bost.ocks.org/mike/selection/
+
+
+/*
+
+selection <=bind=> data
+
+*/
+
+//selection, data, dom element ...they are all js object/primitive type like array
+
+
+//selection is a subclass of array
+
+//this subclass provides methods to manipulate selected element
+console.log(Array.isArray(d3.select('#vis'))) //true
+console.log(typeof d3.select('#vis').selectAll('.bar')) //object
+
+//selections inheritate array method but it has convenient alternatives
+
+console.log(d3.select('#vis').forEach) //function
+console.log(d3.select('#vis').each)
+
+//filter and sort are overriden
+
+//selection is array of array
+//SELECTION is an array of GROUPS(d3.selectxxx is an array of one group)
+//EACH GROUP is an array of elements!
+//GROUP
+console.log(d3.select('#vis')[0]) //another array, the group
+
+//d3.select return a selection([][]) with ONE group containing the ONE selected element
+//[[elements]]
+
+
+//two ways to access the dom node
+
+var selection = d3.select('#vis')
+selection[0][0] === selection.node();//true
+
+//d3.selectAll return a selection with ONE group and any number of elements
+
+d3.select('.bar'); //[group], group contains one element
+d3.selectAll('.bar'); //[group], group contains N elements
+
+
+//Now, both d3.select and d3.selectAll return exactly one group
+
+//a selection with multiple group: selection.selectAll
+//which return a SELECTION with multiple group
+
+d3.selectAll(".node").selectAll(".child") //[[group][group]...]
+//what happen behind the scene
+/*
+selection = d3.selectAll('.node')
+
+[
+group[
+  dom,
+  dom,
+  dom
+  dom
+]
+]
+
+//now the selection is an array of one group
+
+selection.selectAll('.child')
+//every element in the old seelction becaomes a group in the new selection
+//each group contains an old element's matching descendant elements
+
+[
+  dom->group[
+
+  ],
+  dom->group[
+
+  ],
+  dom->group[
+
+  ]
+  dom->group[
+
+  ]
+]
+
+so in d3 you always have
+
+selection[ group[ element...], group[element...]]
+*/
+
+
+d3.selectAll('.node') //a array of a group(len=4) of node elements
+  .selectAll('.child') //each .node in each group(only one) becomes a new group of child elements, thus becomes an array of 4 groups ([len=2][len=2][len=1][len=0])
+  .selectAll('.grandchild') //each .child elements in each group becomes a new group of 'grandchild' elements, thus becomes an array of 2 + 2 + 1 + 0 = 5 groups ([len=2], [len=2], [len=1], len[0], len[0])
+
+//each group has a parentNode property which stores the shared parent of all groups elements
+
+d3.select('#vis')[0].parentNode //html, the document element
+
+//NOTE, d3.select & d3.selectAll, [[group].parentNode = document]
+
+//when function is called on selection, it is applied to the group's elements not the selection's element(which is the group)
+
+//the second argument of callback is the within-group index
+
+d3.selectAll('.bar').each(function(d, i) {
+  console.log(this); //the element in the group
+  console.log(i);//not the index of element of selection(bar, only one)
+});
+
+[1,2,3].forEach((d, i)=>i)//i is the index of element of array
+
+
+//Non-grouping operations
+
+//what select give us
+d3.select('.node').select('.child').select('.grandchild')
+//select preserve existing grouping
+
+d3.selectAll('.node') //[group[1,2,3,4]]
+  .select('.child') //[group[1,2,3,4]]
+/*
+d3.selectAll('.node').selectAll('.child')
+
+[group[len=4]] => [group[], group[], group[], group[]]
+
+every element in original group becomes a new group
+
+
+d3.selectAll('.node').select('.child')
+
+[group[len=4]] => [group[len=4]]
+
+why? because each element will only have one select result, 一脉单传
+不用分家
+so, select also propagates data from parent to child
+selectAll does not and thus need for a data-join!
+传家宝与分家的概念
+
+*/
+// d3.selectAll('.parent').data([100,200])
+//   .select('.child').each(function(d) {
+//     console.log(d); //data progate
+//   });
+
+
+// d3.selectAll('.parent').data([100,200])
+//   .selectAll('.child').each(function(d) {
+//     console.log(d); //data progate to the first one only
+//   });
+
+// //interesting, when bind data to parent
+// p = d3.selectAll('.parent').data([100, 200])//child has no __data__ attribut
+// //but if we do p.select('.child') //then first child will inheritate the data attribute
+
+//let's see how to data is propogate to child only by select/selectAll action => BLOG1
+
+//append and insert are wrappers on top of 'select' and they also preserve grouping and propagate data. ????
+// d3.selectAll('.section')//one group, 4 memebers 
+//   .append('p')//one group, 4 memebers, parentNode still document
+
+/*
+above is like
+d3.selectAll('.section').select('p')?
+*/
+
+/*
+Note that the parentNode for this selection is still the document element because selection.selectAll has not been called to regroup the selection.
+seems that only selection.selectAll is used to regrouping
+
+说人话
+
+selection就像是家谱，如果从人类的起源（dom）来说，永远只有一个家庭
+
+每个成员如果继续一脉单传，则新的家庭人员只会取代上一辈，不会分家
+
+append,insert相当于是一种一脉单传的形式，不分改变原来的结构，只是子辈取代了父辈
+
+如果说原来的家谱里有一个家，selectAll就是一个分家行为，可以把selectAll改成“要分家了”，其作用就是叫每个家庭成员各自为政，成为一个新的家庭。
+
+好吧，唉。
+*/
+//since selection.select won't regrouping, if nothing can be selected, a null will be place to maintain the original group length
+
+//null will be ignore for most operations, but their index matters
+
+//Really Surprisingly. data is not a property of selection but a property of dom element!
+
+//therefore, since data is stored in DOM, it can be considered persistent while selections transient
+
+
+//#BLOG1, several ways of bound data
+/*
+1. joined to groups of elements via selection.data
+2. assigned to individual elements via selection.datum
+3. inherited from a parent via append, insert or select
+
+
+it finally explains why parent.select() can propagate the data to the child elements
+*/
+
+
+</script>
+</body></html>

@@ -1,0 +1,66 @@
+<script type="text/javascript">
+//a review of http://raganwald.com/2015/12/28/mixins-subclass-factories-and-method-advice.html
+
+/*
+Mixins solve a very common problem in class-centric OOP: For non-trivial applications, there is a messy many-to-many relationship between behavior and classes, and it does not neatly decompose into a tree.
+
+what does it means. Put it simple, class single inheritance let us make a tree of the class and behavior. Mixins let us make a graph(not just parent child relationship)
+
+JavaScript’s single-inheritance model forces us to organize behavior in trees, which can only represent one-to-many relationships.
+
+     Person
+    /      \
+Employee   Employer
+
+mixins let us keep that single-inheritance of classes, and mix in behavior into individual classes as needed
+*/
+
+function mixin(behavior) {
+  let instanceKeys = Reflect.ownKeys(behavior);
+  //why Reflect, because we want to enumerate private keys defined by symbol
+  let typeTag = Symbol('isa');
+
+  function _mixin(clazz) {
+    for (let property of instanceKeys) {
+      Object.defineProperty(clazz.prototype, property, {
+        value: behavior[property],
+        writable: true,
+        // configurable: false,
+        // enumerable: false,
+      });
+    }
+    Object.defineProperty(clazz.prototype, typeTag, {value: true});
+    return clazz;
+  }
+
+  Object.defineProperty(_mixin, Symbol.hasInstance, {
+    // value: (i) => !!i[typeTag] //take an instance and check typeTag property, which is in the closure, a private property, marvellous!
+    value: function(i) {
+      console.log(i);
+      // return !!i[typeTag];
+      return true;
+    }
+  });
+  return _mixin;
+}
+
+
+let Magic = mixin({
+  isMagic() {
+    console.log('Yes it is a magic');
+  }
+});
+
+class Human {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+let Magician = Magic(Human);
+
+
+
+
+
+</script>

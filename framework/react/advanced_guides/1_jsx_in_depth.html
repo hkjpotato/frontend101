@@ -1,0 +1,67 @@
+<html>
+    <div id="app"></div>
+    <!-- 
+    Things to know:
+    JSX is not template language, it comes with JS.
+    
+    Wrap multi-lines JSX in parentheses to avoid the automatic semicolon insertion.
+
+    What does the raw js look like, you may wonder.
+
+    Well, after compilation, JSX experession become regular JS objects!!!!! created by React.createElement!!
+
+    Each JSX element is just syntactic sugar for calling React.createElement(component, props, ...children)
+     -->
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        //jsx is an js object, create by React.createElement
+        let jsx = <h1>hello</h1>
+        console.log(jsx);//Object
+
+        //jsx specify attributes by quote(string) or curly braces(JS experession)
+
+        jsx = <div id="1" value={{a: 1}} ><h1>hi</h1></div>
+        console.log(jsx);
+        //chilren<h1>hi</h1> is also one of props
+
+        jsx = <div id="1">hello</div>;
+
+        console.log(Object.isFrozen(jsx.props)); //props has been frozen
+
+
+        //cross-site script attack safe
+        //Everything is converted to a string before being rendered
+        let myMoney = 1000;
+        jsx = <div id="1">{--myMoney}</div>
+        //money has been reduced
+
+        let userInput = "--myMoney";
+        jsx = <div id="1">{userInput}</div>
+        //just as string
+
+        //Babel compiles JSX to React.createElement calls, which make objects
+        const JSX_element = <h1 className="hi">Hello, world</h1>
+
+        const React_element = React.createElement('h1', 
+            {className: 'hi'},
+            'Hello, world'
+            );
+
+        console.log(JSX_element, React_element);
+
+        /*
+        These objects are called "React elements". You can think of them as descriptions of what you want to see on the screen. React reads these objects and uses them to construct the DOM and keep it up to date.
+        */
+        ReactDOM.render(
+            React_element,
+            document.getElementById('app')
+        );
+    </script>
+    </script>
+</html>

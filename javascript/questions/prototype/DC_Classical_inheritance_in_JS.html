@@ -1,0 +1,135 @@
+<html>
+<script type="text/javascript">
+//review of Douglas Crockford's article on http://javascript.crockford.com/inheritance.html
+
+
+//1. Sugar, To let the below example works, we need the sugar
+
+//1.1 the 'method' method on function 
+Function.prototype.method = function(name, func) {
+  this.prototype[name] = func;
+  return this;
+}
+
+var d = {};
+
+//This add a public method to Function.prototype so all functions get it by Class Augmentation
+//return this to allow  a cascade-style of programming.
+
+//1.2 'inherits' method
+//use the predefined 'method' to add another 'inherits' method to Function.prototype so all function has 'inherits' method
+Function.method('inherits', function(parent) {
+  //this is the function who call 'inherits'
+  this.prototype = new parent(); //this is like Cat.prototype = new Animal()
+  //now this.prototype becomes new parent();
+  
+  // var d = {}; //a cache in closure?
+  var p = this.prototype;
+  // add constructor property to prototype, pointing to parent function
+  this.prototype.constructor = parent;
+
+  //add 'psuper' to this.prototype
+  this.method('psuper', function uber(name) {
+    console.log('psuper called', name);
+    if (!(name in d)) {
+      //init the cache with zero
+      d[name] = 0;
+    }
+
+    var f, r;
+    var t = d[name] //cache value
+    var v = parent.prototype; //current parent's prototype
+    if (t) {
+      // t > 0
+      while (t) {
+        v = v.constructor.prototype;
+        //old v is the parent prototype
+        //it has a constructor property point to its parent(grandparent) function, which will has prototype
+        t -= 1;
+      }
+      f = v[name];
+    } else {
+      f = p[name];
+      if (f == this[name]) {
+        f = v[name];
+      }
+    }
+    d[name] += 1;
+    r = f.apply(this, Array.prototype.slice(arguments, [1]));
+    d[name] -= 1;
+    return r;
+  });
+  return this;
+});
+
+
+
+//2. Classical Inheritance.
+//with the suger, we can do the following
+function Animal(value) {
+  this.setValue(value);
+}
+
+Animal.method('setValue', function (value) {
+  console.log('Animal setValue')
+  this.value = value;
+  return this;
+});
+
+//This is the same as Animal.prototype.setValue = function() {};
+
+Animal.method('getValue', function () {
+  return this.value;
+});
+
+Animal.method('toString', function () {
+  console.log('Animal toString');
+  return '(' + this.getValue() + ')';
+});
+
+console.log(Animal.prototype); //{setValue, getValue, toString}
+var myAnimal = new Animal('a1');
+console.log(myAnimal.toString()); //(a1)
+
+myAnimal
+//inherits method
+
+//The inherits method is similar to Java's extends. The psuper method is similar to Java's super. It lets a method call a method of the parent class. (The names have been changed to avoid reserved word restrictions.)
+
+//I use psuper instead uber here since uber is already meaningful today
+
+//make a another 'class' that string value differently
+function AnimalCheckZero(value) {
+  this.setValue(value);
+}
+
+// AnimalCheckZero.inherits(Animal);
+AnimalCheckZero.inherits(Animal);
+
+AnimalCheckZero.method('toString', function() {
+  console.log('AnimalCheckZero toString');
+  if (this.getValue()) {
+    return this.psuper('toString');
+  }
+  return "-0-";
+});
+
+
+console.log(AnimalCheckZero.prototype);
+
+var acz = new AnimalCheckZero(0);
+
+console.log(acz.toString());
+
+console.log(acz.hello);
+console.log(acz.bette);
+
+console.log(d);
+
+//this is the same as Function.prototype.inherits = function(){}
+
+
+//Classical Inheritance
+
+</script>
+</html>

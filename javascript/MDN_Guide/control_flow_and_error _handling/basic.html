@@ -1,0 +1,45 @@
+<html>
+<script type="text/javascript">
+/*
+Any JavaScript expression is also a statement
+
+Statement can be separated by ";"
+
+Statements can be written in single line
+Block statement
+The most basic statement is a block statement that is used to group statements. The block is delimited by a pair of curly brackets:
+{
+    statement_1;
+    statement_2;
+    ...
+}
+
+Block statements are commonly used with control flow statements (e.g. if, for, while).
+
+if (x == y) {
+    statement_1;
+}
+
+Important: JavaScript prior to ECMAScript2015 does not have block scope. Variables introduced within a block are scoped to the containing function or script, and the effects of setting them persist beyond the block itself. In other words, block statements do not define a scope. "Standalone" blocks in JavaScript can produce completely different results from what they would produce in C or Java. For example:
+
+var x = 1;
+{
+    var x = 2;
+}
+console.log(x); //2 this is because statement var x = 2 is in the same scope of console.log(x) 
+
+Starting with ECMAScript2015, the let variable declaration is block scoped. See the let reference page for more information.
+
+*/
+
+var x = 1; var y = 2; // single line
+
+if (true) {
+    var x = 100;
+    let y = 99;
+}
+
+console.log(x, y) //100, 2
+
+</script>
+</html>

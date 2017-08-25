@@ -1,0 +1,74 @@
+<html>
+<script type="text/javascript">
+//review of Sebastian's article on http://sporto.github.io/blog/2013/02/22/a-plain-english-guide-to-javascript-prototypes/
+
+//In the article, it says: Most guides / tutorials start explaining JavaScript objects by going directly to ‘constructor functions’, I think this is a mistake, as they introduce a fairly complex concept early on making Javascript look difficult and confusing from the start. Let’s leave this for later. First let’s start with the basics of prototypes.
+
+//Holy XXXX this is true, we should not start learn prototype based language from the 'new' and constructor function, which is a syntax sugar from class based language
+
+//first thing to learn, when JS look for a property in an object, it search its own first, and then loop through its prototype chain.
+
+// notice here by prototype we means a concept, not the 'prototype' property of the constructor function
+
+//1. __proto__
+//to explain it, we use non standard JS syntax __proto__
+//not standard until ES6
+var person = {
+  kind: 'person'
+}
+
+var alien = {
+  kind: 'alien'
+}
+var kj = {}
+
+//assign person as prototype of kj
+kj.__proto__ = person;
+
+console.log(kj.kind); //person
+
+kj.__proto__ = alien;
+
+console.log(kj.kind); //alien
+
+//we can use isPrototypeOf function to check
+console.log(alien.isPrototypeOf(kj)); //true
+console.log(Object.getPrototypeOf(kj)); //alien
+
+
+//New / updated properties are assigned to the object, not to the prototype
+
+kj.kind = 'kj';
+console.log(kj.kind, alien.kind) //kj, alien
+
+
+//2. Object.create
+//Object.create is ES5, can be shimmed by es5-shim(https://github.com/es-shims/es5-shim)
+
+var rozy = Object.create(person); //same as rozy.__proto__ = person
+
+
+//3. Constructor Functions
+//Constructor functions are the most used way in JavaScript to construct prototype chains.
+function Foo() {}
+var foo = new Foo();
+foo instanceof Foo //true
+
+//In essence functions when used with the keyword new behave like factories, meaning that they create new objects. The new object they create is linked to the function by its prototype, more on this later. So in JavaScript we call this an instance of the function...by article
+
+//'this is assigned' implicitly
+//when we use new. we are doing sth like
+function Foo() {
+  //when called by new
+  var this = {};
+  this.__proto__ = Foo.prototype;
+
+  return this;
+}
+
+//4. The 'function prototype'
+//here the prototype is the property of a function
+
+//As confusing as it may sound, this ‘prototype’ property is not the real prototype (__proto__) of the function.
+</script>
+</html>

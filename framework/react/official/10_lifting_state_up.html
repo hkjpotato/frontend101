@@ -1,0 +1,228 @@
+<html>
+    <div id="app"></div>
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        /*
+        I think this problem on whether to store the state has been confused me a lot when I need to make a child element, such as a popup form. My general approach is to set the initial state of the form from props. Then when the user change it, it just updated its own state (or make it an uncontrolled form). The problem is that if the parent updates the props of this form, those changes made by the user will be lost.
+        */
+
+        /*
+        This document is not solving this problem directly, it talks abot a case when several child components need to share the changing data. In this case, the parent should hold the public, common state.
+        */
+
+        /*Let's follow its example*/
+
+        //First, create a pure functional component called BoilingVerdict
+        function BoilingVerdict(props) {
+            if (props.celsius >= 100) {
+                return <p>the water would boil.</p>;
+            }
+            return <p>The water would not boil.</p>;
+        }
+
+        //since we already learn conditional rendering, we can rewrite it in a simpler format
+        function BoilingVerdict(props) {
+            return props.celsius >= 100 ?
+            <p>the water would boil.</p> :
+            <p>The water would not boil.</p>
+        }
+
+        //next, get the user input...
+        class Calculator_0 extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleChange = this.handleChange.bind(this);
+                this.state = {temperature: ''}; //we use empty string instead of null to get rid of the warning
+            }
+            handleChange(e) {
+                this.setState({temperature: e.target.value});
+            }
+            render() {
+                const temperature = this.state.temperature;
+                return (
+                    <fieldset>
+                        <legend>Enter temperature in Celsius:</legend>
+                        <input
+                            value={temperature}
+                            onChange={this.handleChange} />
+                        <BoilingVerdict
+                            celsius={parseFloat(temperature)} />
+                    </fieldset>
+                )
+            }
+        }
+
+        //OK a new requirement on Fahrenheit input and they are kept in sync
+
+        //In sync...it means that when you change your f input, c will be change, and vice versa
+
+        //Wait, in that case, how many temperature do we have in total? Well, we only have one 'generic' temperature value. The difference is the scale
+
+        //make a map for scale shortcut
+        const scaleNames = {
+            c: 'Celsius',
+            f: 'Fahrenheit'
+        }
+
+        //Apparently, scale is a state of the calculator. Our legend text content actually depends on the scale, let's extract it (The whole input element)
+
+
+        //Look at this! the current child component TemperatureInput has its own state...is this ok?
+        class TemperatureInput_0 extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleChange = this.handleChange.bind(this);
+                this.state = {temperature: ''}
+            }
+            handleChange(e) {
+                this.setState({temperature: e.target.value});
+            }
+            render() {
+                const temperature = this.state.temperature;
+                const scale = this.props.scale;
+                return (
+                  <fieldset>
+                    <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                    <input value={temperature} onChange={this.handleChange} />
+                  </fieldset>
+                );
+            }
+        }
+        
+
+        //Immediately you see the problem, how does this input notify its parent about the temperature change? How does its sibling, the BoilingVerdict, get the temperature as input? This is where we need to lift the state up.
+
+        //But let's leave this problem for now. The tutorial goes on to create two input elements in the Calculator
+        class Calculator_1 extends React.Component {
+            render() {
+                return (
+                <div>
+                    <TemperatureInput scale='c' />
+                    <TemperatureInput scale='f' />
+                </div>
+                )
+            }
+        }
+
+        //Now we have another problem, each input element has its own state so that updating one will not be sync to the other.
+
+        /*
+            In summary, we have 1 problem here:
+            Child element's own state cannot be accessed outside itself, neither by its parent, nor its sibling
+        */
+
+        //we can use callback to notify its parent about its states change. However, a more valuable question to be asked is whether we should keep those as its own states.
+
+        //Let's continue
+        //conversion function for number
+        function toCelsius(fahrenheit) {
+          return (fahrenheit - 32) * 5 / 9;
+        }
+
+        function toFahrenheit(celsius) {
+          return (celsius * 9 / 5) + 32;
+        }
+        //for string value, return string
+        function tryConvert(temperature, convert) {
+          const input = parseFloat(temperature);
+          if (Number.isNaN(input)) {
+            return '';
+          }
+          const output = convert(input);
+          const rounded = Math.round(output * 1000) / 1000; //leave 3 decimal
+          return rounded.toString();
+        }
+        //I am confused why React choose this example as there are some unrelated stuffs.
+
+        //Now it talks about the problem we care before
+        /*
+            blablacbla...
+            The key is 
+            1. In React, sharing state is accomplished by moving it up to the closest common ancestor of the components that need it. This is called "lifting state up". 
+            2. The ancestor now becomes the  "source of truth" of the state. The children get the state as a prop.
+        */
+
+        //Rewrite the TemperatureInput
+        class TemperatureInput extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleChange = this.handleChange.bind(this);
+            }
+            handleChange(e) {
+                this.props.onTemperatureChange(e.target.value)
+            }
+            render() {
+                console.log('TemperatureInput render');
+                const temperature = this.props.temperature;
+                const scale = this.props.scale;
+                return (
+                  <fieldset>
+                    <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                    <input value={temperature}
+                           onChange={this.handleChange} />
+                  </fieldset>
+                );
+            }
+        }
+
+      class Calculator extends React.Component {
+            constructor(props) {
+                super(props)
+                this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+                this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+                //the minimal representation, no need to store two different values, just one with a unique scale
+                this.state = {
+                    temperature: '',
+                    scale: 'c'
+                }
+            }
+            handleCelsiusChange(temperature) {
+                this.setState({scale: 'c', temperature});
+            }
+            handleFahrenheitChange(temperature) {
+                this.setState({scale: 'f', temperature});
+            }
+            render() {
+                console.log('Calculator render');
+                const scale = this.state.scale;
+                const temperature = this.state.temperature
+                const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+                const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
+                return (
+                <div>
+                    <TemperatureInput 
+                        scale='c' 
+                        temperature={celsius}
+                        onTemperatureChange={this.handleCelsiusChange} />
+                    <TemperatureInput 
+                        scale='f' 
+                        temperature={fahrenheit}
+                        onTemperatureChange={this.handleFahrenheitChange} />
+                    <BoilingVerdict temperature={parseFloat(celsius)} />
+                    <input type="checkbox" checked={true} />
+                </div>
+                )
+            }
+        }
+
+        //Notice the input value is no longer a state of this component. We cant call setState to update it since it has no state. If we render this in dom and change the input value, nothing happened. Because this poor input field is now 'controlled' by the value passing as a prop from its ancestor. Since it is controlled by its ancestor (you are the boss, ancestor), the ancestor also need to let it knows what to do when there is a change. This is why onTemperatureChange is passed as a props from the ancestor.
+
+
+
+        /* Lessons Learned (most important)
+         There should be a single "source of truth" for any data that changes in a React application. Usually, the state is first added to the component that needs it for rendering. Then, if other components also need it, you can lift it up to their closest common ancestor. Instead of trying to sync the state between different components, you should rely on the top-down data flow.
+         */
+                //react jsx code in es6
+        ReactDOM.render(
+            <Calculator celsius={100}/>,
+            document.getElementById('app')
+        );
+    </script>
+    </script>
+</html>

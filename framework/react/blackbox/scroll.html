@@ -1,0 +1,97 @@
+<html>
+<style type="text/css">
+</style>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@15/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+  <script type="text/javascript">
+    var e = React.createElement;
+
+    var overScanEnd = 1;
+    var totalNums = 10;
+    var rowHeight = 200;
+    var global = 0;
+    var globalRow = 200;
+    class Canvas extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          // startDisplayIndex: 0,
+          currentIndex: 0,
+          // endDisplayIndex: currentIndex + overScanEnd
+        },
+        this.onScroll = this.onScroll.bind(this);
+      }
+      onScroll(e) {
+        console.log('onScroll get called');
+        // let scrollTop = e.target.scrollTop;
+        // var newIndex = Math.floor(scrollTop / rowHeight);
+        // if (newIndex !== this.state.currentIndex) {
+        //   this.setState({
+        //     currentIndex: newIndex
+        //   });
+        // }
+
+        if (Math.random() < 0.5) {
+          this.setState({
+            currentIndex: Math.random()
+          });
+        }
+      }
+      render() {
+        var totalHeight = 2000;
+        var topHeight = global += 5;
+        var divHeight = globalRow -= 5;
+        var bottomHeight = totalHeight - topHeight - divHeight;
+        var rootStyle = {
+          // width: rowHeight,
+          height: rowHeight * 3,
+          overflowY: 'scroll',
+          outline: '1px solid blue'
+        };
+
+        var topStyle = {
+          height: topHeight,
+          background: 'red'
+        };
+        var divStyle = {
+          background: 'lime',
+          height: divHeight,
+          // outline: '2px solid blue'
+        };
+        var bottomStyle = {
+          background: 'red',
+          height: bottomHeight
+        };
+        return (
+          e(
+            'div',
+            {
+              style: rootStyle,
+              onScroll: this.onScroll
+            },
+            e(
+              'div',
+              {style: topStyle},
+              null
+            ),
+            e(
+              'div',
+              {style: divStyle},
+              this.state.currentIndex
+            ),
+            e(
+              'div',
+              {style: bottomStyle},
+              null
+            )
+          )
+        );
+      }
+    }
+
+    ReactDOM.render(e(Canvas, null), document.getElementById('root'));
+  </script>
+</body>
+</html>

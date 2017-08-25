@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #4d4d4d;
+      font-weight: 300;
+      text-align: center;
+    }
+    .bar {
+      width: 100px;
+      height: 20px;
+      background-color: lightblue;
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+      /* transition related*/
+      transition: top 5s;
+    }
+
+    #container > div {
+      float: left;
+      position: relative;
+      height: 340px;
+      margin-left: 10px;
+    }
+
+    .group {
+      border: 1px dashed lightgray;
+      width: 200px;
+    }
+
+    #inlineStyleLog {
+      font-size: .8em;
+      color: #2ECC71;
+      overflow-y: scroll;
+      height: 300px;
+    }
+
+    #computeStyleLog {
+      color: #FF4D4D;
+      font-size: .8em;
+      overflow-y: scroll;
+      height: 300px;
+    }
+
+    .highlight {
+      color: black;
+      font-weight: 900;
+    }
+    #description {
+      padding: 20px;
+    }
+
+    #container {
+      width: 720px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="description">
+<h3>Effect of Dom Tree Manipulation on CSS transition</h3>
+<em>"Various things can cause the computed style of an element to change, or for an element to start or stop having computed style. (For the purposes of this specification, an element has computed style when it is in the document tree, and does not have computed style when it is not in the document tree.) These include insertion and removal of elements from the document tree..."</em> &mdash;<a href="https://www.w3.org/TR/css3-transitions/" target="_blank">W3C css3-transitions</a>
+</div>
+<div id="container">
+  <div>
+    <button onclick="down()">transition down</button>
+    <button onclick="reinsert()">reinsert the bar</button>
+    <button onclick="up()">transition up</button>
+    <div class="bar" style="top: 30px">bar</div>
+  </div>
+  <div class="group">
+    inline style<br><span style="font-size: .8em;">(element.style.top)</span>
+    <div id="inlineStyleLog"></div>
+  </div>
+  <div class="group">
+    computed style<br><span style="font-size: .8em;">(window.getComputedStyle.top)</span>
+    <div id="computeStyleLog"></div>
+  </div>
+</div>
+<script type="text/javascript">
+
+
+var bar = document.querySelector('.bar');
+var inlineLog = document.getElementById('inlineStyleLog');
+var computeLog = document.getElementById('computeStyleLog');
+// a timer to print out the data
+var timer = null;
+// print the initial info
+var inlineStyle = bar.style.top;
+var computeStyle =  window.getComputedStyle(bar, null).top;
+printInfo(inlineStyle, computeStyle);
+
+function down() {
+  //set the inline style
+  bar.style.top = '300px';
+  if (!timer) {
+    setTimer();
+  }
+}
+
+function up() {
+  //set the inline style
+  bar.style.top = '30px';
+  if (!timer) {
+    setTimer();
+  }
+}
+
+function reinsert() {
+  console.log('reinsert', bar.parentNode);
+  var parent = bar.parentNode;
+  parent.removeChild(bar);
+  parent.insertBefore(bar, null);
+}
+
+
+function setTimer() {
+    console.log('setTimer..')
+    //set the timer, clear when the compute match the inline
+    timer = setInterval(function() {
+      var inlineStyle = bar.style.top;
+      var computeStyle =  window.getComputedStyle(bar, null).top;
+      //udpate the information
+      printInfo(inlineStyle, computeStyle);
+      //scroll to Bottom
+      inlineLog.scrollTop = inlineLog.scrollHeight;
+      computeLog.scrollTop = computeLog.scrollHeight;
+      //clean the timer if the styles match
+      if (inlineStyle === computeStyle) {
+        clearInterval(timer);
+        timer = null;
+      } 
+    }, 300);
+}
+
+function printInfo(inlineStyle, computeStyle) {
+  if (inlineStyle === computeStyle) {
+    //hightlight the matched styles
+    inlineLog.insertAdjacentHTML('beforeend', "<br><span class='highlight'>" + inlineStyle + "</span>");
+    computeLog.insertAdjacentHTML('beforeend', "<br><span class='highlight'>" + computeStyle + "</span>");
+  } else {
+    inlineLog.insertAdjacentHTML('beforeend', "<br>" + inlineStyle);
+    computeLog.insertAdjacentHTML('beforeend', "<br>" + computeStyle);
+  }
+}
+  
+</script>
+</html>

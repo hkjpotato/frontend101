@@ -1,0 +1,173 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+      const ADD_TODO = 'ADD_TODO';
+      const TOGGLE_TODO = 'TOGGLE_TODO';
+      const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
+
+      const Filters = {
+        SHOW_ALL: 'SHOW_ALL',
+        SHOW_COMPLETED: 'SHOW_COMPLETED',
+        SHOW_ACTIVE: 'SHOW_ACTIVE'
+      };
+
+      /*
+       * Components
+       */
+
+      class AddTodo extends React.Component {
+        handleClick(e) {
+          const node = this.refs.input;
+          const text = node.value.trim();
+          this.props.onAddClick(text);
+          node.value = '';
+          //this is an uncontrolled component
+        }
+        render() {
+          //arrow function to get rid of this problem
+          return (
+            <div>
+              <input type='text' ref='input' />
+              <button onClick={(e) => this.handleClick(e)}>
+                Add
+              </button>
+            </div>
+          )
+        }
+      }
+
+      //es6 syntex: destructuring assignment of props
+      const FilterLink = ({isActive, name, onClick}) => {
+        if (isActive) {
+          return <span>{name}</span>;
+        }
+        return (
+          <a href="#" onClick={
+            e => { e.preventDefault(); onClick(); }
+          }>
+            {name}
+          </a>
+        )
+      };
+
+      const Footer = ({filter, onFilterChange}) => (
+        <p>
+          Show:
+          {' '}
+          <FilterLink
+            name='All'
+            isActive={filter === Filters.SHOW_ALL}
+            onClick={() => onFilterChange(Filters.SHOW_ALL)} />
+          {', '}
+          <FilterLink
+            name='Completed'
+            isActive={filter === Filters.SHOW_COMPLETED}
+            onClick={() => onFilterChange(Filters.SHOW_COMPLETED)} />
+          {', '}
+          <FilterLink
+            name='Active'
+            isActive={filter === Filters.SHOW_ACTIVE}
+            onClick={() => onFilterChange(Filters.SHOW_ACTIVE)} />
+        </p>
+      );
+
+      const Todo = ({ onClick, completed, text }) => (
+        <li
+          onClick={onClick}
+          style={{
+            textDecoration: completed ? 'line-through': 'none',
+            cursor: 'pointer'
+          }}>
+          {text}
+        </li>
+      );
+
+      const TodoList = ({ todos, onTodoClick }) => (
+        <ul>
+          {todos.map(todo => 
+            <Todo
+              {...todo}
+              key={todo.id}
+              onClick={() => onTodoClick(todo.id)} />
+          )}
+        </ul>
+      );
+
+      //init the app
+      let nextTodoId = 0;
+      class TodoApp extends React.Component {
+        constructor(props) {
+          super(props)
+          this.addTodo = this.addTodo.bind(this);
+          this.toggleTodo = this.toggleTodo.bind(this);
+          this.onFilterChange = this.onFilterChange.bind(this);
+          this.state = {
+            todos: [],
+            visibilityFilter: Filters.SHOW_ALL
+          }
+        }
+        addTodo (text) {
+          this.setState({
+            todos: [...this.state.todos, {
+              text: text,
+              id: nextTodoId++,
+              completed: false
+            }]
+          });
+        }
+        toggleTodo (toggleId) {
+          this.setState({
+            todos: this.state.todos.map(todo =>
+              todo.id === toggleId ?
+                Object.assign({}, todo, { completed: !todo.completed}) :
+                todo
+            )
+          });
+        }
+        onFilterChange (filter) {
+          this.setState({
+            visibilityFilter: filter
+          })
+        }
+        render() {
+          let visibleTodos = this.state.todos;
+          const visibilityFilter = this.state.visibilityFilter;
+          switch (visibilityFilter) {
+            case Filters.SHOW_COMPLETED:
+              visibleTodos = visibleTodos.filter(todo => todo.completed);
+              break;
+            case Filters.SHOW_ACTIVE:
+              visibleTodos = visibleTodos.filter(todo => !todo.completed);
+            break;
+          }
+
+          return (
+            <div>
+              <AddTodo onAddClick={this.addTodo} />
+              <TodoList
+                todos={visibleTodos}
+                onTodoClick={this.toggleTodo} />
+              <Footer
+                filter={visibilityFilter}
+                onFilterChange={this.onFilterChange} />
+            </div>
+          )
+        }
+      }
+
+      //react jsx code in es6
+      ReactDOM.render(
+          <TodoApp />,
+          document.getElementById('app')
+      );
+    </script>
+</html>

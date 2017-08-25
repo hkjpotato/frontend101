@@ -1,0 +1,44 @@
+<html>
+    <div id="app"></div>
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+    </script>
+    <script type="text/javascript">
+    //This is my personal summary
+
+    //high-order function
+    /*
+      In mathematics and computer science, a higher-order function (also functional, functional form or functor) is a function that does at least one of the following: takes one or more functions as arguments (i.e., procedural parameters), returns a function as its result.
+    */
+
+    //a function can be used as argument
+
+    //a function can be used as return
+    //original
+    function getSum(...args) {
+      sum = 0;
+      args.forEach(function(d) {
+        sum += d;
+      });
+      return sum;
+    }
+
+    function lazyGetSum(...args) {
+      //args is in the closure
+      //the return function can access this closure
+      return function() {
+        sum = 0;
+        args.forEach(function(d) {
+          sum += d;
+        });
+        return sum;
+      }
+    }
+    </script>
+</html>

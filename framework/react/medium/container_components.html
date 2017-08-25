@@ -1,0 +1,40 @@
+<html>
+    <div id="app"></div>
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        //a review of https://medium.com/@learnreact/container-components-c0e67432e005
+        
+        //Within this article
+
+        //container component does data fetching and then renders its corresponding sub-component
+
+        //corresponding sub-component means component with same name
+
+
+        class CommentList extends React.Component {
+          constructor() {
+            super();
+            this.state = { comments: [] };
+          }
+          componentDidMount() {
+
+          }
+          render() {
+            let arr = [1, 2, 3];
+            return <ul>{arr.map(this.renderComment)}</ul>;
+          }
+          renderComment({body, author}) {
+            return <li key={i}>{d}</li>;
+          }
+        }
+
+        ReactDOM.render(<CommentList />, document.getElementById('app'));
+    </script>
+    </script>
+</html>

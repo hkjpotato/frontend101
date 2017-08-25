@@ -1,0 +1,236 @@
+<html>
+<body>
+  <div id="root"></div>
+  <svg class="spinner" viewBox="0 0 100 100" width="20" height="20">
+    <circle cx="50" cy="50" r="42" transform="rotate(-90,50,50)" />
+  </svg>
+  <script type="text/javascript">
+  //https://developers.google.com/web/fundamentals/getting-started/primers/promises
+
+  //forEach isn't async-aware
+
+  //it means it does not do things in sequence when in async mode, it start it in order, but may not end it in the same order
+
+  //solution: turn an array into a sequence of promises 
+
+  var rootApi = 'http://localhost:8000/feeder/api/feeders/1/buss/';
+
+
+  var bussIndexs = [7, 8, 9, 10, 11];
+
+  // Start off with a promise that always resolves
+  var sequence = Promise.resolve();
+  //this creats a promise that resolves to whatever value you give it
+
+  // This is the first time we've seen Promise.resolve(), which creates a promise that resolves to whatever value you give it. If you pass it an instance of Promise it'll simply return it (note: this is a change to the spec that some implementations don't yet follow). If you pass it something promise-like (has a then() method), it creates a genuine Promise that fulfills/rejects in the same way. If you pass in any other value, e.g., Promise.resolve('Hello'), it creates a promise that fulfills with that value. If you call it with no value, as above, it fulfills with "undefined".
+
+
+  function get(url) {
+    return new Promise(function(resolve, reject) {
+      var req = new XMLHttpRequest();
+      req.open('GET', url);
+      req.onload = function() {
+        //this is called even on 404 etc
+        //so check the status
+        if (req.status == 200) {
+          resolve(req.response);
+        } else {
+          console.log('wtf', req.status);
+          reject(Error(req.statusText));
+        }
+      }
+      //handle netork errors(not the server error)
+      req.onerror = function() {
+        reject(Error("Network Error"));
+      }
+      //make the request
+      req.send();
+    })
+  }
+
+  function getJSON(url) {
+    return get(url).then(JSON.parse);
+  }
+
+  bussIndexs.forEach(function(index) {
+    getJSON(rootApi + index).then(function(json) {
+      // console.log('get json of ', json);
+      // addHtmlToPage(json);
+    });
+  })
+
+  function addHtmlToPage(html) {
+    var newNode = document.createElement("div");
+
+    newNode.innerText = html.object + ' ' + html.id;
+    document.querySelector('#root')
+      .insertBefore(newNode, null);
+  }
+
+
+
+
+  // var randomDelayJSON = function(url) {
+  //   return getJSON(url).then(function(json) {
+  //     return new Promise(function(resolve, reject) {
+  //       var delay = Math.random() * 2000;
+  //       setTimeout(function() {
+  //         console.log('delay ', delay);
+  //         resolve(json);
+  //       }, delay)
+  //     });
+  //   })
+  // }
+
+
+  // var curr = Promise.resolve();
+  // var global = null;
+  // bussIndexs.forEach(function(index) {
+
+  //   //in the first round, since the sequence is already resolved it will do the cb of then immediately
+
+  //   //in the later round, when we that be resolved really depends on when it is resolved 
+
+  //   //why we need to reassign, it is like a pointer for prev and curr
+
+  //   //to answer that, let's think about what sequence is at this moment
+
+  //   //it is a promise that has been called then and then
+
+  //   //originally it is an empty promise
+  //   // sequence = 
+  //   curr = curr
+  //     .then(function(val) {
+  //       console.log('index ', index, 'is resolved to ', val);
+  //       //return a promise?
+  //       return randomDelayJSON(rootApi + index);
+  //     })
+  //     .then(function(json) {
+  //       console.log('heihei json', json);
+  //       //actually we return undefined
+  //       addHtmlToPage(json);
+  //       return Math.random();
+  //     });
+  // });
+
+
+
+  /*
+  the above is the same as 
+  //step1
+  var sth = Promise.resolve()
+  .then(function() {
+    return a new Promise, an async action state to be resolved
+  }).then(function() {
+    once resolve do sth
+  });
+  //step2
+  sth.then(function() {
+    return a new Promise, with the next val in the for loop
+  }).then(function() {
+    do sth
+  })
+
+
+  */
+
+
+
+  // array.reduce is really useful for boiling an array down to a single value, which in this case is a promise.
+
+
+  // bussIndexs.reduce(function(myorder, nextIndex) {
+  //   return myorder.then(function() {
+  //     return getJSON(rootApi + nextIndex);
+  //   }).then(function(json) {
+  //     console.log('do sth after get json');
+  //   });
+  // }, Promise.resolve())
+
+  //a little about Promise catch
+
+  // Promise.resolve(
+  //   new Promise(function(resolve, reject) {
+  //     reject(1000);
+  //   }))
+  //   .then(function(val) {
+  //     console.log('get val resolve?', val)
+  //   }, function(val) {
+  //     console.log('I first try to catch you', val);
+  //   })
+  //   .catch(function(val) {
+  //     console.log('I catch you', val)
+  //   });
+
+
+  // Promise
+  // .resolve(
+  //   new Promise(function(resolve, reject) {
+  //     console.log('run first promise');
+  //     // resolve('first resolved');
+  //     reject('first promise rejected');
+  //   })
+  //   )
+  // .then(function(val) {
+  //   console.log(val);
+  //   return new Promise(function(resolve, reject) {
+  //     console.log('run second promise');
+  //     reject('second promise rejected');
+  //   })
+  // }).catch(function(val) {
+  //   console.log('catch: ', val)
+  // });
+
+
+  
+
+  //http://stackoverflow.com/questions/13294658/throw-errormsg-vs-throw-new-errormsg
+
+  //http://stackoverflow.com/questions/16142583/whats-the-different-between-error-and-exception-in-javascript
+
+
+
+  //Promise.all takes an array of promises and creates a promise that fulfills when all of them successfully complete. You get an array of results (whatever the promises fulfilled to) in the SAME ORDER as the promises you passed in.
+
+  function multi2AfterRanT(val) {
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        resolve(val * 2);
+      }, Math.random() * 1000);
+    })
+  }
+
+  var vals = [3,4,5,6];
+  //get an array of promises
+  // var promises = vals.map(multi2AfterRanT);
+
+  // Promise.all(promises)
+  //   .then(function(what) {
+  //     console.log(what);
+  //   })
+
+
+  // var promises = vals.map(new Promise(function(resolve, reject) {
+
+  // }))
+
+
+  Promise.resolve(100)
+    .then(function(val) {
+      console.log(val);
+    })
+    .then(function(val) {
+      console.log(val);
+    })
+    .then(function(val) {
+      console.log(val);
+    })
+    .then(function(val) {
+      console.log(val);
+    });
+
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+<script type="text/javascript">
+/*
+JavaScript classes introduced in ECMAScript 2015 are syntactical sugar over JavaScript's existing prototype-based inheritance. The class syntax is not introducing a new object-oriented inheritance model to JavaScript. JavaScript classes provide a much simpler and clearer syntax to create objects and deal with inheritance.
+
+JS class is not real object oriented inheritance model, but a syntax sugar over js prototype-based inheritance
+*/
+
+//Classses are in fact special functions
+
+//Class has class expressions and class declarations
+
+//1.Class declarations
+
+class Animal {
+    //only one constructor
+    constructor(name) {
+        this.name = name;
+    }
+
+    //prototype method
+    eat() {
+        console.log(this.name + ' eating...')
+    }
+    static say() {
+        console.log("Animal say...");
+    }
+
+}
+
+let a1 = new Animal('a1');
+
+console.log(a1);
+
+Animal.say();
+
+//even though class are special function, class declaration is not hoisted!
+
+</script>
+</html>

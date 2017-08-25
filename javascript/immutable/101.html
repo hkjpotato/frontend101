@@ -1,0 +1,160 @@
+<html>
+<body>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+
+  <script type="text/javascript">
+    //this is a review of http://thomastuts.com/blog/immutable-js-101-maps-lists.html
+    //->8/10 easy, good enough for intro
+
+    //I found it a much better tutorial then the official document since it is more human language.
+
+    //Immutable object cannot be modified
+
+    //Persistent data/object can be modified, though the original data remains the same, it return the new data. (That's why facebook call Persistent data as the 'API' of immutable data).
+
+    //"With Immutable.js, we mutate and retrieve our data using methods. This is quite a change compared to the regular JavaScript way of directly setting data on an object, or retrieving it using a key."---oh that's why I can't use index
+
+    const Map = Immutable.Map;
+    let person = Map({
+      firstName: 'KJ',
+      lastName: 'Huang'
+    });
+
+    person.firstName; //undefined
+    person.get('firstName'); //KJ
+
+    //set data
+    let p = person.set('firstName','Nobody');
+
+    person.get('firstName'); //still KJ! original data is not mutable
+    //set is like a persistent data API
+
+
+    //*Iterable
+    //Iterable is the base of all collections in Immutable
+    p instanceof Immutable.Iterable; //true
+
+    //Iterable is a set of key/value that can be iterated
+
+    //fromJS will convert the js object into immutable object, it will call the corresponding function for Map and Array
+    const fromJS = Immutable.fromJS;
+
+    let book1 = fromJS({
+      title: 'Harry Potter',
+      author: {
+          firstName: 'J.L',
+          lastName: 'Rowling'
+      }
+    });
+
+    //if you already know the js object is a map, you can also do this
+    let book2 = Map({
+      title: 'Harry Potter',
+      author: {
+        firstName: 'J.L',
+        lastName: 'Rowling'
+      }
+    });
+
+    //*Get nested data
+    //instead of book['author']['firstName']
+
+    //method1
+    book1.get('author').get('firstName')
+
+    //method2, use getIn
+    book1.getIn(['author', 'firstName']); //the param is a key path array
+
+    //*Set data
+    let newbook = book1.setIn(['author', 'firstName'], 'K.J');
+
+
+    //*List! list has js array method like push, pop, unshift..
+    const List = Immutable.List;
+    //we can't use List here I guess, the result have a different type
+    let list1 = fromJS([
+      {name: 'Tom', age: 11},
+      {name: 'Jerry', age: 9},
+      {name: 'Mickey', age: 20},
+    ]);
+
+    var item = list1.getIn([0, 'name']);
+
+    //update nested data
+    let network = fromJS({
+      "node": ['n1', 'n2'],
+      "link": ['l1', 'l2']
+    });
+
+    //now we want to push one more into it
+    let newNodes = network.get('node').push('n3');
+    network2 = network.set('node', newNodes);
+
+    //we need update/updateIn function to save our life
+    // network3 = network.update('node', function(item) {
+    //   return item.push('n4');
+    // });
+
+    //a super complicate example
+    let book = fromJS({
+      title: 'Harry Potter & The Goblet of Fire',
+      isbn: '0439139600',
+      series: 'Harry Potter',
+      author: {
+        firstName: 'J.K.',
+        lastName: 'Rowling'
+      },
+      genres: [
+        'Crime',
+        'Fiction',
+        'Adventure',
+      ],
+      storeListings: [
+        {storeId: 'amazon', price: 7.95},
+        {storeId: 'barnesnoble', price: 7.95},
+        {storeId: 'biblio', price: 4.99},
+        {storeId: 'bookdepository', price: 11.88},
+      ]
+    });
+
+    //set genres
+    book = book.setIn(['genres', 0], 'Fantasy')
+
+    //update genres
+    book = book.update('genres', genres => genres.push('Wizard'));
+
+    //update value deep, udpate amazon price to 6.8
+
+    //first use findIndex to set up the key path
+    const indexOfAmazon = book.get('storeListings').findIndex(item=> item.get('storeId') === 'amazon'
+    );
+
+    //find/findIndex is like a filter
+    book = book.setIn(['storeListings', indexOfAmazon, 'price'], 6.8);
+
+    //get the average price
+    const sum = book.get('storeListings').reduce((prev, curr) => prev + curr.get('price'), 0);
+
+    const avg = sum / book.get('storeListings').count();
+
+    //update all
+    const storeListings = book.get('storeListings').map((d) => {
+      const newprice = d.update('price', price=>price * .9);
+      return newprice;
+    });
+
+    let bookie = book.set('storeListings', storeListings);
+
+    //another way
+    let bookoa = book.update(
+      'storeListings', 
+      storeListings => storeListings.map(
+        item => item.update(
+          'price', 
+          price=> price * 0.9
+        )
+      )
+    );
+  </script>
+</body>
+</html>

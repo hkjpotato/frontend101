@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+var size = 100;
+var height = 500;
+var width = 960;
+
+/*create a list of random data [{r: random}] */
+var data = d3.range(size).map(function(){
+  return {r: Math.floor(Math.random() * 8 + 2)};
+});
+
+
+var force = d3.layout.force()
+  .size([width, height])
+  .nodes(data)
+  .charge(function(d){
+    return d.r * -2;
+  })
+  .start();
+
+
+var Nodes = React.createClass({
+  render: function() {
+    //create the circle element(svg)
+    var circles = this.props.data.map(function(d, i) {
+      return (
+        <circle
+          key={i}
+          cx={d.x}
+          cy={d.y}
+          r={d.r}
+          fill="steelblue"></circle>
+      )
+    });
+    return (<g>{circles}</g>)
+  }
+});
+
+var BubbleChart = React.createClass({
+  render: function() {
+    return (
+      <svg
+        width={this.props.width}
+        height={this.props.height}
+      >
+        <Nodes data={this.props.data} />
+      </svg>
+    )
+  }
+})
+
+force.on('tick', function() {
+  ReactDOM.render(
+    <BubbleChart width={width} height={height} data={data} />, 
+    document.getElementById('root'))
+})
+
+
+</script>
+
+
+</html>

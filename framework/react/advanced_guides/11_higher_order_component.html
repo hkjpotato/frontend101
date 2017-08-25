@@ -1,0 +1,305 @@
+<html>
+    <button id="updateBtn">Update DataSource</button>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+    //Why we care about this chapter? Because Redux need it.
+
+    //Higher-Order Components(HOC) is for component
+
+    //It is a pattern emerges from React's compositional nature
+
+    //Concretely, a HOC is a function that takes a component and returns a new component.
+    //Notice in React, Component does not necessarily produce dom element
+
+    //In my tutorial, as usual, I will focus on how to make one by myself.
+
+    //Then it talks about mixins in solving cross-cutting concerns. Cross-cutting concerns...what is that? after some searches it seems it is a concept from aspect oriented programming(AOP)...what is AOP...
+
+    //Forget about AOP, we just need to knows it is something related to 'sharing code between several components'
+
+    //Let's rewrite the official example to provide a better understanding of what's going on.
+
+    //It use a DataSource object as a black box for data source, let's create one so that we don't have black box in our example.
+
+    function getDataSource() {
+      let comments = [];
+      //init 10 comments
+      let numOfcomments = 10;
+      while (numOfcomments--) {
+        comments.push({
+          id: (10 - numOfcomments),
+          text: 'comment ' + (10 - numOfcomments)
+        });
+      }
+
+      let blogposts = [];
+      //init 5 blogpost
+      let numOfblogposts = 5;
+      while (numOfblogposts--) {
+        blogposts.push('blogpost ' + (5 - numOfblogposts));
+      }
+      //listeners list
+      let listeners = [];
+      //udpate function
+      function update() {
+        //add another comment
+        comments = [
+          ...comments, 
+          {
+            id: comments.length + 1,
+            text: 'comment ' + (comments.length + 1)
+          }
+        ]; //dont immutable it since everything is in frontend.
+
+        //update the blogposts content
+        blogposts = blogposts.map((b) => {
+          return b + (' update at min: ' + new Date().getMinutes().toString());
+        });
+        //notify the listeners
+        listeners.forEach(l=>l());
+      }
+
+      function addChangeListener(listener) {
+        listeners.push(listener);
+      }
+
+      function removeChangeListener(listener) {
+        listeners = listeners.filter(l => l !== listener);
+      }
+
+      function getBlogPost(postId) {
+        return blogposts[postId];
+      }
+
+      function getComments() {
+        return comments;
+      }
+
+      return {
+        getComments,
+        getBlogPost,
+        addChangeListener,
+        removeChangeListener,
+        update
+      }
+    }
+    //my DataSource
+    const DataSource = getDataSource();
+
+    //function called by clicking on button
+    function updateDataSource() {
+      DataSource.update();
+      console.log(DataSource.getComments());
+      console.log(DataSource.getBlogPost(1));
+    }
+
+    document.getElementById('updateBtn').addEventListener('click', updateDataSource);
+
+
+    //Ok, know let's use its React Components to see what it wants to do.
+
+
+    /*----code from the example----*/
+
+    //make a Comment Component
+    const Comment = ({comment}) => (
+      <div>{comment.text}</div>
+    );
+
+    class CommentList extends React.Component {
+      constructor() {
+        super();
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+          // "DataSource" is some global data source
+          comments: DataSource.getComments()
+        };
+      }
+
+      componentDidMount() {
+        // Subscribe to changes
+        DataSource.addChangeListener(this.handleChange);
+      }
+
+      componentWillUnmount() {
+        // Clean up listener
+        DataSource.removeChangeListener(this.handleChange);
+      }
+
+      handleChange() {
+        // Update component state whenever the data source changes
+        this.setState({
+          comments: DataSource.getComments()
+        });
+      }
+
+      render() {
+        return (
+          <div>
+            {this.state.comments.map((comment) => (
+              <Comment comment={comment} key={comment.id} />
+            ))}
+          </div>
+        );
+      }
+    }
+
+    //make a TextBlock
+    const TextBlock = ({text}) => (<h3>{text}</h3>);
+
+    class BlogPost extends React.Component {
+      constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+          blogPost: DataSource.getBlogPost(props.id)
+        };
+      }
+
+      componentDidMount() {
+        DataSource.addChangeListener(this.handleChange);
+      }
+
+      componentWillUnmount() {
+        DataSource.removeChangeListener(this.handleChange);
+      }
+
+      handleChange() {
+        this.setState({
+          blogPost: DataSource.getBlogPost(this.props.id)
+        });
+      }
+
+      render() {
+        return <TextBlock text={this.state.blogPost} />;
+      }
+    }
+    // ReactDOM.render(
+    //   <div>
+    //     <BlogPost id={0} />
+    //     {'comment: '}
+    //     <CommentList />
+    //   </div>
+
+    //   , document.getElementById('app'));
+
+    //Ok, now we have clearify everything, let's move to next step.
+
+    //As the tutorial said, the CommentList and BlogPost share some similar behaviors
+
+    /*
+    1. on mount, attach a listener to DataSouce.
+    2. inside the listener, call setState to update the state of that's component.
+    3. on unmount, remove the listener.
+    */
+
+    //we want to abstract these common behaviors.
+
+    //This is where HOC comes into play.
+
+    //Basically, we want to write a function that can help us create the components sharing same behaviors
+
+    //here the tutorial is a little bit misleading. The function will not 'create' the CommentList. (By saying 'create' it sounds like CommentList is the return value. No, CommentList is the input). The function will use CommentList as an input, wrapp it with something, and return a new React Component that use CommentList for rendering. The function is the higher order component(component can also be a function, you know...it is tricky, maybe we should call it HOF(Higher Order Function))
+
+    //We call CommentList the 'WrappedComponent' since it is wrapped. We call the returned React Component 'EnhancedComponent' because after wrapping it is enhanced.
+
+    //const EnhancedComponent = HOC(WrappedComponent);
+
+    //Let's call the function withSubscription
+
+
+    const CommentListWithSubscription = withSubscription(
+      CommentList,
+      //HOC knows to the get the data by calling this function
+      function(thesource, props) {
+        thesource.getComments();
+      }
+    );
+
+    //how it works?
+    // This function takes a component...
+    function withSubscription(WrappedComponent, getData) {
+      // ...and returns another component...
+      return class extends React.Component {
+        constructor(props) {
+          super(props);
+          this.handleChange = this.handleChange.bind(this);
+          this.state = {
+            data: getData(DataSource, props)
+          };
+        }
+
+        componentDidMount() {
+          // ... that takes care of the subscription...
+          DataSource.addChangeListener(this.handleChange);
+        }
+
+        componentWillUnmount() {
+          DataSource.removeChangeListener(this.handleChange);
+        }
+
+        handleChange() {
+          this.setState({
+            data: selectData(DataSource, this.props)
+          });
+        }
+
+        render() {
+          // ... and renders the wrapped component with the fresh data!
+          // Notice that we pass through any additional props
+          return <WrappedComponent data={this.state.data} {...this.props} />;
+        }
+      };
+    }
+
+    //basically, what HOC function is doing is it wrap the raw component with a container
+    /*
+    const RawComponet = (props)=> {...}
+
+    const EnhancedComponent = (props) => {return <RawComponet data=.../> } 
+
+    no modify of the RawComponent at all! no extra 'div' wrapping!
+    */
+
+    //HOC is a pure function with no side effects.
+
+    //what's enhanced?
+    /*
+    The wrapped component get receives all props of the container, which is passed by you. And it has an additional prop called 'data'. As for how and why the data is used, HOC does not care about it, it is in the implemention details of the wrapped element. The HOC is like a data provider, which deal with the datasource.
+
+    HOC has the full control in defining the return component(the enhanced one). Thus HOC can specify play around the data source before it passed to the wrapped component.
+    */
+
+    //at this moment, you should realize that we also need to change the original CommentList component to make it suitable for the HOC.
+
+    //Rewrite CommentList into a functional component
+
+    const WrappedCommentList = ({data}) => (
+      <div>
+        {data.map((comment) => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
+      </div>
+    );
+
+    const WrappedCommentListWithSubscription = withSubscription(
+      CommentList,
+      function (DataSource) { return DataSource.getComments();}
+    );
+
+    ReactDOM.render(
+      <div>
+        {'comment: '}
+        <WrappedCommentListWithSubscription />
+      </div>
+      , document.getElementById('app'));
+    </script>
+</html>

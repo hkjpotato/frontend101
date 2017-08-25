@@ -1,0 +1,166 @@
+<html>
+<body>
+
+    <script type="text/javascript">
+    /*Most difficult, no idea why put it here...I am not refering to the promise in this chapter but the actual page about promise
+
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+    */
+
+    //from my understanding, promise make async composible
+
+    /*
+    Syntax
+    new Promise( function(resolve, reject) { ... } );
+    */
+
+
+    //as you can see excutor will run immediately, and call resolve function after async finished. However, it is the 'then' that really use what is passed to the resolve function
+
+
+
+
+    //https://www.quora.com/Whats-the-difference-between-a-promise-and-a-callback-in-Javascript
+
+    //promise 'flatten' callback
+    var p1 = new Promise(excutor);
+    function excutor(resolve, reject) {
+      setTimeout(function() {
+        var dbval = 1000;
+        resolve(dbval);
+      }, 1000);
+    }
+
+    p1.then(function(dbval) {
+      //originally we should write it nested inside after dbval is gained
+      // console.log('I got db data and console it', dbval);
+
+    });
+
+
+    //JavaScript Promises use CALLBACK functions actually to specify what to do after a Promise has been resolved or rejected, 
+
+
+    setTimeout(function() {
+      var dbval = 2000;
+
+      // console.log('I got db data and console it', dbval);
+
+    }, 1000);
+
+
+    //let implement a fake promise mechanism with setTimeout
+
+    //let's say we want to report a random number after 2 seconds for 5 times
+
+    //using nested callback
+
+    function reportNumber() {
+      console.log(Math.random());
+    }
+
+    // setTimeout(function() {
+    //   reportNumber();
+    //   setTimeout(function() {
+    //     reportNumber();
+    //       setTimeout(function() {
+    //         reportNumber();
+    //       }, 1000);
+    //   }, 1000);
+    // }, 1000);
+    
+    function reportAfter1sec() {
+      return new Promise(function(resolve, reject) {
+        setTimeout(function() {
+          resolve();
+        }, 1000);
+      });
+    }
+
+    // reportAfter1sec()
+    // .then(function() {
+    //   reportNumber();
+    //   return reportAfter1sec();
+    // }).then(function() {
+    //   reportNumber();
+    //   return reportAfter1sec();
+    // });
+
+
+    //What is a promise? A promise is a proxy for a value not necessarily known at its creation time. With promises, rather than an asynchronous call accepting a callback, it instead returns a promise.
+
+    //so promise return sth instead of accept sth
+
+    var globalVal = 100;
+
+    var p = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        var random= Math.floor(Math.random() * 100);
+        resolve(random);
+      }, 1000);
+    });
+
+    p.then(function(random) {
+      globalVal = random;
+    })
+
+    // console.log('current global ', globalVal);
+
+    //think of promise as a cache
+
+    /*
+    make it as a story
+
+    --callback
+    I am going to cook a beef after 1 seconds, what do you want to do with that beef, tell me now so that when I am done I will follow your instruction to deal with that beef.
+
+    --promise
+    I am going to cook a beef after 1 seconds, I don't care what you want to do with that beef now, I will return you a ticket where you can get that beef and do whatever you want with it later.
+
+    */
+
+
+    //They, along with callbacks, streams, and generators/thunks, provide a way to deal with deferred work in your application. For example, returning the result of query to the client when it comes back from the database. The main advantage of a promise over a callback is that you have an instance of an object that represents that deferred work.
+
+    //a promise is a temporary object that represents a async work, instead of presetting what you want to do after that async work is done, you can use that object as a reference and give the instruction whenever you want.
+
+
+    //https://developers.google.com/web/fundamentals/getting-started/primers/promises
+
+
+    /*
+    event vs promise
+
+    event listener with callback 
+    is great for thing that can happen multiple time
+    and you don't care about the relationship between them
+
+    every event is an independent 'state', it is instant
+
+
+    promise can only happen one time and its state will be remember, it is a permanent discription of the 'state'
+
+    you can refer to this state later
+
+    what is required to decribe this 'state'
+
+    fulfilled
+    rejected
+    pending
+    settled
+
+var promise = new Promise(function(resolve, reject) {
+  // do a thing, possibly async, then…
+
+  if (ok) {
+    resolve("Stuff worked!");
+  }
+  else {
+    reject(Error("It broke"));
+  }
+});
+The promise constructor takes one argument, a callback with two parameters, resolve and reject. Do something within the callback, perhaps async, then call resolve if everything worked, otherwise call reject.
+    */
+    </script>
+</body>
+</html>

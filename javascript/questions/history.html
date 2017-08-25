@@ -1,0 +1,27 @@
+<html>
+<a href="http://www.google.com">google</a>
+<script type="text/javascript">
+//http://stackoverflow.com/questions/6762258/when-browser-sets-the-referrer-in-http-request-header
+// setTimeout(()=>{
+//   window.history.back();
+// }, 1000);
+
+// setTimeout(()=> {
+//   window.history.forward();
+// }, 1500)
+
+var stateObj = {
+  foo: "bar"
+}
+history.pushState(stateObj, "page 2", "bar.html");
+
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.state == 200) {
+    console.log('success');
+  }
+}
+xhttp.open('PUT', 'www.google.com', true);
+xhttp.send()
+</script>
+</html>

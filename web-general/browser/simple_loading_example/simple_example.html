@@ -1,0 +1,123 @@
+<html>
+ <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <!-- defer -->
+  <script src="defer.js" type="text/javascript" defer></script>
+  <!-- head -->
+  <script src="head.js" type="text/javascript"></script>
+  <!-- external css -->
+  <link rel="stylesheet" type="text/css" href="abc.css">
+  <style>
+    body {
+      color: red;
+    }
+
+    img {
+      /*display: block;*/
+      border: 1px solid black;
+    }
+  </style>
+  <!-- internal at head -->
+  <script>
+  // document.getElementById('log').insertAdjacentHTML('beforeend', 'inner js<br/>'); this fails because you dont have document yet
+  console.log('internal js before body now the body is ', document.body);
+
+  function onload() {
+    document.getElementById('log').insertAdjacentHTML('beforeend', 'body onload<br/>');
+    console.log('body onload');
+
+  };
+
+
+  var count = 0;
+
+  function doIt() {
+    if (count < 10) {
+      count++;
+      doIt();
+    }
+  }
+
+  $(document).ready(function(){
+      document.getElementById('log').insertAdjacentHTML('beforeend', 'document ready<br/>');
+
+      console.log('document ready');
+
+      //this is a large image
+      //document ready, but image has not not fully downloaded
+      $("#img0").on('load', function() {
+        document.getElementById('log').insertAdjacentHTML('beforeend', 'img0 load<br/>');
+      })
+
+      $("#img1").on('load', function() {
+        document.getElementById('log').insertAdjacentHTML('beforeend', 'img1 load<br/>');
+      })
+
+
+      $("#img2").on('load', function() {
+        document.getElementById('log').insertAdjacentHTML('beforeend', 'img2 load<br/>');
+      })
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function(){
+    console.log('DOMContentLoaded');
+    document.getElementById('log').insertAdjacentHTML('beforeend', 'DOMContentLoaded<br/>');
+    
+  });
+
+ </script>
+
+
+
+ </head>
+ <body onload="onload()">
+    <div id="log">
+    </div>
+
+    <img id="img0" src="http://www.amazingwallpaperz.com/wp-content/uploads/Cat-High-Resolution-Wallpapers.jpg" style="width:400px;height:300px;"/>
+
+    <img id="img1" src="http://www.amazingwallpaperz.com/wp-content/uploads/Cat-High-Resolution-Wallpapers.jpg" style="width:400px;height:300px;"/>
+
+
+    <img id="img2" src="http://www.amazingwallpaperz.com/wp-content/uploads/Cat-High-Resolution-Wallpapers.jpg" style="width:400px;height:300px;"/>
+    <!-- async -->
+    <script src="async.js" type="text/javascript" async></script>
+    <!-- external at body -->
+    <script src="body.js" type="text/javascript"></script>
+
+    <!-- internal at body -->
+    <script type="text/javascript">
+    // this is a review of http://stackoverflow.com/questions/1795438/load-and-execution-sequence-of-a-web-page
+
+    //Use MAMP to test it
+
+    console.log('bottom script');
+    document.getElementById('log').insertAdjacentHTML('beforeend', 'bottom inner script<br/>');
+
+    /*
+      because the src is an large image
+      the console results are:
+
+
+      head.js
+      internal js before body
+      body external
+      bottom script
+      deferjs
+      DOMContentLoaded
+      document read
+      body onload
+
+      asyncjs can be anywhere
+    */
+
+
+    //script at bottom vs documet ready
+    //http://stackoverflow.com/questions/6026645/document-readyfunction-vs-script-at-the-bottom-of-page
+
+    //script order?
+    // http://stackoverflow.com/questions/8996852/load-and-execute-order-of-scripts
+    </script>
+ </body>
+</html>

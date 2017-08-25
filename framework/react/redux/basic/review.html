@@ -1,0 +1,107 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+    //--ACTION
+    //action is payload and the ONLY source of information for the store, sent to store by store.dispatch(). notice reducer is not about the source of information, it is how to CHANGE the state inside the store. action is a plain JS object with type property, which can be stored in a separate module /actionTyps/.
+
+    //it is a good idea to pass as little data in each action as possible, pass index/id instead of the whole TODO object, for example.
+
+    //action creators is the function to create actions(so that you dont need to hard code them every time you want to dispatch a new action)
+
+    /*
+    function addTodo(text) {
+      return {
+        type: ADD_TODO, //could be a string
+        text
+      }
+    }
+    careful dont conflate action and action creator, same for state and reducer.
+
+    In redux, action creator only create action object, to dispatch, call dispatch function explicitly.
+
+    You can bind the action creator to a dispatch call
+    const boundAddTodo = text => dispacth(addTodo(text)) //create action and dispatch it when call boundAddTodo
+    */
+
+    //dispatch function: either call it directly from store as store.dispatch, or, more likely, access it using a HELPER like react-redux's connect.
+
+    /*
+    1. bindActionCreators: bind many action creators to a dispatch function
+
+    2. action creators can be async and have side-effects: e.g. AJAX
+    */
+
+    //source code
+    //action types (make it a variable instead of string)
+    const ADD_TODO = 'ADD_TODO'
+    const TOGGLE_TODO = 'TOGGLE_TODO'
+    const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+
+    //other constants
+    const VisibilityFilters = {
+      SHOW_ALL: 'SHOW_ALL',
+      SHOW_COMPLETED: 'SHOW_COMPLETED',
+      SHOW_ACTIVE: 'SHOW_ACTIVE'
+    }
+
+    //action
+    function addTodo(text) {
+      return { type: ADD_TODO, text }
+    }
+
+    //--REDUCER
+    //actions describe sth happen, is the source of information of store. However, store needs to know how application's state changes in response, and thats the job of reducers.
+
+    //In Redux, all the application state is stored as a single object. It's a good idea to think of its shape before writing any code.
+
+    //state is a minimal representation of our app
+
+    /*
+    in network data it could be:
+    app {
+      vis {
+        layoutparam {}
+        nodes[]
+        links[]
+      }
+      focus {
+        type
+        id
+      }
+      popup {
+        //form
+      }
+      filterType ''
+    }
+    */
+
+    /*
+    note on relationshipes
+    when there is a reference between different entities, keep the state as normalized as possible, without any nesting. 
+    1. https://github.com/paularmstrong/normalizr
+    2. http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html
+
+    basically.
+    1. dont repeat data in state, otherwise when updating data in one place, what about the other
+    2. try not to nested data in state, otherwise the reducer logic has to be nested as well (each todo has its own reducer vs only todos has a nested reducer?=>reducer composition??)
+    3. immutable data, a child's change results in a parent's change
+
+    I will come back to this topic later since it is about performance
+    */
+
+    //redulce handle action
+    //reducer is pure function that take previous state and an action and return next state(action creator could have side effect but reducer is pure)
+
+    //fun fact: reducer is called REDUCEr because it is the type of function to be passed to Array.prototype.reduce(reducer, ?initValue)
+
+    </script>
+</html>

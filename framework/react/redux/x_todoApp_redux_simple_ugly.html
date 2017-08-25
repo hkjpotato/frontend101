@@ -1,0 +1,205 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script type="text/babel">
+
+      /*---code for store---*/
+      const getStore = (reducer) => {
+        //must hold the state
+        let state;
+        let listeners = []; //a list of listeners
+
+        //a getter for state
+        const getState = () => state;
+
+        //api for action dispatch 
+        const dispatch = (action) => {
+          state = reducer(state, action);
+          listeners.forEach(l => l());
+        }
+
+        //api for subscribe
+        const subscribe = (listener) => {
+          listeners.push(listener);
+          //return a callback for unsubscribe
+          return () => {
+            listeners.filter(l => l != listener);
+          }
+        }
+
+        //before return, dispatch a dumy action to init the init state
+        dispatch({});
+        return {getState, dispatch, subscribe}
+      }
+
+
+      /*---TodoApp reducer(without composition)---*/
+      const todoApp = (
+        state={todos: [], visibilityFilter: 'SHOW_ALL'}, 
+        action) => {
+        switch (action.type) {
+          case 'SET_VISIBILITY_FILTER':
+            return {
+              ...state,
+              visibilityFilter: action.filter
+            }
+          case 'ADD_TODO':
+            return {
+              ...state,
+              todos: [...state.todos, {
+                id: action.id,
+                text: action.text,
+                completed: false
+              }]
+            }
+          case 'TOGGLE_TODO':
+            return {
+              ...state,
+              todos: state.todos.map(todo=>{
+                if (todo.id !== action.id) {
+                  return todo;
+                }
+                return {
+                  ...todo,
+                  completed: !todo.completed
+                };
+              })
+            }
+          default:
+            return state; 
+        }
+      }
+
+      //get our store ready
+      const store = getStore(todoApp);
+
+
+      /*---TodoApp UI, a pure rendering Component---*/
+      let nextTodoId = 0;
+      class TodoApp extends React.Component {
+        render() {
+          const {
+            todos,
+            visibilityFilter
+          } = this.props;
+          let visibleTodos;
+          switch (visibilityFilter) {
+            case 'SHOW_ALL':
+              visibleTodos = todos;
+              break;
+            case 'SHOW_ACTIVE':
+              visibleTodos = todos.filter(
+                todo => !todo.completed
+              );
+              break;
+            case 'SHOW_COMPLETED':
+              visibleTodos = todos.filter(
+                todo => todo.completed
+              );
+          }
+          return (
+            <div>
+              <input type="text" ref={(domNode)=>{this.input = domNode}} />
+              <button onClick={() => {
+                store.dispatch({
+                  type: 'ADD_TODO',
+                  text: this.input.value, 
+                  id: nextTodoId++
+                });
+                this.input.value = '';
+              }}>
+                Add Todo
+              </button>
+              <ul>
+                {visibleTodos.map(todo => 
+                  <li
+                    key={todo.id}
+                    onClick={()=> {
+                      store.dispatch({
+                        type: 'TOGGLE_TODO',
+                        id: todo.id
+                      })
+                    }}
+                    style={{
+                      textDecoration: todo.completed ?
+                        'line-through' :
+                        'none'
+                    }}>
+                    {todo.text}
+                  </li>
+                )}
+              </ul>
+              <p>
+                Show:
+                {' '}
+                <FilterLink
+                  filter='SHOW_ALL'
+                  currFilter={visibilityFilter}
+                >
+                  All
+                </FilterLink>
+                {', '}
+                <FilterLink
+                  filter='SHOW_ACTIVE'
+                  currFilter={visibilityFilter}
+                >
+                  Active
+                </FilterLink>
+                {', '}
+                <FilterLink
+                  filter='SHOW_COMPLETED'
+                  currFilter={visibilityFilter}
+                >
+                  Completed
+                </FilterLink>
+              </p>
+            </div>
+          );
+        }
+      }
+      //FilterLink container
+      const FilterLink = ({
+        filter,
+        currFilter,
+        children
+      }) => {
+        if (filter === currFilter) {
+          //just wrap the children props in a normal <span> tag
+          return <span>{children}</span>
+        }
+        //otherwise it should be clickabl
+        return (
+          <a href='#'
+             onClick={e => {
+              e.preventDefault();
+              store.dispatch({
+                type: 'SET_VISIBILITY_FILTER',
+                filter
+              });
+             }}
+           >
+           {children}
+          </a>
+        )
+      }
+
+      /*---Setup the App---*/
+      const render = () => {
+        ReactDOM.render(
+          <TodoApp {...store.getState()} />,
+          document.getElementById('app')
+        )
+      };
+      //subsribe
+      store.subscribe(render);
+      //init render
+      render();
+    </script>
+</html>

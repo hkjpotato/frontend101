@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <style type="text/css">
+
+    </style>
+  </head>
+  <body>
+
+    <div class="container my-container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group input-group-lg">
+            <span class="input-group-addon">Stroke Color</span>
+            <span class="input-group-addon">
+              <input type="checkbox" onchange="defaultStrokeCheck(this)">
+            </span>
+            <span class="input-group-addon">Default</span>
+            <span class="input-group-addon">Black</span>
+            <input id="strokeRange" value="200" type="range" min="0" max="255" step="1">
+            <span class="input-group-addon">White</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          Stroke Color
+          <input type="checkbox" onchange="defaultStrokeCheck(this)">
+          Default
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" value="">
+            Deafult
+          </label>
+          <label>
+            black
+            <input id="strokeRange" value="200" type="range" min="0" max="255" step="1">
+            white
+          </label>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+    var stroke = 200;
+
+    function defaultStrokeCheck(check) {
+      var strokeRange = document.getElementById('strokeRange');
+      if (check.checked) {
+        strokeRange.disabled = true;
+        stroke = 'undefined';
+      } else {
+        strokeRange.disabled = false;
+        stroke = strokeRange.value;
+      }
+      console.log(stroke);
+    }
+
+    /*
+
+
+    */
+    </script>
+  </body>
+</html>

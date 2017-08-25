@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <script type="text/javascript">
+  mocha.setup('bdd');
+  const expect = chai.expect;
+  describe('Exploring Sequence and Range(), btw Range is a Seq.Indexed of number, in Immutable.js', ()=> {
+    it('should see Seq() act like an Iterable', ()=> {
+      const range = _.range(1000);
+      let sequence = Immutable.Seq.of(...range);
+
+      expect(sequence.get(0)).to.equal(0);
+      expect(sequence.last()).to.equal(999);
+    });
+    it('should see Seq() is lazy', ()=> {
+      const range = _.range(1000);
+      var numberOfOperations = 0; //global counter
+      let powerOfTwo = Immutable.Seq.of(...range).map((d)=> {
+        numberOfOperations++;
+        return d * 2;
+      });
+
+      //I am lazy I am not going to really do that for you until you need it
+      expect(numberOfOperations).to.equal(0);
+      powerOfTwo.take(10).toArray(); // compute total lazily
+      expect(numberOfOperations).to.equal(10);   
+    });
+    it('should produce an overflow with infinite Range()', ()=> {
+      //Infinity a js reserverd word
+      const InfiniteRange = Immutable.Range(1, Infinity);
+      expect(InfiniteRange.size).to.equal(Infinity); // cool
+      const first1000Powers = InfiniteRange.take(1000).map(d=>d*2);
+      expect(first1000Powers.size).to.equal(1000);
+    });
+    it('should demonstrate chaining with Seq()', ()=> {
+      var counter = 0;
+      let oddBy2Range = Immutable.Range(0, Infinity)
+        .filter((d)=>{
+          counter++;
+          return d % 2 !== 0;
+        })
+        .map((d)=>{
+          counter++;
+          return d * 2;
+        });
+
+      expect(counter).to.equal(0);
+
+      let first10 = oddBy2Range.take(10);
+      expect(counter).to.equal(0);
+      first10.toArray();
+      expect(counter).to.equal(30); //filter 20 and get 10, for each, do 1 map, thus 20 + 10
+    });
+    it('should cache results of Seq()', ()=> {
+      var counter = 0;
+      let cachedResult = Immutable.Range(0, 1000).map((d)=>{
+        counter++;
+        return d * 2;
+      }).cacheResult();
+
+      expect(counter).to.equal(1000);
+
+      let cachedObjects = Immutable.Range(0, 100).map(d=>{
+        return new Object();
+      }).cacheResult();
+
+      let get10cached = cachedObjects.take(10).toArray();
+      let get10cachedAgain = cachedObjects.take(10).toArray();
+
+      get10cached.forEach((obj, index) => {
+        expect(obj === get10cachedAgain[index]).to.be.true;
+        //referencing the same object, without cacheResult, it will be false
+      });
+    });
+    it('should memorize results of Seq()', ()=> {
+      //not really care about this
+      expect(null==null).to.be.true;
+      expect(null===null).to.be.true;
+      expect(null==undefined).to.be.true;
+    });
+  });
+  mocha.run();
+  </script>
+</body>
+</html>

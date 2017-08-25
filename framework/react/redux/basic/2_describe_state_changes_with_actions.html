@@ -1,0 +1,46 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+      //In the previous example, the state is managed by the component itself, the method to change the state is defined as class method, now we won't change the state by the component itself.
+
+      //The second principle is the that the state tree is read only. Any time you want to change the state in redux, you dispatch an action, instead of changing by the component itself.
+
+      //what is an action: a minimal representation of that change
+
+      //what is a state: a minimal representation of data in the app
+
+      //action must have a 'type', which is suggested to be a string since it is serializable(why?)  #http://redux.js.org/docs/faq/Actions.html
+
+      const Counter = ({val, sthListenToAction}) => (
+        <div>
+          <h1>{val}</h1>
+          <button onClick={()=>sthListenToAction({type: 'ADD'})}>+</button>
+          <button onClick={()=>sthListenToAction({type: 'MINUS'})}>-</button>
+        </div>
+      )
+
+
+      function sthListenToAction(action) {
+        console.log(action);
+      }
+
+      const state = {
+        val: 0
+      }
+
+      //react jsx code in es6
+      ReactDOM.render(
+        <Counter val={state.val} sthListenToAction={sthListenToAction} />,
+        document.getElementById('app')
+      );
+    </script>
+</html>

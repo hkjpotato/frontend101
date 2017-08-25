@@ -1,0 +1,83 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        //react jsx code in es6
+        /*
+        Elements are the smallest building blocks of React apps.
+
+        An element describes what you want to see on the screen:
+
+        const element = <h1>Hello, world</h1>;
+
+        above is the same as the one created by React.createElement, a js Object
+
+        Unlike browser DOM elements, React elements are plain (JS)objects, and are cheap to create. React DOM takes care of updating the DOM to match the React elements.
+
+
+        elements make up component!
+        */
+
+        //these things below are the same
+        React.createElement('h1', {style: {color: 'red'}}, "the text");
+
+        <h1 style={{color: 'red'}}>the text</h1>
+
+        React.DOM.h1({color: 'red'}, "the text");
+
+        //Convenience wrappers around React.createElement() for DOM components are provided by React.DOM. For example, React.DOM.a(...) is a convenience wrapper for React.createElement('a', ...). They are considered legacy, and we encourage you to either use JSX or use React.createElement() directly instead.
+
+        //use ReactDOM to render react element into the root DOM node.
+
+        //React elements are immutable. You cant change children or attributes after created. An element is like a frame in a movie, which represents the UI at a certain point in time...interesting, then how we update this 'frame'?
+
+         //thus base on our knowledge so far, we can only update the UI by calling reactDOM.render with another new created element
+
+
+
+        // Update Example
+         function update() {
+            //use const since element is immutable
+            const element = makeElement(Math.random());
+            ReactDOM.render(
+                element,
+                document.getElementById('app')
+            );
+         }
+
+         function makeElement(val) {
+            console.log('js call');
+            return React.createElement(
+                'p',
+                null,
+                "hello",
+                React.createElement(
+                    "span",
+                    {style : {color: 'red'}},
+                    val
+                )
+            );
+        }
+         setInterval(update, 1000);
+
+
+
+         //In practice, most React apps only call ReactDOM.render() once. In the next sections we will learn how such code gets encapsulated into stateful components.
+
+         //if you check chrome developer tool you will see only val is updated.
+
+         //React DOM compares the element and its children to the previous one, and only applies the DOM updates necessary to bring the DOM to the desired state.
+
+         //so even you call the render multiple times on the whole UI element, only the part changed will be updated.
+
+        //what is the difference between ReactDOM.render and render function in a component?
+    </script>
+    </script>
+</html>

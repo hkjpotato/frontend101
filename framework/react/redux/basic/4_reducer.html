@@ -1,0 +1,73 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+      //A reducer calculates the next state tree based on the previous state tree and the action be dispatched
+
+      //Thing to know: the UI is most predictable when it is described as a pure function of the application state. (Think about functional component in React, we are going to say Bye to class component).
+
+      //In redux, not only the UI is a pure function of state, but the state change is managed by a pure function as well.
+
+      //This is even true in large app where it has a large state. The state change is controlled by a pure function (oldstate, action) => newstate
+
+
+      //third principle: to describe state mutation, we have to use a pure function to take previous state, and action being dispatched, and return the next state of the app. This function has to be pure. It is called reducer.
+      const Counter = ({state, sthListenToAction}) => (
+        <div>
+          <h1>{state.value}</h1>
+          <button onClick={()=>sthListenToAction({type: 'ADD'})}>+</button>
+          <button onClick={()=>sthListenToAction({type: 'MINUS'})}>-</button>
+        </div>
+      )
+
+      //Now we know those 3 principles, let's try to make a reducer, which take a prevState and action and then return a new state
+      function reducer(prevState, action) {
+        let newState = Object.assign({}, prevState);
+        switch (action.type) {
+          case 'ADD':
+            newState.value++;
+            break;
+          case 'MINUS':
+            newState.value--;
+        }
+        return newState;
+      }
+
+      //let's have a blackbox wrapper, it has its own state, it can listen to action, it can react to the action by render the UI
+      var blackbox = {
+        state: {value: 0},
+        listenToAction: function(action) {
+          console.log(this);
+          this.state = reducer(this.state, action);
+          this.render();
+        },
+        render: function() {
+          ReactDOM.render(
+            <Counter state={this.state} sthListenToAction={this.listenToAction.bind(this)} />,
+            document.getElementById('app')
+          );
+        }
+      }
+      //you will see this is actually similar the store of the redux library provided
+
+      //you will see what's the major functions of this blackbox
+      //1. it must hold the state
+      //2. it should be able to accept action, and mutate the state by reducer
+      //3. when there is a change in state, it will trigger some action.
+
+      blackbox.render();
+
+    </script>
+    <script type="text/javascript">
+ 
+
+    </script>
+</html>

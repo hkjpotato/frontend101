@@ -1,0 +1,45 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- redux -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
+    <script type="text/babel">
+      //recap of what store need to do
+
+      //1. store will hold the state, and getState will return it.
+      //2. dispatch accept an action. Internally, it will call the reducer and update the state it holds
+      //3. subscribe will listen to the change of the state, when there is a change it will call the callback passed in.
+
+
+      const createStore = (reducer) => {
+        let state;
+        //why we need a list? because subscribe can be called many times, we need to keep track of all listeners. This is like observer pattern.
+        let listeners = [];
+
+        const getState = () => state;
+        const dispatch = (action) => {
+          //dispatch do two things
+          //1. update the state using the passed in action (& original state)
+          state = reducer(state, action);
+          //2. run through the listeners and call each of them
+          listeners.forEach(listener=>listener());
+        };
+        const subscribe = (listener) => {
+          listeners.push(listener);
+          //oh we need to deal with unsubscribe here, we return a function that when it is called, it will remove the current listener (in this closure)
+          return () => {
+            listeners = listeners.filter(l => l !== listener);
+          }
+        };
+        //before the store is returned, let's dispatch a dummy action to init the state, otherwise our state is undefined
+        dispatch({});
+        return { getState, dispatch, subscribe };
+      }
+    </script>
+</html>

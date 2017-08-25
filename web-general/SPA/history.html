@@ -1,0 +1,50 @@
+<html>
+<body>
+<ul id="nav">  
+    <li><a href="">Home</a></li>  
+    <li><a href="product.html">Product</a></li>  
+    <li><a href="service.php">Service</a></li> 
+    <button>res</button> 
+</ul> 
+<div id="result"></div>
+
+<script type="text/javascript">
+var event = {
+  click: function(e){
+    console.log('click event')
+    var element = e.target || e.srcElement;
+    url = element.href;
+    // //过滤空值
+    if(url === undefined || url === "") return;
+    // //阻止默认跳转
+    console.log('you are a link')
+    e.preventDefault ? e.preventDefault() : (window.event.returnValue = false);
+
+    var data = encodeURI(element.getAttribute("title"));
+
+    // pjax.fnb = false;
+    // pjax.jump(url, data, null);
+  },
+  bindEvent: function (){
+    var nav = document.getElementById('nav');
+    nav.addEventListener("click", event.click);
+    // if(support === 'HTML5'){
+    //   window.addEventListener("popstate", event.popstate);
+    //   var nav = document.getElementById('nav');
+    //   nav.addEventListener("click", event.click);
+    //   //window.addEventListener("click", event.click);
+    // }else{
+    //   window.attachEvent("onhashchange", event.hashchange);
+    //   var nav = document.getElementById('nav');
+    //   nav.attachEvent("onclick", event.click);
+    //   //document.documentElement.attachEvent("onclick", event.click);
+    // }
+  }
+};
+
+event.bindEvent()
+
+
+</script>
+</body>
+</html>

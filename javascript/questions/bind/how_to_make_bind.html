@@ -1,0 +1,133 @@
+<html>
+<script type="text/javascript">
+//Realize the 'bind' function
+
+
+/*
+what does bind function do?
+ans: bind 'this'
+
+bind syntax:
+fun.bind(thisArg[, arg1[, arg2[, ...]]])
+
+key:
+bind return a new function, when this function is call, it will use the first arg passed to bind as this, and the rest args to bind will be used as params for the return function
+
+besides, if it is used as a constructor, the provided this will be ignored
+*/
+//bad test ...
+Function.prototype.bind = null;
+
+
+//Initial
+Function.prototype.bind1 = function(context) {
+    var fToBind = this; //the function who call bind
+    var args = Array.prototype.slice.call(arguments, 1);
+    //the bound function
+    var boundFunc = function() {
+        return fToBind.apply(
+            context, 
+            args.concat(Array.prototype.slice.call(arguments))
+        );
+    }
+    return boundFunc;
+}
+
+//Update to deal with boundFunction used with new
+Function.prototype.bind2 = function(context) {
+    var fToBind = this; //the function who call bind
+    var args = Array.prototype.slice.call(arguments, 1);
+    //the bound function
+    var boundFunc = function() {
+      //get the native_this passed by JS
+      var native_this = this;
+      //make the argument list, with preset args and current args
+      var argList = args.concat(Array.prototype.slice.call(arguments));
+      //check how the function is called
+      if (native_this instanceof boundFunc) {
+        //call as constructor
+        return fToBind.apply(native_this, argList);
+      } else {
+        //call as normal function
+        return fToBind.apply(context, argList);
+      }
+    }
+    //connect the prototype
+    boundFunc.prototype = this.prototype;
+    return boundFunc;
+}
+
+//Final, this version use an empty constructor to build the prototype chain
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    if (this.prototype) {
+      // Function.prototype doesn't have a prototype property
+      fNOP.prototype = this.prototype; 
+    }
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+
+
+
+// //es5-shim
+// bind: function bind(that) {
+//     var target = this;
+//     if (!isCallable(target)) {
+//         throw new TypeError('Function.prototype.bind called on incompatible ' + target);
+//     }
+//     var args = array_slice.call(arguments, 1);
+//     var bound;
+//     var binder = function () {
+//         if (this instanceof bound) {
+//             var result = target.apply(
+//                 this,
+//                 array_concat.call(args, array_slice.call(arguments))
+//             );
+//             if ($Object(result) === result) {
+//                 return result;
+//             }
+//             return this;
+//         } else {
+//             return target.apply(
+//                 that,
+//                 array_concat.call(args, array_slice.call(arguments))
+//             );
+//         }
+//     };
+//     var boundLength = max(0, target.length - args.length);
+//     var boundArgs = [];
+//     for (var i = 0; i < boundLength; i++) {
+//         array_push.call(boundArgs, '$' + i);
+//     }
+//     bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this, arguments); }')(binder);
+
+//     if (target.prototype) {
+//         Empty.prototype = target.prototype;
+//         bound.prototype = new Empty();
+//         Empty.prototype = null;
+//     }
+//     return bound;
+// }
+
+
+</script>
+</html>

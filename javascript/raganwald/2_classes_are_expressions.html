@@ -1,0 +1,72 @@
+<html>
+<script type="text/javascript">
+/*
+a review of http://raganwald.com/2015/06/17/functional-mixins.html
+
+I got quite confused reading this article, because in terms of implementation, it shows it step by step, but in terms of concept, things just show up surprising!
+*/
+
+//The goal of this article is to show you a way to really encapusulate a class
+
+//meaning that like in java you can have private property and expose getter and setter to the other elements.
+
+//Normally, if you want to encapsulate a Person, which has private property like firstName and lastName, and API like fullName, you do the following
+
+function Person (first, last) {
+  this.rename(first, last);
+}
+
+Person.prototype.fullName = function fullName () {
+  return this.firstName + " " + this.lastName;
+};
+
+
+Person.prototype.rename = function rename (first, last) {
+  this.firstName = first;
+  this.lastName = last;
+  return this;
+}
+
+//the problem is that outside world can still access firstName and lastName directly by p.firstName
+
+//it solves this problem by 1.Symbol 2.IIFE closure
+
+//a property defined by Symbol can be only accessed using bracket operator [sym1], it is not enumerable
+
+sym1 = Symbol('a');
+obj = {}
+obj[sym1] = 1000;
+str = sym1.toString(); //"symbol('a)"
+obj[sym1] //1000 that is fine
+Object.keys(obj) //[] not enumerable
+
+
+//the idea is to put symbol value (property name) in a closure and thus they can't be access from outsideworld
+
+let PersonS = (function() {
+  //in the closure created by IIFE
+  let firstNameProperty = Symbol('firstName'), 
+      lastNameProperty = Symbol('lastName');
+
+  let Person = class {
+    constructor(firstName, lastName) {
+      this.rename(firstName, lastName);
+    }
+    fullName() {
+      return this[firstNameProperty] + " " + this[lastNameProperty];
+    }
+    rename(firstName, lastName) {
+      this[firstNameProperty] = firstName;
+      this[lastNameProperty] = lastName;
+      return this;
+    }
+  }
+  return Person; //class is just expression
+})();
+
+var ps = new PersonS('kj', 'huang');
+ps.fullName() //kj huang
+ps.firstName; //undefined
+Object.getOwnPropertyNames(ps); //[]
+</script>
+</html>

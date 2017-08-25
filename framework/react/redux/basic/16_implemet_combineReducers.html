@@ -1,0 +1,83 @@
+<script type="text/javascript">
+//Let's implement combineReducer
+
+//first, what's the function of this function
+
+/*
+take several reducer functions in key value, the key is the state and value is the corresponding reducer, return a new reducer function
+
+the paramter of the new func is the whole state, when the func is called, this state will be separate into different parts, and passed in to the child funcs along with the action param
+
+the difficult part is how are we going to separate the state into parts accordingly
+
+const combineReducer = ({state1: func1, state2: func2}}) => {
+  return (state={}, action) => {
+    return {
+      state1: fuc1(state.state1, action),
+      state2: func2(state.state2, action);   
+    };
+  }
+}
+
+*/
+
+//First Try
+var combineReducer = (reducers) {
+  const stateKeys = Object.keys(reducers);
+  return (state={}, action) => {
+    //created a new one to return, this is the holder
+    var compositeState = {};
+    for (key in stateKeys) {
+      compositeState[key] = reducers[key](state[key], action);
+    };
+    return compositeState;
+  }
+}
+
+//Second Try, use reduce to loop through it
+var combineReducer = (reducers) {
+  return (state = {}, action) => {
+    //{} above is the default state of this reducer, dont mess up with the holder below
+    //the purporse of this reducer is to return a composite state object
+    //the value of each key of object is calculated by applying to corresponding reducer function 
+    const compositeState = Object.keys(reducers).reduce(
+      (nextState, key) => {
+        //run the corresponding reduce with corresponding state and assign to the corresponding key of the composite state
+        nextState[key] = reducers[key](
+          state[key], //use the the key to find corresponding previous state
+          action
+        )
+        //don't forget to return it for next loop
+        return nextState;
+      },
+      {} //this is the holder for the compositeState
+    )
+    return compositeState;
+  }
+}
+
+//Review
+var basicReducer = (prevState, action) {
+  var nextState = 'nextState' + action.type;
+  return nextState;
+}
+
+//why we want to combine reducers?
+// have a composite UI => have a composite state => have a combined reducer to handler the composite state update
+
+var reducersMap = {
+  state1: function reducer1() {console.log('reducer1');}
+  state2: function reducer2() {console.log('reducer1');}
+}
+
+var combineReducer(reducersMap) {
+  function (state, action) {
+    var states = Object.keys(reducersMap);
+    var nextState = {};
+    states.reduce(function(nextState, statekey) {
+      nextState[statekey] = reducersMap[statekey](state[statekey], action);
+      return nextState;
+    }, nextState);
+  }
+}
+</script>

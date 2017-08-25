@@ -1,0 +1,30 @@
+<html>
+<body>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+
+  <script type="text/javascript">
+    //this is a review of https://facebook.github.io/immutable-js/
+
+    //Immutable data cannot be changed once created
+
+    //Persistent data presents a mutative API which does not update the data in-place, but instead always yields new updated data
+
+    const Map = Immutable.Map;
+    const map1 = Map( {a: 1, b: 2, c: 3 })
+    const map2 = map1.set('b', 2)
+    console.log(map1.equals(map2));
+    const map3 = map1.set('b', 50)
+    console.log(map1.equals(map3));
+
+
+    const List = Immutable.List;
+    const list1 = List([1, 2]);
+    list1.forEach((d) => {console.log(d)});
+    // list1[0] = 100;
+    // list1.push(3);
+    // console.log(list1);
+    list1.forEach((d, i) => {console.log(list1[i])});
+    // console.log(list1[0]);
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!-- a review of http://www.jeromecukier.net/blog/2016/08/10/coding-with-react/ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+//a nice set up tutorial of using react in codepen
+//though it will be create to add babel as preprocessor
+
+//I also make a template that you can use in a MAMP or static server, like this HTML file.
+
+//wow, it seems Jerome starts without JSX...by using React.createElement...maybe follow the official tutorial by facebook is a good choice.
+
+//React.createElement(TYPE, Properties, Content)... I like the word 'Content' over 'Children' here. It is more clear for a beginner from d3 background.
+
+//I made a comparsion between d3 and react using Jerome's json-like data of birthdeathrates: http://codepen.io/jckr/pen/JKXLVe
+//(I didn't know that we can use codepen to provide the external js file...)
+
+//example: http://codepen.io/hkjpotato/pen/mWOwaV
+
+//Jerome mention's the key attribute and he is this is not really necessary, but based on my current knowledge it seems React need to use this key attribute to do dirty checking. In d3, we also need to provide the key function for identify relationship between the selection and the binding data.
+
+//build enviroment, transpilation...a good starting point for this will be my web-general google tutorial reviews: https://developers.google.com/web/tools/setup/setup-preprocessors
+</script>
+</html>

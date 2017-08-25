@@ -1,0 +1,357 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <style type="text/css">
+        body {
+          display: flex;
+          min-height: 100vh;
+          flex-direction: column;
+        }
+
+        main {
+          flex: 1 0 auto;
+        }
+
+        .thumb {
+          display: none;
+        }
+
+        #strokeRange {
+          /*display: block;*/
+        }
+
+        input[type=range] {
+          width: 50%;
+        }
+
+        #placeholder {
+          width: 100%;
+          position: relative;
+          overflow: hidden;
+          margin-top: 20px;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+
+        #placeholder img,canvas {
+          width: 100%;
+          display: block;
+          opacity: 0;
+        }
+
+        #placeholder canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transition: opacity .5s;
+        }
+
+        #placeholder img.loaded,canvas.loaded{
+          opacity: 1;
+        }
+
+        #placeholder .replay-btn {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          opacity: .5;
+        }
+
+        #placeholder .replay-btn:hover {
+          opacity: 1;
+        }
+        .progress-wrapper {
+          margin: 0 auto;
+        }
+
+        .progress-wrapper #myProgress {
+          transition: none;
+        }
+      </style>
+    </head>
+
+    <body>
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="col l8 m10 offset-l2 offset-m1">
+            <div id="placeholder" data-src="http://www.newyorker.com/wp-content/uploads/2015/12/Veix-Goodbye-New-York-Color-1200.jpg">
+              <a class="replay-btn btn-floating waves-effect waves-light lighten-2" onclick="reload()"><i class="material-icons white-text">replay</i></a>
+            </div>
+            <div class="progress progress-wrapper">
+                <div id="myProgress" class="determinate" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col m6 offset-m3">
+            <div class="file-field input-field">
+              <div class="btn btn-xs">
+                <span><i class="material-icons left">insert_photo</i>Upload</span>
+                <input type="file" onchange="myReadURL(this)">
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- <div class="footer teal lighten-5"> -->
+    <footer class="page-footer teal lighten-5">
+      <div class="container">
+        <div class="row">
+          <div class="col s3">
+            Stroke Color
+            <p class="range-field" id="strokeRange">
+              dark
+              <input type="range" min="0" max="250" step="10" value="150" onchange="strokeRangeChange(this)"/>
+              light
+            </p>
+          </div>
+          <div class="col s3">
+            Drawing Speed
+            <p class="range-field">
+              <span>min</span>
+              <input type="range" min="1" max="3" step="1" value="1" onchange="strokeSpeedChange(this)"/>
+              <span>max</span>
+            </p>
+          </div>
+          <div class="col s3">
+            Show Pic At ?
+            <p class="range-field">
+              <span>begin</span>
+              <input type="range" min="0" max="100" step="1" value="50" onchange="colorStartChange(this)"/>
+              <span>end</span>
+            </p>
+          </div>
+          <div class="col s3">
+            Transition Duration
+            <p class="range-field">
+              <span>1s</span>
+              <input type="range" min="1" max="5" step=".5" value="3" onchange="colorDurationChange(this)"/>
+              <span>5s</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- </div> -->
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+      <script type="text/javascript">
+        /*------------Global Variable----------*/
+        var myImg;
+        var myCanvas;
+        var placeholder = document.getElementById('placeholder');
+        var myProgress = document.getElementById('myProgress');
+
+        // var initSrc = placeholder.dataset.src;
+        var imgSrc = placeholder.dataset.src;
+        //--animation default value
+        var animationFrameId;
+        var thresholdLimit = 255;
+        var darkestStroke = 150;
+        var strokeSpeed = 1;
+        var startColoringAt = .5;
+        var coloringDuration = 3;
+
+
+        /*-----------Event Listeners----------*/
+        function strokeRangeChange(target) {
+          darkestStroke = +target.value;
+        }
+
+        function strokeSpeedChange(target) {
+          strokeSpeed = +target.value;
+        }
+
+        function colorStartChange(target) {
+          startColoringAt = +target.value / 100;
+        }
+
+        function colorDurationChange(target) {
+          coloringDuration = +target.value;
+        }
+
+        var myReadURL = function(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                  imgSrc = e.target.result;
+                  reload();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        /*-----------Loading Image----------*/
+        function init(imgSrc) {
+          myImg = new Image();
+          myCanvas = document.createElement('canvas');
+          placeholder.appendChild(myCanvas);
+          placeholder.appendChild(myImg);
+
+          //set onload
+          myImg.onload = function() {
+            myCanvas.classList.add('loaded');
+            //reset the opacity duration of the image
+            myImg.style.transitionDuration = coloringDuration + 's';
+            myCanvas.style.transitionDuration = coloringDuration + 's';
+            startDraw(myImg);
+          }
+          myImg.crossOrigin = 'Anonymous';//CORS issue, check https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+          myImg.src = imgSrc;
+        }
+
+        init(imgSrc);
+
+        //reload function
+        function reload() {
+          placeholder.removeChild(myImg);
+          placeholder.removeChild(myCanvas);
+          cancelAnimationFrame(animationFrameId);
+          myProgress.style.width = '0%';
+          init(imgSrc);
+        }
+        //get prepare for drawing
+        function startDraw(img) {
+          var width = img.width, height = img.height;
+
+          //set the width and height corresponding to the image
+          myCanvas.width = width;
+          myCanvas.height = height;
+
+          //convert to grayscale
+          var grayScale = getGrayScaleData(img);
+          //get edge data
+          var edgeData = mySobel(grayScale, width, height);
+          //reverse black and white to outline the edges
+          var targetEdge = edgeData.map(function(d) {
+            return 255 - d;
+          });
+          //do the drawing
+          drawing(targetEdge);
+        }
+
+        function drawing(targetEdge) {
+          //get the drawing canvas context
+          var drawCtx = myCanvas.getContext('2d');
+          var width = myCanvas.width, height = myCanvas.height;
+          //start drawing step by step
+          var threshold = 0; //0 means black
+          function step() {
+            //draw until all the edge data showed
+            if (threshold <= thresholdLimit) {
+              temptarget = parseThreshold(targetEdge, threshold);
+              var imageData = grayScale2ImageData(temptarget, width, height)
+              drawCtx.putImageData(imageData, 0, 0);
+
+              //update threshold
+              threshold += strokeSpeed;
+              var percent = parseInt(threshold/thresholdLimit * 100) + '%';
+              myProgress.style.width = percent;
+
+              //check if it is time to start coloring
+              if (threshold / thresholdLimit > startColoringAt) {
+                myImg.classList.add('loaded');
+                myCanvas.classList.remove('loaded');
+              }
+              animationFrameId = requestAnimationFrame(step);
+            }
+          }
+          animationFrameId = requestAnimationFrame(step);
+        }
+
+        function parseThreshold(target, threshold) {
+          return target.map(function(d) {
+            //if darker than darkest stroke, use darkest stroke value
+            var strokecolor = d < darkestStroke ? darkestStroke : d;
+            // if the pixel value is larger(whiter) than the threshold color, we just draw them as white color
+            return d < threshold ? strokecolor : 255;
+          });
+        }
+
+        //convert the RGBA data to grayscale data
+        function getGrayScaleData(img) {
+          //a temp canvas to hold the image data
+          var tempCanvas = document.createElement('canvas');
+          var width = img.width;
+          var height = img.height;
+          tempCanvas.width = width;
+          tempCanvas.height = height;
+          //draw the image to the temp canvas
+          tempCanvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          //get the ImageData object
+          var imgData = tempCanvas.getContext('2d').getImageData(0, 0, width, height).data;
+          //reduce the size of pixel data by 4, only care about grayscale
+          var grayScale = new Uint8ClampedArray(width*height);
+          for (var i = 0; i < width * height * 4; i += 4) {
+              var r = imgData[i + 0];
+              var g = imgData[i + 1];
+              var b = imgData[i + 2];
+              // CIE luminance for the RGB
+              var v = 0.2126*r + 0.7152*g + 0.0722*b;
+              grayScale[i>>2] = v;
+          }
+          return grayScale;
+        }
+
+        //convert the grayscale data back to ImageData object
+        function grayScale2ImageData(grayScale, width, height) {
+            var imageData = new ImageData(width, height);
+            //we create a view of the typed array buffer and reset the RGBA value
+            //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+            var data_u32View = new Uint32Array(imageData.data.buffer);
+            var alpha = (0xff << 24);
+            var i = width * height;
+            while (--i >= 0) {
+              var pixel = grayScale[i];
+              //a 32-bit location with RGBA data, each of 8-bit
+              data_u32View[i] = alpha | (pixel << 16) | (pixel << 8) | pixel;
+            }
+            return imageData;
+        }
+
+        //the crazy sobel filter
+        function mySobel(grayScale, width, height) {
+          var w = width;
+          var h = height;          
+          var retMatrix = new Float32Array(w * h);
+          //just ignore the edge :)
+          for (var y = 1; y < h - 1 ; y++) {
+            for (var x = 1; x < w - 1; x++) {
+              var dstOff = y*w+x;
+              //horizontal
+              var rH = 
+                grayScale[dstOff - w + 1]
+              - grayScale[dstOff - w  - 1]
+              + (grayScale[dstOff + 1] << 1)
+              - (grayScale[dstOff - 1] << 1)
+              + grayScale[dstOff + w  + 1]
+              - grayScale[dstOff + w  - 1];
+              //vertical
+              var rV = 
+              - grayScale[dstOff - w - 1]
+              - (grayScale[dstOff - w ] << 1)
+              - grayScale[dstOff - w + 1]
+              + grayScale[dstOff + w - 1]
+              + (grayScale[dstOff + w ] << 1)
+              + grayScale[dstOff + w + 1];
+              retMatrix[(y-1)*w +(x-1)] = Math.sqrt(rV*rV + rH*rH);
+            }
+          }          
+          return new Uint8ClampedArray(retMatrix); //take care of the 255 limit
+        };
+      </script>
+    </body>
+  </html>

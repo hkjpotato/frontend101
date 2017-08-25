@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+  <script type="text/javascript">
+  mocha.setup('bdd');
+  const expect = chai.expect;
+
+  class Todo {
+    constructor(title="", items=Immutable.List(), completed=false) {
+      this.id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+      this.title = title;
+      this.items = items;
+      this.completed = completed;
+    }
+  }
+
+  function addTodoToMap(todos, todo) {
+    return todos.set(todo.id, todo);
+  }
+
+  function addTodoToList(todos, todo) {
+    return todos.push(todo);
+  }
+
+  describe('Differences between the Immutable.js Map() and List()', () => {
+    
+    it('should find same todo in List() and Map()', () => {
+
+      const todo = new Todo("Todo 1");
+      
+      let todosMap = Immutable.Map();
+      todosMap = addTodoToMap(todosMap, todo);
+
+      let todosList = Immutable.List();
+      todosList = addTodoToList(todosList, todo);
+      
+      expect(todosMap.get(todo.id)).to.equal(todo); //by key
+      expect(todosList.get(0)).to.equal(todo); //by index
+      
+    });
+
+    it('should create List() from series of values, and access by get(index)', () => {
+
+      const todoItems = ["Milk", "Eggs", "Detergent", "Bread", "Steak"]; //plain js array
+      const list = Immutable.List.of("Milk", "Eggs", "Detergent", "Bread", "Steak"); //immutable list
+      
+      var count = 0;
+      _.each(todoItems, (item) => {
+        expect(list.get(count)).to.equal(item);
+        count++;
+      })
+      
+    });
+    
+    it('should create List() from array using the rest operator', () => {
+
+      const todoItems = ["Milk", "Eggs", "Detergent", "Bread", "Steak"];
+      const list = Immutable.List.of(...todoItems);
+      
+      var count = 0;
+      _.each(todoItems, (item) => {
+        expect(list.get(count)).to.equal(item);
+        count++;
+      })
+
+      const list2 = Immutable.List(todoItems);
+      _.each(todoItems, (item, index) => {
+        expect(list2.get(index)).to.equal(item);
+      });
+    });
+     
+    it('should remove last element from List()', () => {
+
+      const todoItems = ["Milk", "Eggs", "Detergent", "Bread", "Steak"];
+      let list = Immutable.List.of(...todoItems);
+      
+      list = list.pop(); // Just like Array, but immutable
+      
+      _.each(todoItems, (item, count) => {
+        if (count < 4)
+          expect(list.get(count)).to.equal(item);
+        else
+          expect(list.get(count)).to.not.equal(item);
+      });
+    });
+  });
+  mocha.run();
+  </script>
+</body>
+</html>

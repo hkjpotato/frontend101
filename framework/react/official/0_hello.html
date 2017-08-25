@@ -1,0 +1,30 @@
+<html>
+    <p>I am always wondering this topic:
+        <a href="https://github.com/facebook/react/issues/5497">Use jsx in browser to have an easy start!</a>
+    </p>
+
+    <p>I find this following link provide the browser.min.js for transpile the jsx or es6 code to js. After all, as a beginner tutorial, it is good to start from place where ui developers normally live--the browser.</p>
+
+    <b>https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js</b>
+
+    <p>This file will serve as a template for the next tutorials</p>
+
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+    <script type="text/babel">
+        ReactDOM.render(
+            <h1>Hello, world!</h1>,
+            document.getElementById('app')
+        );
+
+        //I will add topic about es6 later, but just focus on arrow function, class, template literals, let and const.
+    </script>
+    </script>
+</html>

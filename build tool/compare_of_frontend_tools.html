@@ -1,0 +1,88 @@
+<html>
+<meta charset="UTF-8">
+<script type="text/javascript">
+//a review of http://stackoverflow.com/questions/35062852/npm-vs-bower-vs-browserify-vs-gulp-vs-grunt-vs-webpack
+
+
+//What on earth the difference between NPM vs Bower vs Gulp vs Grunt vs Webpack..
+
+
+//They are different stuffs
+
+/*----------------
+Package Manager
+
+Package manager simplify installing and updating project dependencies, which are libraries like jQuery, Bootstrap
+
+Without it, you need to download, copy and update the library yourself
+
+--- NPM---
+stands for: Node JS package manager
+NPM does nested dependency tree, e.g.
+
+project root
+[node_modules] // default directory for dependencies
+ -> dependency A
+ -> dependency B
+    [node_modules]
+    -> dependency A
+
+ -> dependency C
+    [node_modules]
+    -> dependency B
+      [node_modules]
+       -> dependency A 
+    -> dependency D
+
+--- Bower ---
+for front-end package manager
+Bower does flat dependency tree, e.g.
+
+project root
+[bower_components] // default directory for dependencies
+ -> dependency A
+ -> dependency B // needs A
+ -> dependency C // needs B and D
+ -> dependency D
+
+----------------*/
+
+
+
+/*----------------
+Task Runner
+Gulp, Grunt...
+
+Task runners and build tools are primarily command-line tools. Why we need to use them: In one word: automation. 
+
+"The less work you have to do when performing repetitive tasks like minification, compilation, unit testing, linting which previously cost us a lot of times to do with command line or even manually."
+Its'
+
+
+----------------*/
+
+
+/*----------------
+Module Loader/Bundling 
+
+Two separate things
+
+In server side
+If you use Node, you have module as a built in feature, meaning you can do CommonJS style module pattern (require, export)
+
+
+In browser side
+Browser does not have module feature. Thus to let multiple JS module to work, we need to bundle them in server first.
+
+//depending on the module pattern 
+
+//you can use requireJS for amd, which is essentially use ajax to get script and use callback same as AMD.
+
+//you can use browserify/webpack to bundle the commonJS module in server into a huge bundle, the idea behind is an register system.
+----------------*/
+
+
+
+</script>
+
+</html>

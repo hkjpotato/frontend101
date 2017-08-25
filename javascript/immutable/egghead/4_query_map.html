@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+
+  <div id="mocha"></div>
+  <script type="text/javascript">
+    mocha.setup('bdd');
+    const expect = chai.expect;
+
+    class Todo {
+      constructor(title="", text="", completed=false) {
+        this.id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+        this.title = title;
+        this.text = text;
+        this.completed = false;
+      }
+    }
+
+    function findTodo(todos, todo) {
+      // mapObject.find(cb, null, null)
+      //like the filter on array
+      return todos.find((t) => {
+        return t.id === todo.id
+      }, null, null);
+    }
+
+    function addTodo(todos, todo) {
+      return todos.set(todo.id, todo);
+    }
+
+
+    describe('Querying an Immutable Map with get, getIn, has, includes, find, first and last', ()=> {
+      it('should properly report keys by get and has (they accept key)', () => {
+        const todo = new Todo("Todo 1", "I'm a todo!", false);
+        let todos = Immutable.Map();
+        todos = addTodo(todos, todo);
+        expect(todos.get(todo.id)).to.equal(todo);
+        expect(todos.has(todo.id)).to.equal(true);
+        expect(todos.has("Unknown Key")).to.equal(false);
+      });
+
+      it('should properly report included values, include accepts values of the map', () => {
+        const todo = new Todo("Todo 1", "I'am a todo!", false);
+        const todo2 = new Todo("Todo 2", "I'am a todo!", false);
+
+        let todos = Immutable.Map();
+        todos = addTodo(todos, todo);
+
+        expect(todos.includes(todo)).to.equal(true);
+        expect(todos.includes(todo2)).to.equal(false);
+      });
+
+      it('should find nested keys by getIn (also use first to locate the target)', () => {
+        let todos = Immutable.Map();
+        let todos2 = Immutable.Map();
+
+        _.each(_.range(10), (index) => {
+          todos = addTodo(todos, new Todo("Todo " + index, "I'm a todo!", false));
+        });
+
+        _.each(_.range(10), (index) => {
+          todos2 = addTodo(todos2, new Todo("Todo " + index, "I'm a todo!", false));
+        });
+        //nested map
+        var multipleTodoStates = Immutable.Map({
+          "todos1": todos,
+          "todos2": todos2
+        });
+        //get the first? first? this is a map right?
+        const todoId = todos.first().id;
+
+        var path = ['todos1', todoId];
+        //accept a path and a default value
+        expect(multipleTodoStates.getIn(path, null)).to.equal(todos.first());
+      });
+
+      it('should find todo by find', ()=> {
+        const todo = new Todo("Todo 1", "I'm a todo!", false);
+        const todo2 = new Todo("Todo 2", "I'm a todo!", false);
+
+        let todos = Immutable.Map();
+        todos = addTodo(todos, todo);
+        todos = addTodo(todos, todo2);
+
+        expect(findTodo(todos, todo)).to.equal(todo);
+        expect(findTodo(todos, todo2)).to.equal(todo2);
+      })
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

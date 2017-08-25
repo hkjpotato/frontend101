@@ -1,0 +1,122 @@
+<!-- a review of http://www.jeromecukier.net/blog/2016/08/11/react-components/ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <style type="text/css">
+    .bar__label, .label {
+      display: inline-block;
+      font-family: sans-serif;
+      font-size: 10px;
+      line-height: 10px;
+      text-transform: uppercase;
+      vertical-align: top;
+    }
+
+    .bar__label {
+      text-align: right;
+      width: 50px;
+    }
+
+    .bar__mark {
+      background: orange;
+      /*display: inline-block;*/
+      /*height: 16px;*/
+      /*margin-left: 10px;*/
+      /*margin-top: 2px;*/
+      transition: width 1s;
+    }
+
+    .switch__track {
+      border-radius: 10px;
+      box-shadow: inset 0px 1px 3px 0px rgba(0,0,0,0.50);
+      display: inline-block;
+      margin: 0 20px;
+      position: relative;
+      width: 60px;
+      height: 20px;
+      background: #c0c0c0;
+    }
+
+    .switch__thumb {
+      background: #d6d6d5;
+      border-radius: 10px;
+      position: relative;
+      left: 1px;
+      top: 1px;
+      width: 18px;
+      height: 18px;
+      transition: left .5s;
+    }
+
+    .switch__thumb.death {
+      left: 41px;
+    }
+
+
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/javascript">
+</script>
+<script>
+  //In this article, Jerome is going to make his own component, instead of the React.DOM.xxx.
+
+  //This element..component can remember its OWN state such as selected and highlighted.
+
+  //I still remember how painful I did this in my old d3 and react project since I am not sure where to put the 'selected' state of a array of circles. Everytime I need to loop through the all selections to erase the old selection and highlight the new one.
+
+  //Let's see how Jerome implement it.
+
+  //Frankly speaking, just like Jerome said, this article has a speed bump for people who are not familiar with React. Still, go through the official facebook tutorials firts is a good choice.
+
+  //component vs element vs instance, maybe check this article: https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html
+
+  //I will not say an element is an instance of the component as we are not 'new' it. Based on Dan's article, instance is a less important concept in React. React will manage them.
+
+  /*
+  "The second line is super(props). What this does is that it passes whatever arguments the constructor had to the constructor of the original React.Component class. You don’t have to know what happens then, just that it’s a mandatory step."
+  --hahahahaha, I like this.
+  */
+
+  //I am confused by my previous experience now: should I give set the selected state to a Point? Isn't it better to 'lift' this state up to the parent component?...well, Jerome talks about that in the bar chart example.
+
+  /*
+  "We’re going to have many Point elements. Each of them can be highlighted or not. Each of them also corresponds to a different data point. Each of them can access and manipulate data that no other can. This is where this comes from. Properties of this (that is, whatever comes after “this.”) are going to be private to that element, in other words, not accessible from the OUTSIDE."
+  */
+
+  //with es6, we can use React.createClass(obj). This time, we do not create a Class but a variable. The argument of the React.createClass function is an object (thus its properties need to be separated by comma)
+
+  /*the parent children communication part
+  Jerome wants to change the state of parent from its children
+
+  Jerome sets two principles
+  1. a state can only be changed by the element itself, and is not accessible outside the element.
+  2. the props is passed from the parent, and cannot be changed.
+
+  Based on these two principles, he comes up with a solution:
+
+  1. make a callback function which will reset the state of the 'this' element using the passed in argument
+  2. pass this callback from parent to the child as a prop.
+  3. an event in child will trigger this callback, pass the child's param to it, and reset the state of the parent
+  4. once the parent's state is changed, it will trigger a re-rendering of its children based on the update state.
+  */
+
+  //The sort function confused me a little bit..why we need to sort them by alphabetic order.
+
+
+  /*
+  So whatever the metric, the same country will always be at the same position in this array, only its rank property, which was computed while the list was sorted, would be different.
+  */
+
+  //well, this is not true
+
+
+
+
+</script>
+</html>

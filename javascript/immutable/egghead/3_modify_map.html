@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  <meta charset="utf-8">
+  <title>Learning Immutable.js</title>
+  
+  <meta name="description" content="Manage Application State with Immutable.js">
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.css"></link>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mocha/2.3.3/mocha.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/chai/3.3.0/chai.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.1/immutable.js"></script>
+  <script src="//cdn.rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
+</head>
+<body>
+
+  <div id="mocha"></div>
+  <script type="text/javascript">
+
+    mocha.setup('bdd');
+    const expect = chai.expect;
+
+    class Todo {
+      constructor(title="", text="", completed=false) {
+        this.id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36); //to 36 radix
+        this.title = title;
+        this.text = text;
+        this.completed = completed;
+      }
+    }
+    //all are pure function
+    function addTodo(todos, todo) {
+      return todos.set(todo.id, todo);
+    }
+
+    function removeTodo(todos, todo) {
+      return todos.delete(todo.id);
+    }
+
+    function updateTodos(todos, newTodo) {
+      return todos.update(newTodo.id, oldTodo => newTodo);
+    }
+
+    function mergeTodos(todos, todos2) {
+      return todos.merge(todos2);
+    }
+
+    function clearAll(todos) {
+      return todos.clear();
+    }
+
+    describe('Modifying an Immutable.js Map() by set, delete, clear, update and merge', () => {
+      it('should add todo to state', () => {
+        const todo = new Todo("Todo 1", "I'am a todo!", false);
+
+        let todos = Immutable.Map();
+        todos = addTodo(todos, todo);
+
+        expect(todos.get(todo.id)).to.equal(todo);
+      });
+
+      it('should remove todo from state', () => {
+        const todo = new Todo("Todo 1", "I'am a todo!", false);
+        let todos = Immutable.Map();
+        todos = addTodo(todos, todo);
+
+        expect(todos.get(todo.id)).to.equal(todo);
+
+        todos = removeTodo(todos, todo);
+        expect(todos.get(todo.id)).to.be.undefined;
+      });
+
+      it('should update todo', () => {
+        const todo = new Todo("Todo 1", "I'am a todo!", false);
+        let todos = Immutable.Map();
+        todos = addTodo(todos, todo);
+        //after added, update todo item
+        todo.title = "New Title";
+        //before update, it actually change the original data, why, because todo itself is not immutable
+        expect(todos.get(todo.id).title).to.not.equal("Todo 1");
+
+        todos = updateTodos(todos, todo);
+        expect(todos.get(todo.id).title).to.equal("New Title");
+
+        //a better test on immutable update
+        let item = Immutable.Map({
+          id: '1234',
+          title: 'Title 1'
+        });
+
+        let items = Immutable.Map();
+        items = items.set(item.get('id'), item);
+        item = item.set('title', "New Title");
+
+        //has not been changed before update
+        expect(items.get(item.get('id')).get('title')).to.equal("Title 1");
+        //call update
+        items = items.update(item.get('id'), i => item);
+        expect(items.get(item.get('id')).get('title')).to.equal("New Title");
+      });
+
+      it('should merge todos', () => {
+        let todos = Immutable.Map();
+        let todos2 = Immutable.Map();
+
+        _.each(_.range(10), (index) => {
+          todos = addTodo(todos, new Todo("Todo " + index, "I'am a todo!", false));
+        });
+        _.each(_.range(10), (index) => {
+          todos2 = addTodo(todos2, new Todo("Todo " + index, "I'am a todo!", false));
+        });
+        todos = mergeTodos(todos, todos2); //don't worry, out id is unqiue
+        expect(todos.size).to.equal(20);
+      });
+
+      it('should remove all todos', () => {
+        let todos = Immutable.Map();
+        _.each(_.range(10), (index) => {
+          todos = addTodo(todos, new Todo("Todo " + index, "I'am a todo!", false));
+        });
+        expect(todos.size).to.equal(10);
+        todos = clearAll(todos);
+
+        expect(todos.size).to.equal(0);
+      });
+    });
+    
+    mocha.run();
+
+
+  </script>
+</body>
+</html>

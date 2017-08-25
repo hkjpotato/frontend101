@@ -1,0 +1,49 @@
+<html>
+<body>
+<style type="text/css">
+.fullfilled {
+    color: green;
+}
+.rejected {
+    color: red;
+}
+</style>
+<button onclick="makePromise()">make promise</button>
+<div id="log"></div>
+<script type="text/javascript">
+//to know about insertAjacentHTML go to https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+
+var log = document.getElementById('log');
+var promiseCount = 0;
+function makePromise() {
+    console.log('make a new promise');
+    var promiseId = ++promiseCount;
+
+    log.insertAdjacentHTML('beforeend', promiseId + ') sycn start...');
+
+    var p = new Promise(function(func1, func2) {
+        log.insertAdjacentHTML('beforeend', 'asycn start...');
+
+        setTimeout(function() {
+            log.insertAdjacentHTML('beforeend', promiseId +') async finished ')
+
+            if (Math.random() > .5) {
+                func1(promiseId);
+            } else {
+                func2(promiseId);
+            }
+        }, 2000);
+    });
+
+    log.insertAdjacentHTML('beforeend', ' sycn end<br>');
+
+    p.then(function(val) {
+        log.insertAdjacentHTML('beforeend', val +' promise <span class="fullfilled">fullfilled</span><br>')
+    }).catch(function(val) {
+        log.insertAdjacentHTML('beforeend', val +') promise <span class="rejected">rejected</span><br>')
+    });
+
+}
+</script>
+</body>
+</html>

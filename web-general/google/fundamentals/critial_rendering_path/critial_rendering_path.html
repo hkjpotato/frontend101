@@ -1,0 +1,159 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" >
+    <style>
+        body {
+            width: 100%;
+            background-color: gray;
+        }
+
+        div {
+            width: 50%;
+            background-color: green;
+        }
+
+        p {
+            width: 50%;
+            background-color: red;
+        }
+
+        span {
+            color: red;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function hkjWindowOnLoad() {
+            console.log('window loaded');
+        }
+
+        document.addEventListener('DOMContentLoaded', function hkjDOMContentLoaded(){
+            console.log('DOMContentLoaded');
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <p>hello world!<span>hi</span></p>
+        <img src="http://www.amazingwallpaperz.com/wp-content/uploads/Cat-High-Resolution-Wallpapers.jpg?=99" style="width:400px;height:300px;"/>
+    </div>
+<script type="text/javascript">
+//a review of https://developers.google.com/web/fundamentals/performance/critical-rendering-path/
+
+/*-----------------
+    
+        JS
+       /  \
+    DOM -> CSSOM -> Render Tree -> Layout -> Paint
+
+
+-----------------*/
+
+
+/*-----------------
+Build The DOM: converting HTML to the Document Object Model
+
+    
+characters -> tokens(tag) -> nodes -> dom
+
+1. tokenizer emit tokens
+2. another process consumes those tokens and convert them into node objects.
+3. the startTag and endTag in tokens helps us build relationships among the nodes (parent - child)
+4. After consumes all the tokens -> Document Object Model (A Tree structure)
+5. The dom node contains all information in HTML markup. e.g. A image node will have src attribute in it as well.
+
+- Browser build DOM incrementally
+    
+    Request Page -> [Build DOM & Render] -> [Build DOM & Render]
+    
+    initHTML     ->  header              -> sections
+
+Returning partial HTML is a nice performance optimization.
+    
+-----------------*/
+
+/*-----------------
+CSSOM: CSS Object Model
+
+css file characters -> tokens -> object 
+
+1. every visable component is child of body.
+2. child inherits parent's styling rules(cascading styling)
+3. we cant do partial increment CSS as HTML (because the later might redefine the rules and the previous partial render will be wrong)
+4. Thus, browser block rendering until it receives and processes all of the CSS -> CSS is render blocking.
+5. more general rule is faster (p is faster than div p)
+   browser match css selectors from right to left
+   //http://stackoverflow.com/questions/5797014/why-do-browsers-match-css-selectors-from-right-to-left
+
+-----------------*/
+
+/*-----------------
+Render Tree: combine DOM and CSSOM into Render Tree
+
+//https://classroom.udacity.com/courses/ud884/lessons/1464158642/concepts/15290985580923
+
+1. RT only capture visible content (display:none will not be captured)
+2. Render Tree has the element and styles information.
+
+-----------------*/
+
+/*-----------------
+Layout: calculating positions and dimensions
+
+    body {background-color: gray, width: 100%}
+    |
+    div {background-color: green, width: 50%}
+    |
+    p {background-color: red, width: 50%}
+    |
+    hello (text)
+
+1. body width is 100% of "layout viewport size"
+2. layout viewport is defined by 
+    <meta name="viewport" content="width=device-width" >
+    e.g. if the device-width is 320px, then 
+        if above is present, the layout viewport will be 320px
+        else if not present, the browser will use default viewport width, typically 980px
+
+3. if dimension of layout viewport changes, the browser has to rerun the layout step (resize or rotate)
+
+Note: layout can be triggered by device orientation change on mobile, a window resize, or any other action that modifies the content of the DOM - e.g. adding or removing content from the DOM tree, toggling CSSOM properties on a node, and so on!
+
+4. Batch updates to avoid having multiple layout events.
+-----------------*/
+
+
+/*-----------------
+Paint: make the pixels
+
+-----------------*/
+
+/*
+Current Page
+1. receive HTML response
+2. parseHTML 
+    {
+        1. send Img request
+        2. eval script (compile it)
+        3. event readystatechange
+        4. event (DOMContentLoaded) => function call
+        5. recalculate style(CSSOM render Tree)
+        6. Layout
+        7. paint
+    }
+3. img finish
+4. load event
+5. recaculate -> layout -> paint
+
+
+//some tips;
+1. minify css
+2. use inline for critical element
+3. combine dom together and add them at once
+4. hide elements before change them
+5. give images and other elements height and width
+
+to test it, cmd + option + i then cmd + shift + r
+*/
+</script>
+</body>
+</html>

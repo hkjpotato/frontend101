@@ -1,0 +1,65 @@
+<html>
+    <div id="app"></div>
+
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+    <!-- react -->
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <!-- react-dom -->
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <!-- expect -->
+    <script src="https://unpkg.com/expect/umd/expect.min.js"></script>
+    <script type="text/babel">
+      //expect' basic
+      expect(
+        2
+        ).toEqual(2);
+
+      //our test for counter reducer called counter
+      //we use es6 default argument https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters
+      function counter(state=0, action){
+        //state=0 means 0 is the default value so that if state is undefined we can use 0 as default
+        switch (action.type) {
+          case 'INCREMENT':
+            return state + 1;
+          case 'DECREMENT':
+            return state - 1;
+          default:
+            return state;
+        }
+      }
+
+      expect(
+        counter(0, { type: 'INCREMENT' })
+      ).toEqual(1);
+
+      expect(
+        counter(1, { type: 'INCREMENT' })
+      ).toEqual(2);
+
+      expect(
+        counter(2, { type: 'DECREMENT' })
+      ).toEqual(1);
+
+      expect(
+        counter(1, { type: 'DECREMENT' })
+      ).toEqual(0);
+
+      //unexpect action
+      expect(
+        counter(1,{ type: 'SOMETHING_ELSE' })
+      ).toEqual(1);
+
+      //initial state
+      //the convention in redux is that if we receive undefined as the state argument, it must return what it considers to be the initial state of the application, which is 0 in this case
+      expect(
+        counter(undefined, {})
+      ).toEqual(0);
+
+      console.log('Tests passed!')
+    </script>
+    <script type="text/javascript">
+ 
+
+    </script>
+</html>

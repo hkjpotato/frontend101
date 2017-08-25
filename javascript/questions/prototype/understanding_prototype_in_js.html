@@ -1,0 +1,245 @@
+<html>
+<script type="text/javascript">
+//review of Yehuda Katz's article on http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/
+
+//let's start from the very beginning and forget about the 'new' function
+
+//In JS, objects are pairs of keys and values
+
+//To create an empty object, do this
+var empty = Object.create(null); //behind the scene this create an object with no properties
+
+
+//empty is not the same as {}, {} has __proto__
+console.log(empty); //Object no properties
+
+
+var ob = Object.create(Object.prototype);
+// console.log(ob)
+// console.log({})
+// console.log({}.__proto__ == ob.__proto__) //true
+
+
+//Define properties with config
+var p = Object.create(null);
+
+Object.defineProperty(p, 'firstname', {
+  value: 'HKJ',
+  writable: true, //can replace it
+  enumerable: true, //show up when used by for(prop in obj)
+  configurable: true //can delete or change its other attribute
+})
+// console.log(p);
+// p.firstname = 'huang'; //if writable is false, it will stay the same
+
+//prior to ES5, you can only define property with all config to be true
+
+var defaultConfig = {
+  writable: true,
+  enumerable: true,
+  configurable: true
+}
+
+
+var defineProperty = function(obj, property, value) {
+  defaultConfig.value = value;
+  Object.defineProperty(obj, name, defaultConfig);
+} 
+
+defineProperty(p, 'lastname', 'huang');
+console.log(p);
+
+//"So far, we've talked about objects as simple pairs of keys and values. In fact, JavaScript objects also have one additional attribute: a pointer to another object. We call this pointer the object's prototype. If you try to look up a key on an object and it is not found, JavaScript will look for it in the prototype. It will follow the "prototype chain" until it sees a null value. In that case, it returns undefined."...by the article
+
+//lookup Object's prototype by using Object.getPrototypeOf
+//I guess at that time there is no __proto__ method
+
+var prototype1 = {'name': 'p1'};
+var p1 = Object.create(prototype1);
+
+var result1 = Object.getPrototypeOf(p1) === prototype1;
+var result2 = Object.getPrototypeOf(p1) === p1.__proto__;
+console.log(result1, result2); //true true
+
+// instead of using defineProperty and specifying writable,
+// configurable, and enumerable, we can just assign the
+// value directly and JavaScript will take care of the rest
+
+var person = Object.create(null);
+
+//define in prototype, shared by objects
+person.fullName = function() {
+  return this.firstname + " " + this.lastname;
+}
+
+var man1 = Object.create(person);
+man1.firstname = "kj";
+man1.lastname = "huang";
+
+
+var man2 = Object.create(person);
+man2.firstname = "rozy";
+man2.lastname = "chen";
+// console.log(man1.fullName(), man2.fullName());
+
+//Object Literals
+//"Still, having to set a number of properties every time can get annoying. JavaScript provides a literal syntax for creating an object and assigning properties to it at one time."...by article
+
+
+//remember that empty = Object.create(null) is not the same as obj = {}
+
+//in fact, object literals means
+var person = {
+  firstname: "Paul",
+  lastname: "Irish"
+}
+
+//is same as (syntax sugar)
+var person = Object.create(Object.prototype);
+
+person.firstname = "Paul";
+person.lastname = "Irish";
+// console.log(person.__proto__ === {}.__proto__);//true
+
+
+//"The most important thing about the expanded form is that object literals always set the newly created object's prototype to an object located at Object.prototype."...by article
+
+//what the Object.prototype has?
+console.log(Object.prototype); //in chrome
+/*
+__defineGetter__:
+__defineSetter__:
+__lookupGetter__:
+__lookupSetter__:
+constructor: Object()
+hasOwnProperty:
+isPrototypeOf:
+propertyIsEnumerable
+toLocaleString
+toString
+valueOf
+get __proto__: getter
+set __proto__: setter
+*/
+
+//The default Object.prototype dictionary comes with a number of the methods we have come to expect objects to contain, and through the magic of the prototype chain, all new objects created as object literal will contain these properties. Of course, objects can happily override them by defining the properties directly. Most commonly, developers will override the toString method...by article
+
+//every object created by literals has its prototype (__proto__) set to Object.prototype
+
+
+//how to create Object from prototype
+var fromPrototype = function(prototype, object) {
+  var newObject = Object.create(prototype);
+
+  //copy the prop from Object literals: object
+  //object literals has __proto__ to Object.prototype
+  //properties defined by JS in Object.prototype is not emurable
+  //but properties defined by anyone will be enumerable, and thus the {} can also access it
+  //thus we need hasOwnProperty 
+  for (var prop in object) {
+    console.log(prop);
+    if (object.hasOwnProperty(prop)) {
+      newObject[prop] = object[prop];
+    }
+  }
+
+  return newObject;
+}
+
+//for example
+var person = {
+  toString: function() {
+    return this.firstname + " " + this.lastname;
+  }
+}
+//if we did sth like below
+// Object.prototype.isSuperMan = true;
+
+var p = fromPrototype(person, {firstname: "kj", lastname: "huang"});
+console.log(p.toString());
+//both male, and isSuperMan will be logged
+//isSuperMan is from prototype, not ownProperty
+
+//p(kj, huang)'s prototype chain -> person -> Object.prototype -> null
+
+console.log(p.hasOwnProperty('firstname')) //true
+console.log(Object.getPrototypeOf(p) === person); //true, person
+console.log(Object.getPrototypeOf(Object.getPrototypeOf(p)) === Object.prototype); //true, Object.prototype
+console.log(Object.getPrototypeOf(Object.prototype)) //null
+
+
+//New operator
+//In order to facilitate object oriented programming, JavaScript allows you to use a Function object as a combination of a prototype to use for the new object and a constructor function to invoke...by article
+
+//It is not very accurate, I feel. What he means is that in JS, a function be a constructor, while providing the prototype for the object created by it.
+
+//as constructor
+var Person = function(firstname, lastname) {
+  this.firstname = firstname;
+  this.lastname = lastname;
+}
+//provide prototype
+//notice this prototype is an Object literals, means its prototype is Object.prototype
+Person.prototype = {
+  toString: function() {
+    return this.firstname + " " + this.lastname;
+  }
+}
+
+//Coooooooool thing! Let's implement the 'new'
+function newObject(func) {
+  // get an Array of all the arguments except the first one, the first one is func!
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  //create a new object with its prototype assigned to func.prototype
+  var object = Object.create(func.prototype);
+
+  // invoke the constructor, passing the new object as 'this'
+  // and the rest of the arguments as the arguments
+  func.apply(Object, args);
+  
+  // return the new object
+  return object;
+}
+
+
+//Cool again, make the Object.create method with new operator
+
+//Notice that earlier version of JS does not have Object.create
+
+//'new' comes before Object.create
+var createObject = function(o) {
+  // we only want the prototype part of the `new`
+  // behavior, so make an empty constructor
+  function F() {}
+
+  // set the function's `prototype` property to the
+  // object that we want the new object's prototype
+  // to be.
+  F.prototype = o;
+
+  // use the `new` operator. We will get a new
+  // object whose prototype is o, and we will
+  // invoke the empty function, which does nothing.
+  return new F();
+}
+
+
+var simpleCreateObject = function(prototype) {
+  var obj = {};
+  obj.__proto__ = prototype; //but __proto__ is even later 
+  //there is no easy way to check the prototype chain
+}
+
+var person = {
+  type: 'person'
+}
+
+var student = createObject(person);
+var teacher = createObject(person);
+var mother = Object.create(person);
+console.log(student.type)
+console.log(teacher);
+console.log(mother);
+</script>
+</html>

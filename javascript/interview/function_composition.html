@@ -1,0 +1,157 @@
+<html>
+<script type="text/javascript">
+/*
+a review of https://medium.com/javascript-scene/master-the-javascript-interview-what-is-function-composition-20dfb109a1a0
+*/
+
+//Function composition is the process of combine two or more functions to produce a new function.
+
+//Ha, is that like
+function play() {
+  console.log('play');
+}
+
+function work() {
+  console.log('work');
+}
+function doSth() {
+  play();
+  work();
+}
+
+//no, above is simply 'put' two functions together. By 'combine into a new function' it means that the return should be a new function that do what those functions do on the input
+
+//what is a function: x -> y
+
+/*
+  thus for 
+    func1(x)->(y1)
+    func2(y1)->(y2)
+
+
+  we need fun3 that
+    func3(x)->(y2)
+*/
+  
+
+  let curry = fn => (...args) => fn.bind(null, ...args);
+
+  //what does it means
+  //let's write it in es5
+  function curry_in_es5 (fn) {
+    return function() {
+      var boundFn = fn.bind(null, ...arguments); //notice that for additional argument they will be place after the bind arguments
+      return boundFn;
+      //well, it is not exactly the same as the rest parameter...
+      //...args make args a real array
+      //check https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters
+    }
+  }
+  /*
+    so the 'curry' here is a function that take a function(func1) as an input
+    and return a new function(fun2)
+    when this new function is called, it will return a new function(fun3), which is a bound function
+    the bound function(fun3) bind the arguments when calling fun2 to the original fun1
+
+    Let's make it like a story
+    1. I am a meat cooker that can cook meat with some spice(fun1, (meat, spice)=>(cooked meat with spice))
+    2. However, the consumer don't want some mystery 'cooked meat', they want 'cooked chicken' or 'cooked beef'.
+    3. A smart engineer(fun2) comes in and decides to make a new cooker that will cook specific type of meat.
+    4. When some one ask the engineer say 'Hi I want a machine that produce cooked chicken', the engineer will create new type of cooker(bound function, fun3), based on the design of me, and preload the chicken in side it(...crazy). Then the engineer will give the new 'chicken cooker'(fun3) to the consumer.
+    5. 'curry' is the where the smart engineer is created.
+  */
+
+  //let's test the story
+  function meatCooker(meat, spice) {
+    return 'cooked ' + meat + ' with ' + spice;
+  }
+
+  const engineer = curry(meatCooker);
+  const chickenCooker = engineer('chicken');
+  console.log(chickenCooker('chilli')); //'cooked chicken with chilli'
+
+  //thus the split is
+  const splitStringFunc = function(splitOn, str) {
+    console.log('calling splitStringFunc')
+    return str.split(splitOn);
+  }
+  //test it
+  console.log(splitStringFunc('_', 'hello_world')); //['hello', 'world'], works fine
+
+  const splitEngineer = curry_in_es5(splitStringFunc);
+
+  const spaceSplit = splitEngineer(' ');
+  let result = spaceSplit('hello world');
+  console.log(result);
+
+
+  function pipe() {
+    var fns = Array.prototype.slice.call(arguments);
+    return function(x) {
+      return fns.reduce(function(value, fn) {
+        return fn(value);
+      }, x);
+    }
+  }
+
+
+  function addApple(x) {
+    return x + '&apple';
+  }
+  function addPear(x) {
+    return x + '&pear';
+  }
+  function addWaterMelon(x) {
+    return x + '&watermelon';
+  }
+
+  var willEat = pipe(addPear, addApple, addWaterMelon);
+  console.log(willEat('I will eat '));
+
+  /*
+  '咖喱'是一个函数加工者生产器，他自己本身不加工函数，而是产生一个加工者，这个加工者会把原函数进行加工，即对其进行部分预设。使得产生的新函数获得某些预设值，而只需要一个额外的值就可以运行。
+
+  另一种理解是，咖喱就是函数加工者，他返回一个有预设值的函数
+
+
+  */
+
+
+  function sayXandY(x, y) {
+    console.log(x, y);
+  }
+
+  var enhance = curry(sayXandY);
+
+  enhance2 = enhance(1, 2);
+  enhance2();
+
+  function printInputWithLabel(label, x) {
+    // console.log(`== ${ label }:  ${ x }`);
+    console.log('== ' + label + ' : ' + x);
+    return x;
+  }
+
+  const trace = curry(printInputWithLabel);
+
+
+  trace('Coke')(100);
+
+
+  function runSomeFuncOnXAndThenReturnX(fn, x) {
+    fn(x);
+    return x;
+  }
+
+  var runSomeFuncOnXAndThenReturnX_Generator = curry(runSomeFuncOnXAndThenReturnX);
+
+  var tellMeTheInput =(x) =>{
+    console.log('tell you', x);
+  }
+
+
+  var LetsRunOnX = runSomeFuncOnXAndThenReturnX_Generator(tellMeTheInput);
+
+  console.log(LetsRunOnX(100));
+</script>
+</html>
