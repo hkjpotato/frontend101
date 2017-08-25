@@ -66,10 +66,11 @@ Before going into the JS algorithm part, understand the below concepts is essent
     * Scope
     * Prototype chain
     * Array mainipulation, such as map, forEach, reduce, filter.
-    * Apply, call and bind
-    * [Event delegation](./javascript/event delegation)
+    * ['bind' and bound/unbound function](./javascript/questions/bind.html)
+    * [How to make 'bind' function](./javascript/questions/how_to_make_bind.html)
+    * [Manage 'arguments'](./javascript/questions/arguments.html)
+    * [Event delegation](./javascript/questions/event delegation)
     * IIFE
-    * [var vs function](http://stackoverflow.com/questions/336859/javascript-function-declaration-syntax-var-fn-function-vs-function-fn)
     * [Hositing](http://adripofjavascript.com/blog/drips/variable-and-function-hoisting)
     * Asynchronous (callback)
     * ES6

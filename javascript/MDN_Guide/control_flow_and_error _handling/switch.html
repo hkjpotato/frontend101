@@ -1,1 +1,100 @@
-<html></html>
+<html>
+<script type="text/javascript">
+/*
+Things to know:
+1.when default be executed
+2.fall through feature
+*/
+
+/*
+switch (expression) {
+  case label_1:
+    statements_1
+    [break;]
+  case label_2:
+    statements_2
+    [break;]
+    ...
+  default:
+    statements_def
+    [break;]
+}
+*/
+
+x = 100
+switch (x) {
+    case 100:
+        console.log('case 100 matched');
+        // break; //without break, the next case will be excuted
+    case 200:
+        console.log('case 200 matched');
+    default:
+        console.log('default matched');
+}
+
+/*
+output:
+case 100 matched
+case 200 matched
+default matched
+*/
+//because no break, all the statement will be executed
+
+
+
+y = 3
+switch (y) {
+    case 3:
+        console.log('case 3 matched');
+        break; //with break, the next case will be not be executed, default will not be executed, you will jump out the switch
+    case 4:
+        console.log('case 4 matched');
+    default:
+        console.log('default matched');
+}
+
+
+console.log('---------')
+z = 6
+switch(z) {
+    default:
+        console.log('default match')
+    case 2:
+        console.log('case 2 matched');
+        // break;
+    case 6:
+        console.log('case 6 matched');
+        // break;
+    case 4:
+        console.log('case 4 matched');
+        // break;
+    case 8:
+        console.log('case 8 matched');
+        // break;
+}
+
+/*
+as you can see, switch test case in order
+output
+case 6 match
+case 4 match
+case 8 match
+
+because there is a match, it wont look for default anymore, just execute the statement behind it. This is the fall-through feauture of switch
+*/
+
+varName = 'marry';
+switch(varName) {
+    case 'hkj':
+        console.log('fall-through hkj')
+    case 'marry':
+        console.log('fall-through marry')
+    case 'rozy':
+        console.log('hey, ' + varName)
+        break;
+    default:
+        console.log('you are not a member')
+}
+
+</script>
+</html>

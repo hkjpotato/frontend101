@@ -34,21 +34,3 @@ There are tons of good tutorials about NodeJS online, so I won't re-write them h
   9. Source
   	* Offical Website
   	* [Callback Hell](http://callbackhell.com/)
-
-
-
-<!-- ####  CommonJS:
-This is the base for NodeJS. 
- * [CommonJS: Why and How](https://0fps.net/2013/01/22/commonjs-why-and-how/)
-
-"However, while there are many good reasons to use JavaScript, it has a reputation for scaling poorly with project size.  In my opinion, the main cause of this is that JavaScript lacks anything even remotely resembling a coherent module system.  This omission makes it inordinately difficult to apply sensible practices like:
-
-* Hiding implementation details behind interfaces
-* Splitting large projects into multiple files
-* Reusing functionality from libraries and other code bases"
-
-_[0 FPS]((https://0fps.net/2013/01/22/commonjs-why-and-how/)_
-
-
-#### NPM
- -->

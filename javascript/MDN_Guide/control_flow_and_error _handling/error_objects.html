@@ -1,1 +1,18 @@
-<html></html>
+<html>
+<script type="text/javascript">
+/*
+Utilizing Error objects
+Depending on the type of error, you may be able to use the 'name' and 'message' properties to get a more refined message. 'name' provides the general class of Error (e.g., 'DOMException' or 'Error'), while 'message' generally provides a more succinct message than one would get by converting the error object to a string.
+
+*/
+
+//javascript Error
+
+try {
+    throw new Error('kj..')
+} catch(e) {
+    console.log(e.name);
+    console.log(e.message);
+}
+</script>
+</html>
