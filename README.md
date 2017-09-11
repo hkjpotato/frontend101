@@ -78,8 +78,8 @@ Before going into the JS algorithm part, understand the below concepts is essent
 #### Design&#32;Pattern:
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
   * [Singleton](./design%20pattern/singleton)
-  * [Observer Pattern](./design%20pattern/observer pattern)
-  * [Strategy Pattern](./design%20pattern/strategy pattern)
+  * [Observer Pattern](./design%20pattern/observer%20pattern)
+  * [Strategy Pattern](./design%20pattern/strategy%20pattern)
   * Proxy Pattern
   * Iterator Pattern
   * Command Pattern
