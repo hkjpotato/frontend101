@@ -77,9 +77,9 @@ Before going into the JS algorithm part, understand the below concepts is essent
 
 #### Design&#32;Pattern:
 Before going into framework such as MVC and Flux, it is better to know the basic of design patterns. Below is a list of them in js:
-  * [Singleton](./design pattern/singleton)
-  * [Observer Pattern](./design pattern/observer pattern)
-  * [Strategy Pattern](./design pattern/strategy pattern)
+  * [Singleton](./design%20pattern/singleton)
+  * [Observer Pattern](./design%20pattern/observer pattern)
+  * [Strategy Pattern](./design%20pattern/strategy pattern)
   * Proxy Pattern
   * Iterator Pattern
   * Command Pattern
@@ -90,8 +90,7 @@ A deep understanding of framework is essential in making the website to be a fun
   * [MVC](./framework/mvc)
       * [Basic](./framework/mvc/basic)
       * [Simplified TodoMVC](./framework/mvc/simplified%20todomvc)
-      * AngularJS TodoMVC
-  * [Redux](./framework/react): a collection of react tutorials(you dont need to use webpack to run them).
+  * [React](./framework/react): a collection of react tutorials(you dont need to use webpack to run them).
 
   
 #### Build Tool:
