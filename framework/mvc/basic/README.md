@@ -5,23 +5,28 @@ Here are some simple examples for MVC in plain JS from "Hello World" to "TodoMVC
 ### The Basic
 Below is the simplest example of MVC I have found from StackOverflow By [Raynos](http://stackoverflow.com/questions/8497833/hello-world-in-mvc-pattern)
 
-#####html
+#### html
 ```html
 <input id="myBtn" type="button" value="click"></input>
 ```
 
-#####javascript
+#### javascript
 ```javascript
-var M = {}, V = {}, C = {};
+var Model = {}, View = {}, Controller = {};
 
-M.data = "Hello World";
-V.render = function(M) { console.log(M.data); }
+// Model manage the data source
+Model.data = "Hello World";
 
-C.handleClick = function() {
-  V.render(M);
+// View render the data
+View.render = function(data) { console.log(data); }
+
+// Controller ties Model and View
+Controller.handleClick = function(event) {
+	var data = Model.data;
+	V.render(data);
 }
 
-document.getElementById("myBtn").addEventListener("click", C.handleClick);
+document.getElementById("myBtn").addEventListener("click", Controller.handleClick);
 ```
 As Raynos mentioned:
 
@@ -35,21 +40,21 @@ _The Controller tells to View to do something with something from the Model._
 
 _In this example_
 
-_the View knows nothing about the Model apart from it implements some interface_
-_the Model knows nothing of the View and the Controller_
-_the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."_
+ 1. _the View knows nothing about the Model apart from it implements some interface_
+ 2. _the Model knows nothing of the View and the Controller_
+ 3. _the Controller knows about both the Model and the View and tells the View to go do something with the data from the Model."_
 
 ### A little more
 The more complete example with the Object-oriented design approach is shown below, which includes the idea of "class" and "object". The MVC are separate and abstract to each other.
 
-#####html
+#### html
 ```html
 <input type="text" />
 <input type="button" value="add"></input>
 <span id="display"></span>
 ```
 
-#####javascript
+#### javascript
 ```javascript
 //------------Database-----------------
 var Storage = function(data) {
@@ -153,3 +158,8 @@ I add some logs to console so as to show the data flow of the application.
 ```
 
 As you can see: When the view detect a click event, it will triggers controller's "add" method. The add method will call the model's "create" method, which will "save" the passed in data in the storage. Once this action is finished, the callback will be triggered, which calls the controller's "show" method. It will call the model's "read" method to "fetch" data from storage, and pass it to the callback, so as to "render" the view.
+
+
+### Next
+ 1. [Simplified TodoMVC](../simplified todomvc)
+ 2. with backend, check [here](https://www.codeproject.com/Articles/753724/JavaScript-Front-End-Web-App-Tutorial-Part)

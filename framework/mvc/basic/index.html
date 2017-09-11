@@ -21,6 +21,7 @@ var Storage = function(data) {
 	this.data = data;
 }
 
+console.log('hello')
 Storage.prototype.fetchData = function(callback) {
 	console.log("fetch in the storage");
 	callback.call(this, this.data);

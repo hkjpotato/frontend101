@@ -1,5 +1,42 @@
 <script type="text/javascript">
 
+//http://2ality.com/2012/09/expressions-vs-statements.html
+
+//https://javascriptweblog.wordpress.com/2010/07/06/function-declarations-vs-function-expressions/
+
+//http://benalman.com/news/2010/11/immediately-invoked-function-expression/
+/*
+
+function () {}(1) //error, function() {} <-declaration statement must have a name
+
+function foo() {}(1) //no error, but function is not run
+
+the above two is just like
+function [name]() {}
+(1)
+//two separate statement
+
+
+(function() {})(1) //function run, (function() {}) is an expression, an expression return a value(which is that) function
+
+without (), when js parser see function ..., regard it as declaration, and it will be hosited(before any code get executed)
+
+//..As you can see, there’s a catch. When the parser encounters the function keyword in the global scope or inside a function, it treats it as a function declaration (statement), and not as a function expression, by default. If you don’t explicitly tell the parser to expect an expression, it sees what it thinks to be a function declaration without a name and throws a SyntaxError exception because function declarations require a name.
+
+//..The most widely accepted way to tell the parser to expect a function expression is just to wrap it in parens, because in JavaScript, parens can’t contain statements. 
+
+
+(function() {}()) ...ok, when js see (), regard it as expression
+(function() {})() ...ok as well
+
+var i = function() {}() //ok
+
+*/
+
+
+
+
+
 console.log('------------')
 //q:
 console.log(['1', '2', '3'].map(parseInt)); 
