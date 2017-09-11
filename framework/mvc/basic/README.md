@@ -161,5 +161,5 @@ As you can see: When the view detect a click event, it will triggers controller'
 
 
 ### Next
- 1. [Simplified TodoMVC](../simplified todomvc)
+ 1. [Simplified TodoMVC](../simplified%20todomvc)
  2. with backend, check [here](https://www.codeproject.com/Articles/753724/JavaScript-Front-End-Web-App-Tutorial-Part)

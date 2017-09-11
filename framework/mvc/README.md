@@ -1,3 +1,2 @@
   * [Basic](./basic)
-  * [Simplified TodoMVC](./simplified todomvc)
-  * AngularJS TodoMVC
+  * [Simplified TodoMVC](./simplified%20todomvc)

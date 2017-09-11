@@ -2,10 +2,6 @@
 
 This is the simplified version of the Vanilla JS code from [todomvc.com](http://todomvc.com/). I believe this is the most simplified version you can find on the web. The original source code is [here](https://github.com/tastejs/todomvc/tree/gh-pages/examples/vanillajs).
 
-
-## Notice
-You can also check out the **[simple](./simple/index.html)** example I made to see a very basic function of this app in one file. It only supports one function: add a todo item.
-
 There are some basic things you need to know to help understand the [source code]((https://github.com/tastejs/todomvc/tree/gh-pages/examples/vanillajs).
 
 
