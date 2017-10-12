@@ -11,6 +11,7 @@ function Model(storage) {
 }
 
 Model.prototype.create = function (title, callback) {
+  log('model create');
   //default value, miss es5 right?
   title = title || '';
   callback = callback || function() {};
@@ -27,6 +28,7 @@ Model.prototype.create = function (title, callback) {
 
 Model.prototype.read = function (query, callback) {
   //3 situations
+  log('model read ' + JSON.stringify(query));
 
   //no query, return all
   if (typeof query === 'function') {

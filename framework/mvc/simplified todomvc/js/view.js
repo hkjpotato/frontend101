@@ -30,7 +30,7 @@ var defaultTemplate
     +   '<div class="view">'
     +     '<input class="toggle" type="checkbox" {{checked}}>'
     +     '<label>{{title}}</label>'
-    +     '<button class="destroy">x</button>'
+    +     '<button class="destroy"></button>'
     +   '</div>'
     + '</li>';
 
@@ -58,6 +58,7 @@ function View() {
 
 //------render function-------
 View.prototype.showEntries = function(data) {
+  log('view show todos');
   var template = '';
 
   for (var i = 0; i < data.length; i++) {
@@ -83,6 +84,7 @@ View.prototype.showEntries = function(data) {
 }
 
 View.prototype.clearNewTodo = function () {
+  log('view clear input');
   this.newTodoInput.value = "";
 }
 
@@ -154,6 +156,7 @@ View.prototype.bindNewTodo = function (callback) {
   var self = this;
   //notice change event is happened when focus is blurred
   self.newTodoInput.addEventListener('change', function(event) {
+    log('dom input change event');
     callback(self.newTodoInput.value);
   });
 };

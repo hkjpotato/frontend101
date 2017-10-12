@@ -53,7 +53,6 @@ Controller.prototype.updateFilterState = function(route) {
   // store the filter state
   this.filter = route === '' ? 'all' : route; 
   this.filterTodos();
-
   this.view.setFilter(route);
 }
 
@@ -61,6 +60,7 @@ Controller.prototype.updateFilterState = function(route) {
 Filter todos based on route
 */
 Controller.prototype.filterTodos = function (itemAdded) {
+  log('controller filter todos');
   var filter = this.filter;
 
   /*
@@ -98,6 +98,7 @@ Controller.prototype.filterTodos = function (itemAdded) {
 
 
 Controller.prototype.addItem = function (title) {
+  log('controller addItem');
   var self = this;
   if (title.trim() === '') {
     return; //add nothing

@@ -22,9 +22,11 @@ var todo = new Todo('kj-simple-todo-mvc');
 // //url(hash) is one part of control
 window.addEventListener('load', function() {
   todo.controller.setRouteState(document.location.hash);
+  logSection.innerHTML = '';
 }, false);
 
 window.addEventListener('hashchange', function() {
   console.log('hash change');
   todo.controller.setRouteState(document.location.hash);
+  logSection.innerHTML = '';
 }, false);

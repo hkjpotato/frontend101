@@ -9,6 +9,7 @@ function Storage(name) {
 }
 
 Storage.prototype.find = function (query, callback) {
+  log('storage find todos');
   if (!callback) {
     return;
   }
@@ -26,12 +27,15 @@ Storage.prototype.find = function (query, callback) {
 };
 
 Storage.prototype.findAll = function (callback) {
+  log('storage findAll todos');
+
   callback = callback || function() {};
   callback.call(this, JSON.parse(localStorage[this._dbName]).todos);
 };
 
 
 Storage.prototype.save = function (updated, callback, id) {
+  log('storage save');
   var data = JSON.parse(localStorage[this._dbName]);
   var todos = data.todos;
   if (!id) {

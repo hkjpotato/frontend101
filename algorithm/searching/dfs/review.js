@@ -1,3 +1,34 @@
+
+
+
+
+/*
+Important
+
+DFS in recursion is similar to Stack
+
+In fact, recursion is similar to stack (you function call is in stack)
+
+two types of recursion, tail or untail
+
+both devide&conquer and traverse are dfs recursion
+dfs can be done without recursion by just stack
+
+the difference is:
+devide&conquer=> bottom up =>devide first, small result in return and combine, so it is untail
+
+traverse => top down => do sth for current level, then go deeper, get more info
+
+devide & conquer is like "boss assign tasks to child"
+
+traverse is like "carry the result and go through all possibility" (might be a tail recursion)
+
+a good starting point is max_depth_of_bst
+*/
+
+
+
+
 var arr = [3, 2, 1, 4];
 
 //get the combination

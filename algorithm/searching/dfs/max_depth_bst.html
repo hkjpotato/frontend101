@@ -1,0 +1,87 @@
+<script type="text/javascript">
+/*
+#104
+Given a binary tree, find its maximum depth.
+
+The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+https://www.jiuzhang.com/qa/1497/
+*/
+
+function Tree(val) {
+  this.val = val;
+  this.left = null;
+  this.right = null;
+}
+
+
+var root = new Tree(3);
+root.left = new Tree(2);
+root.left.left = new Tree(1);
+root.right = new Tree(4);
+
+//maxDepth is 3,2,1 => 3
+
+
+
+//devide and conquer, bottom up, non tail
+var maxDepth = function(root) {
+  if (root === null) {
+    return 0;
+  }
+  //non-tail recursion
+  return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+}
+
+
+//traverse, top down, carry result
+var maxDepthHelper = function(root, count, result) {
+  if (root === null) {
+    // reach the bottom, collect the current result
+    result.push(count);
+    return;
+  } else {
+    count++;
+    maxDepthHelper(root.left, count, result);
+    maxDepthHelper(root.right, count, result);
+    return;
+  }
+}
+
+var maxDepth = function(root) {
+  // the result collector
+  result = [];
+  count = 0;
+  maxDepthHelper(root, count, result);
+  return result.reduce(function (max, count) {
+    return Math.max(max, count);
+  }, -Number.MAX_VALUE);
+}
+
+
+
+//traverse2 scope value, update result when searching
+
+var max;
+
+var maxDepthHelper = function (root, curr) {
+  if (root === null) {
+    return;
+  }
+    
+  curr++;
+  max = Math.max(curr, max);
+  maxDepthHelper(root.left, curr);
+  maxDepthHelper(root.right, curr);
+}
+
+var maxDepth = function(root) {
+  // the result collector
+  max = 0;
+  var curr = 0;
+  maxDepthHelper(root, curr);
+  return max;
+}
+console.log(maxDepth(root));
+
+</script>

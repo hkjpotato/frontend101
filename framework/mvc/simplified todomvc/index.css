@@ -4,6 +4,23 @@ body {
 	padding: 0;
 }
 
+.log {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 200px;
+	height: 200px;
+	padding: 0px 15px;
+	/*text-align: center;*/
+	font-weight: 400;
+	font-family: monospace;
+  	color: #55ff55;
+ 	background-color: rgba(0, 0, 0, 0.5);
+	border: 1px solid gray;
+	overflow-y: scroll;
+}
+
+
 button {
 	margin: 0;
 	padding: 0;
